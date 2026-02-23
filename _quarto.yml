@@ -6,8 +6,8 @@ book:
   title: "Modul Psikometri: Item Response Theory (IRT)"
   subtitle: "Panduan Praktis untuk Analis SDM dan Peneliti"
   author: "Aswin Januarsjaf"
-  date: "2026"
-  date-format: "Februari 2026"
+  date: "Februari 2026"
+  date-format: "MM YY"
   language: id
 
   sidebar:
