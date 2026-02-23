@@ -1,6 +1,6 @@
 # Kata Pengantar {.unnumbered}
 
-::: {.callout-note appearance="simple"}
+
 **Tentang Modul**  
 Modul ini dirancang sebagai panduan praktis penerapan *Item Response Theory* (IRT) untuk praktisi psikometri, analis SDM, dan peneliti di lingkungan instansi pemerintah maupun swasta di Indonesia.
 :::
