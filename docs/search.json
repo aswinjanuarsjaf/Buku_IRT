@@ -1,0 +1,1071 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Modul Psikometri: Item Response Theory (IRT)",
+    "section": "",
+    "text": "Kata Pengantar",
+    "crumbs": [
+      "Kata Pengantar"
+    ]
+  },
+  {
+    "objectID": "index.html#latar-belakang",
+    "href": "index.html#latar-belakang",
+    "title": "Modul Psikometri: Item Response Theory (IRT)",
+    "section": "Latar Belakang",
+    "text": "Latar Belakang\nPengujian berbasis psikometri telah menjadi fondasi utama dalam seleksi, asesmen kompetensi, dan pengembangan SDM. Selama puluhan tahun, Classical Test Theory (CTT) menjadi pendekatan dominan. Namun, CTT memiliki keterbatasan mendasar: karakteristik item bergantung pada sampel dan kemampuan peserta bergantung pada instrumen.\nItem Response Theory (IRT) hadir sebagai solusi dengan prinsip parameter invariance — kemampuan peserta dan karakteristik item dapat diestimasi secara terpisah dan tidak saling bergantung. Inilah yang membuat IRT menjadi standar emas dalam pengembangan tes modern.",
+    "crumbs": [
+      "Kata Pengantar"
+    ]
+  },
+  {
+    "objectID": "index.html#tujuan-modul",
+    "href": "index.html#tujuan-modul",
+    "title": "Modul Psikometri: Item Response Theory (IRT)",
+    "section": "Tujuan Modul",
+    "text": "Tujuan Modul\nSetelah mempelajari modul ini, pembaca diharapkan mampu:\n\nMemahami perbedaan fundamental CTT vs IRT\nMenguasai konsep model 1PL, 2PL, 3PL, dan Rasch Model\nMengoperasikan analisis IRT menggunakan R (mirt, TAM, eRm)\nMenginterpretasikan parameter item: kesulitan (b), daya beda (a), dan tebakan (c)\nMenilai item fit dan person fit\nMelakukan analisis DIF (Differential Item Functioning)\nMenyusun laporan psikometri berbasis IRT secara profesional",
+    "crumbs": [
+      "Kata Pengantar"
+    ]
+  },
+  {
+    "objectID": "index.html#struktur-modul",
+    "href": "index.html#struktur-modul",
+    "title": "Modul Psikometri: Item Response Theory (IRT)",
+    "section": "Struktur Modul",
+    "text": "Struktur Modul\nModul ini terdiri dari empat bagian utama:\n\n\n\nBagian\nTopik\nBab\n\n\n\n\nI\nFondasi Teori\n1–3\n\n\nII\nModel-Model IRT\n4–7\n\n\nIII\nImplementasi di R\n8–12\n\n\nIV\nAplikasi Praktis\n13–15",
+    "crumbs": [
+      "Kata Pengantar"
+    ]
+  },
+  {
+    "objectID": "index.html#cara-menggunakan-modul",
+    "href": "index.html#cara-menggunakan-modul",
+    "title": "Modul Psikometri: Item Response Theory (IRT)",
+    "section": "Cara Menggunakan Modul",
+    "text": "Cara Menggunakan Modul\n\n\n\n\n\n\nUntuk Pemula — Mulai dari Bab 1 secara berurutan.\nUntuk Praktisi — Bisa langsung ke Bagian III (Implementasi di R).\nUntuk Referensi Cepat — Gunakan sidebar kiri untuk navigasi antar bab.\n\n\n\nSetiap bab dilengkapi dengan:\n\nKonsep teoritis yang dijelaskan secara sistematis\nKode R yang siap dijalankan (copy-paste ready)\nOutput dan interpretasi yang dijelaskan secara rinci\nLatihan mandiri di akhir bab\nCallout box untuk tips, catatan penting, dan peringatan",
+    "crumbs": [
+      "Kata Pengantar"
+    ]
+  },
+  {
+    "objectID": "index.html#prasyarat",
+    "href": "index.html#prasyarat",
+    "title": "Modul Psikometri: Item Response Theory (IRT)",
+    "section": "Prasyarat",
+    "text": "Prasyarat\nPembaca diasumsikan telah familiar dengan:\n\nStatistika dasar (mean, SD, distribusi normal)\nKonsep reliabilitas dan validitas\nR dan RStudio (minimal tingkat pemula)",
+    "crumbs": [
+      "Kata Pengantar"
+    ]
+  },
+  {
+    "objectID": "index.html#tentang-penulis",
+    "href": "index.html#tentang-penulis",
+    "title": "Modul Psikometri: Item Response Theory (IRT)",
+    "section": "Tentang Penulis",
+    "text": "Tentang Penulis\nModul ini disusun oleh Aswin Januarsjaf dan tim psikometri Talentlytica.\n\n“Mengukur dengan tepat adalah langkah pertama menuju keputusan yang adil.”",
+    "crumbs": [
+      "Kata Pengantar"
+    ]
+  },
+  {
+    "objectID": "bab01-pengantar.html",
+    "href": "bab01-pengantar.html",
+    "title": "1  Pengantar Psikometri dan IRT",
+    "section": "",
+    "text": "1.1 Apa Itu Psikometri?\nPsikometri (psychometrics) adalah cabang ilmu psikologi yang berfokus pada teori dan teknik pengukuran psikologis. Psikometri mencakup pengembangan instrumen, analisis data tes, dan evaluasi kualitas pengukuran.\nPengukuran psikologis berbeda dari pengukuran fisik karena:",
+    "crumbs": [
+      "Bagian I: Fondasi Teori",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Pengantar Psikometri dan IRT</span>"
+    ]
+  },
+  {
+    "objectID": "bab01-pengantar.html#apa-itu-psikometri",
+    "href": "bab01-pengantar.html#apa-itu-psikometri",
+    "title": "1  Pengantar Psikometri dan IRT",
+    "section": "",
+    "text": "Konstruk yang diukur tidak langsung terobservasi (laten)\nPengukuran mengandung error\nSkala pengukuran bersifat relatif, bukan absolut",
+    "crumbs": [
+      "Bagian I: Fondasi Teori",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Pengantar Psikometri dan IRT</span>"
+    ]
+  },
+  {
+    "objectID": "bab01-pengantar.html#sejarah-singkat-irt",
+    "href": "bab01-pengantar.html#sejarah-singkat-irt",
+    "title": "1  Pengantar Psikometri dan IRT",
+    "section": "1.2 Sejarah Singkat IRT",
+    "text": "1.2 Sejarah Singkat IRT\n\n\n\n\n\n\n\n\nFigure 1.1: Perkembangan Teori Pengukuran Psikologis",
+    "crumbs": [
+      "Bagian I: Fondasi Teori",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Pengantar Psikometri dan IRT</span>"
+    ]
+  },
+  {
+    "objectID": "bab01-pengantar.html#mengapa-irt-penting",
+    "href": "bab01-pengantar.html#mengapa-irt-penting",
+    "title": "1  Pengantar Psikometri dan IRT",
+    "section": "1.3 Mengapa IRT Penting?",
+    "text": "1.3 Mengapa IRT Penting?\n\n1.3.1 Keterbatasan CTT\nClassical Test Theory memiliki beberapa kelemahan fundamental:\n\n\n\n\n\n\nWarningKeterbatasan CTT\n\n\n\n\nSample-dependent — Statistik item (tingkat kesulitan, daya beda) berubah tergantung kelompok peserta\nTest-dependent — Skor peserta bergantung pada tes yang digunakan, bukan kemampuan sejatinya\nTrue score tidak terobservasi — Hanya bisa diestimasikan dengan asumsi ketat\nError seragam — CTT mengasumsikan error pengukuran sama untuk semua level kemampuan\n\n\n\n\n\n1.3.2 Keunggulan IRT\n\n\n\n\n\n\nNoteKeunggulan IRT\n\n\n\n\nParameter Invariance — Parameter item tidak bergantung pada sampel; parameter peserta tidak bergantung pada instrumen\nItem Information Function — Setiap item memberikan informasi berbeda di setiap level kemampuan\nConditional Independence — Respon terhadap item bersifat independen secara kondisional\nSkala Logit — Kemampuan dan kesulitan diukur pada skala yang sama (logit/theta)",
+    "crumbs": [
+      "Bagian I: Fondasi Teori",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Pengantar Psikometri dan IRT</span>"
+    ]
+  },
+  {
+    "objectID": "bab01-pengantar.html#konsep-dasar-irt",
+    "href": "bab01-pengantar.html#konsep-dasar-irt",
+    "title": "1  Pengantar Psikometri dan IRT",
+    "section": "1.4 Konsep Dasar IRT",
+    "text": "1.4 Konsep Dasar IRT\n\n1.4.1 Kemampuan Laten (θ)\nDalam IRT, kemampuan peserta dilambangkan dengan θ (theta), dinyatakan dalam skala logit dengan:\n\nMean = 0\nSD = 1 (umumnya)\nRentang praktis: −3 hingga +3\n\n\n\n1.4.2 Item Characteristic Curve (ICC)\nICC (Item Characteristic Curve) atau Kurva Karakteristik Item menggambarkan probabilitas menjawab benar sebagai fungsi dari kemampuan θ.\n\n\nCode\nlibrary(ggplot2)\n\ntheta &lt;- seq(-4, 4, by = 0.01)\n\n# Fungsi logistik 1PL\nprob_1pl &lt;- function(theta, b) {\n  1 / (1 + exp(-(theta - b)))\n}\n\ndf &lt;- data.frame(\n  theta = rep(theta, 3),\n  prob  = c(prob_1pl(theta, -1),\n            prob_1pl(theta,  0),\n            prob_1pl(theta,  1)),\n  item  = rep(c(\"Item Mudah (b = -1)\",\n                \"Item Sedang (b = 0)\",\n                \"Item Sulit (b = +1)\"), each = length(theta))\n)\n\nggplot(df, aes(x = theta, y = prob, color = item, linetype = item)) +\n  geom_line(linewidth = 1.2) +\n  geom_vline(xintercept = 0, linetype = \"dashed\", color = \"gray50\") +\n  geom_hline(yintercept = 0.5, linetype = \"dashed\", color = \"gray50\") +\n  scale_color_manual(values = c(\"#2ecc71\", \"#3498db\", \"#e74c3c\")) +\n  scale_y_continuous(labels = scales::percent, limits = c(0, 1)) +\n  labs(\n    title = \"Item Characteristic Curve (ICC)\",\n    subtitle = \"Model 1PL — Tiga Level Kesulitan\",\n    x = \"Kemampuan (θ)\",\n    y = \"P(benar | θ)\",\n    color = \"Item\",\n    linetype = \"Item\"\n  ) +\n  theme_minimal(base_size = 12) +\n  theme(legend.position = \"bottom\")\n\n\n\n\n\n\n\n\nFigure 1.2: Contoh Item Characteristic Curve (ICC)\n\n\n\n\n\n\n\n1.4.3 Asumsi IRT\nIRT bergantung pada tiga asumsi utama:\n\n\n\n\n\n\n\n\nAsumsi\nPenjelasan\nCara Uji\n\n\n\n\nUnidimensionalitas\nSatu faktor laten dominan mengukur semua item\nAnalisis Faktor, Scree plot\n\n\nLocal Independence\nRespon antar item independen jika θ dikontrol\nQ3 statistic, LD χ²\n\n\nMonotonisitas\nP(benar) meningkat seiring peningkatan θ\nMokken scale analysis",
+    "crumbs": [
+      "Bagian I: Fondasi Teori",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Pengantar Psikometri dan IRT</span>"
+    ]
+  },
+  {
+    "objectID": "bab01-pengantar.html#aplikasi-irt-di-indonesia",
+    "href": "bab01-pengantar.html#aplikasi-irt-di-indonesia",
+    "title": "1  Pengantar Psikometri dan IRT",
+    "section": "1.5 Aplikasi IRT di Indonesia",
+    "text": "1.5 Aplikasi IRT di Indonesia\nIRT telah diterapkan secara luas di berbagai konteks Indonesia:\n\nBKN — Seleksi CPNS (CAT-BKN berbasis IRT)\nKemendikbudristek — PISA, PIRLS, UN berbasis IRT\nPerbankan & BUMN — Seleksi karyawan berbasis kompetensi\nDJP — Asesmen kompetensi pegawai\n\n\n\n\n\n\n\nTipKoneksi ke Regulasi\n\n\n\nPenerapan IRT di asesmen kompetensi ASN relevan dengan Peraturan BKN No. 411/2025 yang mengatur skala penilaian kompetensi 0–5 untuk jabatan fungsional dan struktural.",
+    "crumbs": [
+      "Bagian I: Fondasi Teori",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Pengantar Psikometri dan IRT</span>"
+    ]
+  },
+  {
+    "objectID": "bab01-pengantar.html#latihan-mandiri",
+    "href": "bab01-pengantar.html#latihan-mandiri",
+    "title": "1  Pengantar Psikometri dan IRT",
+    "section": "Latihan Mandiri",
+    "text": "Latihan Mandiri\n\nGambarkan ICC untuk item dengan parameter: b = 0.5, menggunakan kertas grafik manual.\nJelaskan mengapa “parameter invariance” menjadi keunggulan utama IRT dibandingkan CTT.\nCari satu contoh penggunaan IRT dalam konteks seleksi ASN di Indonesia.",
+    "crumbs": [
+      "Bagian I: Fondasi Teori",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Pengantar Psikometri dan IRT</span>"
+    ]
+  },
+  {
+    "objectID": "bab02-classical-test-theory.html",
+    "href": "bab02-classical-test-theory.html",
+    "title": "2  Classical Test Theory: Tinjauan & Keterbatasan",
+    "section": "",
+    "text": "2.1 Formula Dasar CTT\nDalam CTT, skor observasi (X) merupakan jumlah dari skor sejati (T) dan error pengukuran (E):\n\\[X = T + E\\]\ndengan asumsi: - \\(E(E) = 0\\) (rata-rata error = 0) - \\(\\text{Cov}(T, E) = 0\\) (true score dan error tidak berkorelasi) - \\(\\text{Cov}(E_i, E_j) = 0\\) (error antar tes tidak berkorelasi)",
+    "crumbs": [
+      "Bagian I: Fondasi Teori",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Classical Test Theory: Tinjauan & Keterbatasan</span>"
+    ]
+  },
+  {
+    "objectID": "bab02-classical-test-theory.html#reliabilitas-dalam-ctt",
+    "href": "bab02-classical-test-theory.html#reliabilitas-dalam-ctt",
+    "title": "2  Classical Test Theory: Tinjauan & Keterbatasan",
+    "section": "2.2 Reliabilitas dalam CTT",
+    "text": "2.2 Reliabilitas dalam CTT\nReliabilitas didefinisikan sebagai rasio varians true score terhadap varians observasi:\n\\[\\rho_{XX'} = \\frac{\\sigma^2_T}{\\sigma^2_X} = \\frac{\\sigma^2_T}{\\sigma^2_T + \\sigma^2_E}\\]\n\n\nCode\nlibrary(ggplot2)\nlibrary(scales)\n\ndf_rel &lt;- data.frame(\n  komponen = c(\"True Score Variance\", \"Error Variance\"),\n  nilai    = c(0.75, 0.25),\n  warna    = c(\"#3498db\", \"#e74c3c\")\n)\n\nggplot(df_rel, aes(x = \"\", y = nilai, fill = komponen)) +\n  geom_col(width = 0.5) +\n  geom_text(aes(label = paste0(nilai * 100, \"%\")),\n            position = position_stack(vjust = 0.5),\n            color = \"white\", size = 5, fontface = \"bold\") +\n  scale_fill_manual(values = c(\"#3498db\", \"#e74c3c\")) +\n  coord_flip() +\n  labs(title = \"Dekomposisi Varians Skor Observasi\",\n       subtitle = \"Reliabilitas = 0.75\",\n       x = NULL, y = \"Proporsi Varians\", fill = \"\") +\n  theme_minimal(base_size = 12) +\n  theme(legend.position = \"bottom\")\n\n\n\n\n\n\n\n\nFigure 2.1: Visualisasi Komponen Varians dalam CTT",
+    "crumbs": [
+      "Bagian I: Fondasi Teori",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Classical Test Theory: Tinjauan & Keterbatasan</span>"
+    ]
+  },
+  {
+    "objectID": "bab02-classical-test-theory.html#statistik-item-dalam-ctt",
+    "href": "bab02-classical-test-theory.html#statistik-item-dalam-ctt",
+    "title": "2  Classical Test Theory: Tinjauan & Keterbatasan",
+    "section": "2.3 Statistik Item dalam CTT",
+    "text": "2.3 Statistik Item dalam CTT\n\n\nCode\nlibrary(dplyr)\nlibrary(knitr)\n\nset.seed(42)\nn_item &lt;- 10\nn_peserta &lt;- 200\n\n# Simulasi data dikotomis\ndata_sim &lt;- matrix(\n  rbinom(n_peserta * n_item, 1, \n         rep(seq(0.3, 0.8, length.out = n_item), each = n_peserta)),\n  nrow = n_peserta,\n  ncol = n_item\n)\ncolnames(data_sim) &lt;- paste0(\"Item_\", 1:n_item)\ntotal_score &lt;- rowSums(data_sim)\n\n# Hitung statistik CTT\nstats_ctt &lt;- data.frame(\n  Item = paste0(\"Item \", 1:n_item),\n  `Tingkat Kesulitan (p)` = round(colMeans(data_sim), 3),\n  `Daya Beda (r_pbis)` = round(apply(data_sim, 2, function(x) \n    cor(x, total_score - x)), 3)\n) %&gt;%\n  mutate(\n    Kategori_p = case_when(\n      `Tingkat.Kesulitan..p.` &lt; 0.30 ~ \"Sulit\",\n      `Tingkat.Kesulitan..p.` &gt; 0.70 ~ \"Mudah\",\n      TRUE ~ \"Sedang\"\n    ),\n    Kategori_r = case_when(\n      `Daya.Beda..r_pbis.` &lt; 0.20 ~ \"Buruk\",\n      `Daya.Beda..r_pbis.` &lt; 0.30 ~ \"Cukup\",\n      `Daya.Beda..r_pbis.` &lt; 0.40 ~ \"Baik\",\n      TRUE ~ \"Sangat Baik\"\n    )\n  )\n\nkable(stats_ctt, align = \"c\")\n\n\n\n\nTable 2.1: Statistik Item CTT: Contoh Perhitungan\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nItem\nTingkat.Kesulitan..p.\nDaya.Beda..r_pbis.\nKategori_p\nKategori_r\n\n\n\n\nItem_1\nItem 1\n0.355\n0.024\nSedang\nBuruk\n\n\nItem_2\nItem 2\n0.295\n0.028\nSulit\nBuruk\n\n\nItem_3\nItem 3\n0.355\n-0.068\nSedang\nBuruk\n\n\nItem_4\nItem 4\n0.450\n0.002\nSedang\nBuruk\n\n\nItem_5\nItem 5\n0.565\n-0.016\nSedang\nBuruk\n\n\nItem_6\nItem 6\n0.615\n0.074\nSedang\nBuruk\n\n\nItem_7\nItem 7\n0.625\n0.013\nSedang\nBuruk\n\n\nItem_8\nItem 8\n0.730\n0.040\nMudah\nBuruk\n\n\nItem_9\nItem 9\n0.720\n0.000\nMudah\nBuruk\n\n\nItem_10\nItem 10\n0.725\n0.039\nMudah\nBuruk",
+    "crumbs": [
+      "Bagian I: Fondasi Teori",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Classical Test Theory: Tinjauan & Keterbatasan</span>"
+    ]
+  },
+  {
+    "objectID": "bab02-classical-test-theory.html#keterbatasan-ctt-demonstrasi",
+    "href": "bab02-classical-test-theory.html#keterbatasan-ctt-demonstrasi",
+    "title": "2  Classical Test Theory: Tinjauan & Keterbatasan",
+    "section": "2.4 Keterbatasan CTT: Demonstrasi",
+    "text": "2.4 Keterbatasan CTT: Demonstrasi\n\n2.4.1 Sample-Dependency\n\n\nCode\nset.seed(123)\n\n# Simulasi dua kelompok berbeda kemampuan\nkelompok_tinggi &lt;- rbinom(100, 1, 0.85)\nkelompok_rendah &lt;- rbinom(100, 1, 0.35)\nkelompok_campur &lt;- c(kelompok_tinggi, kelompok_rendah)\n\np_values &lt;- c(\n  mean(kelompok_tinggi),\n  mean(kelompok_rendah),\n  mean(kelompok_campur)\n)\n\ndf_sd &lt;- data.frame(\n  Kelompok = c(\"Kemampuan Tinggi\\n(n=100)\", \n               \"Kemampuan Rendah\\n(n=100)\", \n               \"Gabungan\\n(n=200)\"),\n  p_value = p_values\n)\n\nggplot(df_sd, aes(x = Kelompok, y = p_value, fill = Kelompok)) +\n  geom_col(width = 0.5, show.legend = FALSE) +\n  geom_text(aes(label = round(p_value, 3)), vjust = -0.5, size = 4, fontface = \"bold\") +\n  scale_fill_manual(values = c(\"#2ecc71\", \"#e74c3c\", \"#3498db\")) +\n  scale_y_continuous(limits = c(0, 1.1), labels = percent) +\n  labs(\n    title = \"Tingkat Kesulitan Item yang Sama pada Sampel Berbeda\",\n    subtitle = \"Item CTT yang 'sama' memiliki p-value berbeda tergantung sampel\",\n    x = NULL, y = \"Tingkat Kesulitan (p)\"\n  ) +\n  theme_minimal(base_size = 12)\n\n\n\n\n\n\n\n\nFigure 2.2: Demonstrasi Sample-Dependency pada CTT\n\n\n\n\n\n\n\n\n\n\n\nImportantImplikasi Sample-Dependency\n\n\n\nItem yang tampak “sedang” di kelompok kemampuan tinggi akan tampak “sulit” di kelompok kemampuan rendah. Ini menyulitkan ekuivalensi tes dan norma lintas kelompok.",
+    "crumbs": [
+      "Bagian I: Fondasi Teori",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Classical Test Theory: Tinjauan & Keterbatasan</span>"
+    ]
+  },
+  {
+    "objectID": "bab02-classical-test-theory.html#perbandingan-ctt-vs-irt",
+    "href": "bab02-classical-test-theory.html#perbandingan-ctt-vs-irt",
+    "title": "2  Classical Test Theory: Tinjauan & Keterbatasan",
+    "section": "2.5 Perbandingan CTT vs IRT",
+    "text": "2.5 Perbandingan CTT vs IRT\n\n\n\n\n\n\n\n\nAspek\nCTT\nIRT\n\n\n\n\nUnit analisis\nSkor total\nParameter item & person\n\n\nEstimasi kemampuan\nSkor mentah / skor standar\nLogit (θ)\n\n\nKetergantungan sampel\nYa — item statistics berubah\nTidak — parameter invariant\n\n\nError pengukuran\nKonstan untuk semua peserta\nBervariasi per level θ\n\n\nKompleksitas komputasi\nRendah\nTinggi\n\n\nUkuran sampel\nMinimal 100–200\nMinimal 200–500+\n\n\nEquating\nTerbatas\nLebih kuat\n\n\nAplikasi CAT\nTidak memungkinkan\nOptimal",
+    "crumbs": [
+      "Bagian I: Fondasi Teori",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Classical Test Theory: Tinjauan & Keterbatasan</span>"
+    ]
+  },
+  {
+    "objectID": "bab03-teori-irt.html",
+    "href": "bab03-teori-irt.html",
+    "title": "3  Teori Dasar IRT",
+    "section": "",
+    "text": "3.1 Model Logistik IRT\nSemua model IRT dikembangkan dari model logistik. Probabilitas menjawab benar diformulasikan sebagai:",
+    "crumbs": [
+      "Bagian I: Fondasi Teori",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Teori Dasar IRT</span>"
+    ]
+  },
+  {
+    "objectID": "bab03-teori-irt.html#model-logistik-irt",
+    "href": "bab03-teori-irt.html#model-logistik-irt",
+    "title": "3  Teori Dasar IRT",
+    "section": "",
+    "text": "3.1.1 Model Logistik Umum (3PL)\n\\[P(X_{ij} = 1 \\mid \\theta_j) = c_i + (1 - c_i) \\cdot \\frac{e^{Da_i(\\theta_j - b_i)}}{1 + e^{Da_i(\\theta_j - b_i)}}\\]\nDi mana:\n\n\n\n\n\n\n\n\n\nParameter\nSimbol\nNama\nRentang\n\n\n\n\nKemampuan\nθ\nTheta / Ability\n−∞ hingga +∞ (praktis: −3 s/d +3)\n\n\nKesulitan\nb\nDifficulty / Location\n−3 hingga +3\n\n\nDaya beda\na\nDiscrimination\n0 hingga +3 (umumnya 0.5–2.0)\n\n\nTebakan\nc\nPseudo-guessing\n0 hingga 1 (umumnya &lt; 0.35)\n\n\nKonstanta\nD\nScaling factor\n1.0 atau 1.702",
+    "crumbs": [
+      "Bagian I: Fondasi Teori",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Teori Dasar IRT</span>"
+    ]
+  },
+  {
+    "objectID": "bab03-teori-irt.html#parameter-kesulitan-b",
+    "href": "bab03-teori-irt.html#parameter-kesulitan-b",
+    "title": "3  Teori Dasar IRT",
+    "section": "3.2 Parameter Kesulitan (b)",
+    "text": "3.2 Parameter Kesulitan (b)\nParameter b menentukan di mana pada skala θ probabilitas menjawab benar adalah 50% (untuk model 1PL dan 2PL).\n\n\nCode\nlibrary(ggplot2)\n\ntheta &lt;- seq(-4, 4, by = 0.05)\n\nicc_1pl &lt;- function(theta, b) 1 / (1 + exp(-(theta - b)))\n\ndf_b &lt;- data.frame(\n  theta = rep(theta, 5),\n  prob  = c(icc_1pl(theta, -2), icc_1pl(theta, -1),\n            icc_1pl(theta, 0),  icc_1pl(theta, 1),\n            icc_1pl(theta, 2)),\n  b_val = factor(rep(c(\"b = -2\", \"b = -1\", \"b = 0\", \"b = +1\", \"b = +2\"),\n                     each = length(theta)),\n                 levels = c(\"b = -2\",\"b = -1\",\"b = 0\",\"b = +1\",\"b = +2\"))\n)\n\nggplot(df_b, aes(x = theta, y = prob, color = b_val)) +\n  geom_line(linewidth = 1.1) +\n  geom_hline(yintercept = 0.5, linetype = \"dashed\", color = \"gray60\") +\n  scale_color_brewer(palette = \"RdYlBu\", direction = -1) +\n  scale_y_continuous(labels = scales::percent, limits = c(0,1)) +\n  labs(title = \"Pengaruh Parameter Kesulitan (b)\",\n       subtitle = \"a = 1.0 (tetap), c = 0 — Kurva bergeser kanan saat item makin sulit\",\n       x = \"Kemampuan (θ)\", y = \"P(benar | θ)\", color = \"Parameter b\") +\n  theme_minimal(base_size = 12) +\n  theme(legend.position = \"right\")\n\n\n\n\n\n\n\n\nFigure 3.1: Pengaruh Parameter Kesulitan (b) terhadap ICC",
+    "crumbs": [
+      "Bagian I: Fondasi Teori",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Teori Dasar IRT</span>"
+    ]
+  },
+  {
+    "objectID": "bab03-teori-irt.html#parameter-daya-beda-a",
+    "href": "bab03-teori-irt.html#parameter-daya-beda-a",
+    "title": "3  Teori Dasar IRT",
+    "section": "3.3 Parameter Daya Beda (a)",
+    "text": "3.3 Parameter Daya Beda (a)\nParameter a menentukan kemiringan (slope) ICC. Semakin besar nilai a, semakin curam ICC, dan semakin baik item membedakan peserta.\n\n\nCode\nicc_2pl &lt;- function(theta, a, b) 1 / (1 + exp(-a * (theta - b)))\n\ndf_a &lt;- data.frame(\n  theta = rep(theta, 4),\n  prob  = c(icc_2pl(theta, 0.5, 0), icc_2pl(theta, 1.0, 0),\n            icc_2pl(theta, 1.5, 0), icc_2pl(theta, 2.5, 0)),\n  a_val = factor(rep(c(\"a = 0.5 (lemah)\", \"a = 1.0 (sedang)\",\n                       \"a = 1.5 (baik)\", \"a = 2.5 (sangat baik)\"),\n                     each = length(theta)))\n)\n\nggplot(df_a, aes(x = theta, y = prob, color = a_val)) +\n  geom_line(linewidth = 1.1) +\n  geom_hline(yintercept = 0.5, linetype = \"dashed\", color = \"gray60\") +\n  scale_color_manual(values = c(\"#bdc3c7\",\"#3498db\",\"#2ecc71\",\"#e74c3c\")) +\n  scale_y_continuous(labels = scales::percent, limits = c(0,1)) +\n  labs(title = \"Pengaruh Parameter Daya Beda (a)\",\n       subtitle = \"b = 0 (tetap), c = 0 — Semakin besar a, kurva semakin curam\",\n       x = \"Kemampuan (θ)\", y = \"P(benar | θ)\", color = \"Parameter a\") +\n  theme_minimal(base_size = 12) +\n  theme(legend.position = \"right\")\n\n\n\n\n\n\n\n\nFigure 3.2: Pengaruh Parameter Daya Beda (a) terhadap ICC",
+    "crumbs": [
+      "Bagian I: Fondasi Teori",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Teori Dasar IRT</span>"
+    ]
+  },
+  {
+    "objectID": "bab03-teori-irt.html#parameter-tebakan-c",
+    "href": "bab03-teori-irt.html#parameter-tebakan-c",
+    "title": "3  Teori Dasar IRT",
+    "section": "3.4 Parameter Tebakan (c)",
+    "text": "3.4 Parameter Tebakan (c)\nParameter c (pseudo-guessing) merepresentasikan probabilitas minimum menjawab benar, bahkan bagi peserta dengan kemampuan sangat rendah. Relevan terutama untuk tes pilihan ganda.\n\n\nCode\nicc_3pl &lt;- function(theta, a, b, c) c + (1-c) / (1 + exp(-a * (theta - b)))\n\ndf_c &lt;- data.frame(\n  theta = rep(theta, 4),\n  prob  = c(icc_3pl(theta, 1, 0, 0.00),\n            icc_3pl(theta, 1, 0, 0.10),\n            icc_3pl(theta, 1, 0, 0.20),\n            icc_3pl(theta, 1, 0, 0.33)),\n  c_val = factor(rep(c(\"c = 0.00 (no guessing)\",\n                       \"c = 0.10\",\n                       \"c = 0.20\",\n                       \"c = 0.33 (1 dari 3)\"),\n                     each = length(theta)))\n)\n\nggplot(df_c, aes(x = theta, y = prob, color = c_val)) +\n  geom_line(linewidth = 1.1) +\n  scale_color_manual(values = c(\"#2c3e50\",\"#3498db\",\"#f39c12\",\"#e74c3c\")) +\n  scale_y_continuous(labels = scales::percent, limits = c(0,1)) +\n  labs(title = \"Pengaruh Parameter Tebakan (c)\",\n       subtitle = \"a = 1.0, b = 0 (tetap) — Batas bawah ICC naik sesuai nilai c\",\n       x = \"Kemampuan (θ)\", y = \"P(benar | θ)\", color = \"Parameter c\") +\n  theme_minimal(base_size = 12) +\n  theme(legend.position = \"right\")\n\n\n\n\n\n\n\n\nFigure 3.3: Pengaruh Parameter Tebakan (c) terhadap ICC",
+    "crumbs": [
+      "Bagian I: Fondasi Teori",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Teori Dasar IRT</span>"
+    ]
+  },
+  {
+    "objectID": "bab03-teori-irt.html#item-information-function-iif",
+    "href": "bab03-teori-irt.html#item-information-function-iif",
+    "title": "3  Teori Dasar IRT",
+    "section": "3.5 Item Information Function (IIF)",
+    "text": "3.5 Item Information Function (IIF)\nIIF (Item Information Function) menggambarkan seberapa banyak informasi yang diberikan item pada setiap level θ. Semakin tinggi informasi, semakin kecil error pengukuran.\n\\[I_i(\\theta) = \\frac{[P'_i(\\theta)]^2}{P_i(\\theta) \\cdot Q_i(\\theta)}\\]\n\n\nCode\n# IIF untuk model 2PL\niif_2pl &lt;- function(theta, a, b) {\n  p &lt;- icc_2pl(theta, a, b)\n  q &lt;- 1 - p\n  (a^2 * p * q)\n}\n\ndf_iif &lt;- data.frame(\n  theta = rep(theta, 3),\n  info  = c(iif_2pl(theta, 0.5, 0),\n            iif_2pl(theta, 1.0, 0),\n            iif_2pl(theta, 2.0, 0)),\n  item  = rep(c(\"a=0.5 (daya beda rendah)\",\n                \"a=1.0 (daya beda sedang)\",\n                \"a=2.0 (daya beda tinggi)\"), each = length(theta))\n)\n\nggplot(df_iif, aes(x = theta, y = info, color = item)) +\n  geom_line(linewidth = 1.1) +\n  scale_color_manual(values = c(\"#bdc3c7\",\"#3498db\",\"#e74c3c\")) +\n  labs(title = \"Item Information Function (IIF)\",\n       subtitle = \"b = 0 (tetap) — Informasi maksimal pada θ = b\",\n       x = \"Kemampuan (θ)\", y = \"Informasi Item I(θ)\", color = \"Item\") +\n  theme_minimal(base_size = 12) +\n  theme(legend.position = \"bottom\")\n\n\n\n\n\n\n\n\nFigure 3.4: Item Information Function (IIF)",
+    "crumbs": [
+      "Bagian I: Fondasi Teori",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Teori Dasar IRT</span>"
+    ]
+  },
+  {
+    "objectID": "bab03-teori-irt.html#test-information-function-tif",
+    "href": "bab03-teori-irt.html#test-information-function-tif",
+    "title": "3  Teori Dasar IRT",
+    "section": "3.6 Test Information Function (TIF)",
+    "text": "3.6 Test Information Function (TIF)\nTIF adalah penjumlahan IIF semua item dalam tes:\n\\[I(\\theta) = \\sum_{i=1}^{n} I_i(\\theta)\\]\nHubungan TIF dengan Standard Error of Measurement (SEM):\n\\[SEM(\\theta) = \\frac{1}{\\sqrt{I(\\theta)}}\\]",
+    "crumbs": [
+      "Bagian I: Fondasi Teori",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Teori Dasar IRT</span>"
+    ]
+  },
+  {
+    "objectID": "bab04-model-1pl.html",
+    "href": "bab04-model-1pl.html",
+    "title": "4  Model 1 Parameter Logistik (1PL)",
+    "section": "",
+    "text": "4.1 Konsep Dasar Model 1PL\nModel 1 Parameter Logistik (1PL) adalah model IRT paling sederhana. Disebut “1 parameter” karena hanya satu parameter item yang diestimasi, yaitu parameter kesulitan (b).\nModel ini mengasumsikan bahwa:",
+    "crumbs": [
+      "Bagian II: Model-Model IRT",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Model 1 Parameter Logistik (1PL)</span>"
+    ]
+  },
+  {
+    "objectID": "bab04-model-1pl.html#konsep-dasar-model-1pl",
+    "href": "bab04-model-1pl.html#konsep-dasar-model-1pl",
+    "title": "4  Model 1 Parameter Logistik (1PL)",
+    "section": "",
+    "text": "Semua item memiliki daya beda yang sama (a konstan = 1.0)\nTidak ada efek tebakan (c = 0)\nHanya posisi kurva pada skala θ yang berbeda antar item",
+    "crumbs": [
+      "Bagian II: Model-Model IRT",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Model 1 Parameter Logistik (1PL)</span>"
+    ]
+  },
+  {
+    "objectID": "bab04-model-1pl.html#formula-model-1pl",
+    "href": "bab04-model-1pl.html#formula-model-1pl",
+    "title": "4  Model 1 Parameter Logistik (1PL)",
+    "section": "4.2 Formula Model 1PL",
+    "text": "4.2 Formula Model 1PL\n\\[P(X_{ij} = 1 \\mid \\theta_j, b_i) = \\frac{e^{(\\theta_j - b_i)}}{1 + e^{(\\theta_j - b_i)}}\\]\nYang equivalen dengan:\n\\[P(X_{ij} = 1 \\mid \\theta_j, b_i) = \\frac{1}{1 + e^{-(\\theta_j - b_i)}}\\]\nDi mana:\n\n\\(\\theta_j\\) = kemampuan peserta \\(j\\) (dalam logit)\n\\(b_i\\) = parameter kesulitan item \\(i\\) (dalam logit)\n\\(P(\\cdot)\\) = probabilitas menjawab benar\n\n\n\n\n\n\n\nNoteHubungan 1PL dengan Rasch Model\n\n\n\nModel 1PL dan Rasch Model secara matematis identik ketika konstanta D = 1. Perbedaan filosofis ada pada pendekatan:\n\n\n\n\n\n\n\n\n\n1PL (dalam IRT)\nRasch Model\n\n\n\n\nOrientasi\nFit model ke data\nData harus fit ke model\n\n\nEstimasi\nMML (mirt)\nCML (eRm) atau JML (TAM)\n\n\nPerlakuan misfit\nItem direvisi jika perlu\nItem harus fit ke model",
+    "crumbs": [
+      "Bagian II: Model-Model IRT",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Model 1 Parameter Logistik (1PL)</span>"
+    ]
+  },
+  {
+    "objectID": "bab04-model-1pl.html#icc-model-1pl",
+    "href": "bab04-model-1pl.html#icc-model-1pl",
+    "title": "4  Model 1 Parameter Logistik (1PL)",
+    "section": "4.3 ICC Model 1PL",
+    "text": "4.3 ICC Model 1PL\n\n\nCode\nlibrary(ggplot2)\nlibrary(dplyr)\n\ntheta &lt;- seq(-4, 4, by = 0.05)\n\nicc_1pl &lt;- function(theta, b) {\n  1 / (1 + exp(-(theta - b)))\n}\n\nb_values &lt;- c(-2.0, -1.0, 0.0, 1.0, 2.0)\nlabels   &lt;- paste0(\"b = \", ifelse(b_values &gt; 0, paste0(\"+\", b_values), b_values))\n\ndf_icc &lt;- data.frame(\n  theta = rep(theta, length(b_values)),\n  prob  = unlist(lapply(b_values, function(b) icc_1pl(theta, b))),\n  item  = factor(rep(labels, each = length(theta)), levels = labels)\n)\n\nggplot(df_icc, aes(x = theta, y = prob, color = item)) +\n  geom_line(linewidth = 1.2) +\n  geom_hline(yintercept = 0.5, linetype = \"dashed\", color = \"gray60\", linewidth = 0.8) +\n  geom_vline(xintercept = b_values, linetype = \"dotted\", \n             color = scales::hue_pal()(5), alpha = 0.6) +\n  scale_color_brewer(palette = \"RdYlBu\", direction = -1) +\n  scale_y_continuous(labels = scales::percent, limits = c(0, 1)) +\n  annotate(\"text\", x = -3.7, y = 0.53, label = \"P = 0.50\", \n           color = \"gray40\", size = 3.5) +\n  labs(\n    title    = \"Item Characteristic Curves — Model 1PL\",\n    subtitle = \"Semua kurva memiliki kemiringan (slope) yang sama\\nKurva bergeser kanan = item lebih sulit\",\n    x        = \"Kemampuan Peserta (θ)\",\n    y        = \"Probabilitas Menjawab Benar P(θ)\",\n    color    = \"Parameter Kesulitan\"\n  ) +\n  theme_minimal(base_size = 12) +\n  theme(legend.position = \"right\",\n        plot.subtitle = element_text(color = \"gray40\", size = 10))\n\n\n\n\n\n\n\n\nFigure 4.1: Item Characteristic Curves — Model 1PL\n\n\n\n\n\n\n4.3.1 Membaca ICC Model 1PL\n\n\nCode\n# ICC dengan anotasi detail untuk satu item\nb_item &lt;- 0.5\n\ndf_single &lt;- data.frame(\n  theta = theta,\n  prob  = icc_1pl(theta, b_item)\n)\n\nggplot(df_single, aes(x = theta, y = prob)) +\n  geom_ribbon(aes(ymin = 0, ymax = prob),\n              fill = \"#3498db\", alpha = 0.15) +\n  geom_line(linewidth = 1.5, color = \"#3498db\") +\n  # Titik b (P = 0.5)\n  geom_point(x = b_item, y = 0.5, size = 5, color = \"#e74c3c\") +\n  geom_segment(x = b_item, xend = b_item, y = 0, yend = 0.5,\n               linetype = \"dashed\", color = \"#e74c3c\", linewidth = 0.9) +\n  geom_segment(x = -4, xend = b_item, y = 0.5, yend = 0.5,\n               linetype = \"dashed\", color = \"#e74c3c\", linewidth = 0.9) +\n  # Anotasi\n  annotate(\"text\", x = b_item + 0.3, y = 0.45,\n           label = \"b = 0.5\\n(P = 50%)\", color = \"#e74c3c\",\n           size = 4, fontface = \"bold\", hjust = 0) +\n  annotate(\"text\", x = -3, y = 0.9,\n           label = \"Peserta dengan\\nθ &gt;&gt; b\\n→ sangat mudah\", \n           color = \"#27ae60\", size = 3.5) +\n  annotate(\"text\", x = 2.5, y = 0.1,\n           label = \"Peserta dengan\\nθ &lt;&lt; b\\n→ sangat sulit\",\n           color = \"#e74c3c\", size = 3.5) +\n  scale_y_continuous(labels = scales::percent, limits = c(0, 1)) +\n  labs(\n    title    = \"Membaca ICC: Item dengan b = +0.5\",\n    subtitle = \"Titik merah = parameter kesulitan b (di sini P(benar) = 50%)\",\n    x = \"Kemampuan (θ)\", y = \"P(benar | θ)\"\n  ) +\n  theme_minimal(base_size = 12)\n\n\n\n\n\n\n\n\nFigure 4.2: Anotasi Pembacaan ICC — Model 1PL",
+    "crumbs": [
+      "Bagian II: Model-Model IRT",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Model 1 Parameter Logistik (1PL)</span>"
+    ]
+  },
+  {
+    "objectID": "bab04-model-1pl.html#item-information-function-iif-model-1pl",
+    "href": "bab04-model-1pl.html#item-information-function-iif-model-1pl",
+    "title": "4  Model 1 Parameter Logistik (1PL)",
+    "section": "4.4 Item Information Function (IIF) — Model 1PL",
+    "text": "4.4 Item Information Function (IIF) — Model 1PL\nUntuk model 1PL, IIF memiliki bentuk:\n\\[I_i(\\theta) = P_i(\\theta) \\cdot [1 - P_i(\\theta)]\\]\nInformasi maksimum terjadi ketika \\(\\theta = b\\), yaitu:\n\\[I_i^{max} = 0.5 \\times 0.5 = 0.25\\]\n\n\n\n\n\n\nImportantImplikasi Informasi Maksimum\n\n\n\nKarena semua item 1PL memiliki a = 1, semua item memberikan informasi maksimum yang sama (0.25) — hanya berbeda di mana informasi tersebut paling tinggi (yaitu pada θ = b masing-masing item).\n\n\n\n\nCode\niif_1pl &lt;- function(theta, b) {\n  p &lt;- icc_1pl(theta, b)\n  p * (1 - p)\n}\n\ndf_iif &lt;- data.frame(\n  theta = rep(theta, length(b_values)),\n  info  = unlist(lapply(b_values, function(b) iif_1pl(theta, b))),\n  item  = factor(rep(labels, each = length(theta)), levels = labels)\n)\n\nggplot(df_iif, aes(x = theta, y = info, color = item)) +\n  geom_line(linewidth = 1.2) +\n  geom_hline(yintercept = 0.25, linetype = \"dashed\", \n             color = \"gray50\", linewidth = 0.8) +\n  annotate(\"text\", x = 3.5, y = 0.26,\n           label = \"I_max = 0.25\", color = \"gray40\", size = 3.5) +\n  scale_color_brewer(palette = \"RdYlBu\", direction = -1) +\n  labs(\n    title    = \"Item Information Function — Model 1PL\",\n    subtitle = \"Semua item memiliki informasi maksimum yang sama (0.25)\\nhanya berbeda posisi puncaknya\",\n    x = \"Kemampuan (θ)\", y = \"Informasi Item I(θ)\",\n    color = \"Parameter b\"\n  ) +\n  theme_minimal(base_size = 12) +\n  theme(legend.position = \"right\")\n\n\n\n\n\n\n\n\nFigure 4.3: Item Information Function — Model 1PL",
+    "crumbs": [
+      "Bagian II: Model-Model IRT",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Model 1 Parameter Logistik (1PL)</span>"
+    ]
+  },
+  {
+    "objectID": "bab04-model-1pl.html#estimasi-model-1pl-di-r",
+    "href": "bab04-model-1pl.html#estimasi-model-1pl-di-r",
+    "title": "4  Model 1 Parameter Logistik (1PL)",
+    "section": "4.5 Estimasi Model 1PL di R",
+    "text": "4.5 Estimasi Model 1PL di R\n\n4.5.1 Menggunakan mirt\n\n\nCode\nlibrary(mirt)\n\n# ======================================================\n# SIMULASI DATA 1PL\n# ======================================================\nset.seed(2025)\n\nn_peserta &lt;- 400\nn_item    &lt;- 20\n\n# True parameters (a = 1 untuk semua item, tidak ada c)\nb_true    &lt;- seq(-2.5, 2.5, length.out = n_item)\ntheta_true &lt;- rnorm(n_peserta, mean = 0, sd = 1)\n\n# Generate respon berdasarkan model 1PL\nprob_1pl &lt;- outer(theta_true, b_true, function(t, b) \n  1 / (1 + exp(-(t - b))))\n\ndata_1pl &lt;- matrix(\n  rbinom(n_peserta * n_item, 1, prob_1pl),\n  nrow = n_peserta,\n  dimnames = list(\n    paste0(\"P\", 1:n_peserta),\n    paste0(\"Item\", sprintf(\"%02d\", 1:n_item))\n  )\n)\n\ncat(\"=== DATA SIMULASI 1PL ===\\n\")\n\n\n=== DATA SIMULASI 1PL ===\n\n\nCode\ncat(\"Dimensi       :\", dim(data_1pl), \"\\n\")\n\n\nDimensi       : 400 20 \n\n\nCode\ncat(\"Proporsi benar:\", round(mean(data_1pl), 3), \"\\n\\n\")\n\n\nProporsi benar: 0.505 \n\n\nCode\n# ======================================================\n# ESTIMASI DENGAN MIRT (itemtype = \"Rasch\")\n# ======================================================\nmodel_1pl &lt;- mirt(\n  data     = data_1pl,\n  model    = 1,\n  itemtype = \"Rasch\",   # 1PL / Rasch\n  SE       = TRUE,\n  verbose  = FALSE\n)\n\nsummary(model_1pl)\n\n\n       F1   h2\nItem01    0.27\nItem02    0.27\nItem03    0.27\nItem04    0.27\nItem05    0.27\nItem06    0.27\nItem07    0.27\nItem08    0.27\nItem09    0.27\nItem10    0.27\nItem11    0.27\nItem12    0.27\nItem13    0.27\nItem14    0.27\nItem15    0.27\nItem16    0.27\nItem17    0.27\nItem18    0.27\nItem19    0.27\nItem20    0.27\n\n       SE.F1\nItem01      \nItem02      \nItem03      \nItem04      \nItem05      \nItem06      \nItem07      \nItem08      \nItem09      \nItem10      \nItem11      \nItem12      \nItem13      \nItem14      \nItem15      \nItem16      \nItem17      \nItem18      \nItem19      \nItem20      \n\nSS loadings:  0 \nProportion Var:  0 \n\nFactor correlations: \n\n   F1\nF1  1\n\n\n\n\nCode\nlibrary(knitr)\nlibrary(kableExtra)\n\n# Ekstrak parameter dalam skala IRT\nparams_raw &lt;- coef(model_1pl, IRTpars = TRUE, simplify = TRUE)$items\n\n# Ekstrak SE dengan cara yang benar untuk mirt\ncoef_full  &lt;- coef(model_1pl, SE = TRUE, simplify = FALSE)\nse_b &lt;- tryCatch({\n  # Ambil SE dari parameter d (intercept) lalu konversi ke skala b\n  sapply(coef_full[seq_len(n_item)], function(x) x[\"d\", \"SE\"])\n}, error = function(e) rep(NA_real_, n_item))\n\nparams_1pl &lt;- data.frame(\n  Item       = paste0(\"Item\", sprintf(\"%02d\", 1:n_item)),\n  b_estimasi = round(params_raw[, \"b\"], 3),\n  b_true     = round(b_true, 3),\n  SE_b       = round(abs(se_b), 3),\n  Kategori   = cut(params_raw[, \"b\"],\n                   breaks = c(-Inf, -1.5, -0.5, 0.5, 1.5, Inf),\n                   labels = c(\"Sangat Mudah\", \"Mudah\", \"Sedang\", \"Sulit\", \"Sangat Sulit\"))\n)\n\n# Buat tabel dasar\ntbl_1pl &lt;- kable(params_1pl,\n      col.names = c(\"Item\", \"b Estimasi\", \"b True\", \"SE(b)\", \"Kategori\"),\n      align     = \"c\") |&gt;\n  kable_styling(bootstrap_options = c(\"striped\", \"hover\"), full_width = FALSE)\n\n# Tambah warna baris hanya jika ada baris yang cocok\nidx_sulit &lt;- which(as.character(params_1pl$Kategori) == \"Sangat Sulit\")\nidx_mudah &lt;- which(as.character(params_1pl$Kategori) == \"Sangat Mudah\")\nif (length(idx_sulit) &gt; 0) tbl_1pl &lt;- row_spec(tbl_1pl, idx_sulit, background = \"#fdecea\")\nif (length(idx_mudah) &gt; 0) tbl_1pl &lt;- row_spec(tbl_1pl, idx_mudah, background = \"#e8f5e9\")\ntbl_1pl\n\n\n\n\nTable 4.1: Tabel Parameter Item — Model 1PL (semua item)\n\n\n\n\n\n\n\nItem\nb Estimasi\nb True\nSE(b)\nKategori\n\n\n\n\nItem01\nItem01\n-2.444\n-2.500\nNA\nSangat Mudah\n\n\nItem02\nItem02\n-2.115\n-2.237\nNA\nSangat Mudah\n\n\nItem03\nItem03\n-1.939\n-1.974\nNA\nSangat Mudah\n\n\nItem04\nItem04\n-1.898\n-1.711\nNA\nSangat Mudah\n\n\nItem05\nItem05\n-1.312\n-1.447\nNA\nMudah\n\n\nItem06\nItem06\n-1.158\n-1.184\nNA\nMudah\n\n\nItem07\nItem07\n-1.099\n-0.921\nNA\nMudah\n\n\nItem08\nItem08\n-0.738\n-0.658\nNA\nMudah\n\n\nItem09\nItem09\n-0.556\n-0.395\nNA\nMudah\n\n\nItem10\nItem10\n-0.429\n-0.132\nNA\nSedang\n\n\nItem11\nItem11\n0.200\n0.132\nNA\nSedang\n\n\nItem12\nItem12\n0.274\n0.395\nNA\nSedang\n\n\nItem13\nItem13\n0.588\n0.658\nNA\nSulit\n\n\nItem14\nItem14\n0.961\n0.921\nNA\nSulit\n\n\nItem15\nItem15\n1.476\n1.184\nNA\nSulit\n\n\nItem16\nItem16\n1.492\n1.447\nNA\nSulit\n\n\nItem17\nItem17\n1.649\n1.711\nNA\nSangat Sulit\n\n\nItem18\nItem18\n2.001\n1.974\nNA\nSangat Sulit\n\n\nItem19\nItem19\n2.112\n2.237\nNA\nSangat Sulit\n\n\nItem20\nItem20\n2.585\n2.500\nNA\nSangat Sulit\n\n\n\n\n\n\n\n\n\n\n4.5.2 Menggunakan eRm (CML — Conditional Maximum Likelihood)\n\n\nCode\nlibrary(eRm)\n\n# eRm menggunakan CML — tidak memerlukan estimasi θ\nmodel_erm &lt;- RM(data_1pl)\n\ncat(\"=== ESTIMASI eRm (CML) ===\\n\")\n\n\n=== ESTIMASI eRm (CML) ===\n\n\nCode\ncat(\"Jumlah item diestimasi:\", length(model_erm$betapar), \"\\n\\n\")\n\n\nJumlah item diestimasi: 20 \n\n\nCode\n# Parameter b dari eRm (dalam bentuk -beta)\nb_erm &lt;- -model_erm$betapar\ncat(\"Parameter b (5 item pertama):\\n\")\n\n\nParameter b (5 item pertama):\n\n\nCode\nprint(round(b_erm[1:5], 3))\n\n\nbeta Item01 beta Item02 beta Item03 beta Item04 beta Item05 \n     -2.433      -2.101      -1.925      -1.883      -1.293 \n\n\n\n\nCode\nb_mirt &lt;- params_raw[, \"b\"]\n\ndf_rec &lt;- data.frame(\n  b_true = b_true,\n  b_mirt = b_mirt,\n  b_erm  = b_erm\n)\n\nlibrary(tidyr)\ndf_long &lt;- pivot_longer(df_rec, cols = c(b_mirt, b_erm),\n                         names_to = \"Metode\", values_to = \"b_est\")\ndf_long$Metode &lt;- ifelse(df_long$Metode == \"b_mirt\",\n                          \"MML (mirt)\", \"CML (eRm)\")\n\nggplot(df_long, aes(x = b_true, y = b_est, color = Metode, shape = Metode)) +\n  geom_point(size = 3, alpha = 0.8) +\n  geom_abline(slope = 1, intercept = 0,\n              linetype = \"dashed\", color = \"gray50\", linewidth = 1) +\n  scale_color_manual(values = c(\"#3498db\", \"#e74c3c\")) +\n  labs(\n    title    = \"Parameter Recovery — Model 1PL\",\n    subtitle = \"Garis putus-putus = garis sempurna (estimasi = true value)\",\n    x = \"b True\", y = \"b Estimasi\",\n    color = \"Metode Estimasi\", shape = \"Metode Estimasi\"\n  ) +\n  theme_minimal(base_size = 12) +\n  theme(legend.position = \"bottom\")\n\n\n\n\n\n\n\n\nFigure 4.4: Parameter Recovery — Estimasi vs True Value (Model 1PL)",
+    "crumbs": [
+      "Bagian II: Model-Model IRT",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Model 1 Parameter Logistik (1PL)</span>"
+    ]
+  },
+  {
+    "objectID": "bab04-model-1pl.html#kapan-menggunakan-model-1pl",
+    "href": "bab04-model-1pl.html#kapan-menggunakan-model-1pl",
+    "title": "4  Model 1 Parameter Logistik (1PL)",
+    "section": "5.1 Kapan Menggunakan Model 1PL?",
+    "text": "5.1 Kapan Menggunakan Model 1PL?\n\n\n\nPanduan Pemilihan Model: Kapan Gunakan 1PL?\n\n\n\n\n\n\nKondisi\nRekomendasi\n\n\n\n\nUkuran sampel kecil (n &lt; 200)\n✅ Gunakan 1PL / Rasch\n\n\nItem dikembangkan dari domain yang sama\n✅ Gunakan 1PL / Rasch\n\n\nFokus pada lokasi item di skala (b)\n✅ Gunakan 1PL / Rasch\n\n\nTujuan construct mapping\n✅ Gunakan 1PL / Rasch\n\n\nMemerlukan pengukuran setara (specific objectivity)\n✅ Gunakan 1PL / Rasch\n\n\nItem dari domain berbeda atau heterogen\n⚠ Pertimbangkan 2PL\n\n\nSampel besar dan perlu diskriminasi item\n⚠ Pertimbangkan 2PL\n\n\nItem pilihan ganda (banyak alternatif jawaban)\n⚠ Pertimbangkan 3PL",
+    "crumbs": [
+      "Bagian II: Model-Model IRT",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Model 1 Parameter Logistik (1PL)</span>"
+    ]
+  },
+  {
+    "objectID": "bab04-model-1pl.html#latihan-mandiri",
+    "href": "bab04-model-1pl.html#latihan-mandiri",
+    "title": "4  Model 1 Parameter Logistik (1PL)",
+    "section": "Latihan Mandiri",
+    "text": "Latihan Mandiri\n\nDengan menggunakan data data_1pl yang telah dibuat, bandingkan estimasi model 1PL dari mirt dan eRm. Seberapa besar korelasi antara kedua set parameter b?\nModifikasi kode simulasi untuk membuat dataset dengan 500 peserta dan 25 item. Amati bagaimana akurasi parameter recovery berubah dengan ukuran sampel yang lebih besar.\nBuat ICC untuk item dengan b = −2.5 dan b = +2.5. Interpretasikan: apa artinya bagi peserta dengan kemampuan rata-rata (θ = 0)?",
+    "crumbs": [
+      "Bagian II: Model-Model IRT",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Model 1 Parameter Logistik (1PL)</span>"
+    ]
+  },
+  {
+    "objectID": "bab05-model-2pl.html",
+    "href": "bab05-model-2pl.html",
+    "title": "5  Model 2 Parameter Logistik (2PL)",
+    "section": "",
+    "text": "5.1 Konsep Dasar Model 2PL\nModel 2 Parameter Logistik (2PL) adalah model IRT yang mengizinkan setiap item memiliki dua parameter berbeda: parameter kesulitan (b) dan parameter daya beda (a). Dengan demikian, tidak semua item memiliki kurva yang sama — item yang “lebih baik” (daya beda tinggi) akan memiliki kurva yang lebih curam.\nModel 2PL adalah model yang paling banyak digunakan dalam asesmen skala besar karena menyeimbangkan fleksibilitas dan parsimoni.",
+    "crumbs": [
+      "Bagian II: Model-Model IRT",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Model 2 Parameter Logistik (2PL)</span>"
+    ]
+  },
+  {
+    "objectID": "bab05-model-2pl.html#formula-model-2pl",
+    "href": "bab05-model-2pl.html#formula-model-2pl",
+    "title": "5  Model 2 Parameter Logistik (2PL)",
+    "section": "5.2 Formula Model 2PL",
+    "text": "5.2 Formula Model 2PL\n\\[P(X_{ij} = 1 \\mid \\theta_j, a_i, b_i) = \\frac{1}{1 + e^{-Da_i(\\theta_j - b_i)}}\\]\nDi mana:\n\n\\(a_i\\) = parameter daya beda (discrimination) item \\(i\\)\n\\(b_i\\) = parameter kesulitan (difficulty / location) item \\(i\\)\n\\(\\theta_j\\) = kemampuan peserta \\(j\\)\n\\(D\\) = konstanta skalasi (1.0 atau 1.702)\n\n\n\n\n\n\n\nNoteKonstanta D = 1 vs D = 1.702\n\n\n\n\nD = 1.0 → model logistik murni (default mirt)\nD = 1.702 → aproksimasi model normal ogive (lebih umum di literatur lama)\n\nKedua versi valid — pastikan konsisten dalam satu analisis!",
+    "crumbs": [
+      "Bagian II: Model-Model IRT",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Model 2 Parameter Logistik (2PL)</span>"
+    ]
+  },
+  {
+    "objectID": "bab05-model-2pl.html#peran-parameter-a-daya-beda",
+    "href": "bab05-model-2pl.html#peran-parameter-a-daya-beda",
+    "title": "5  Model 2 Parameter Logistik (2PL)",
+    "section": "5.3 Peran Parameter a (Daya Beda)",
+    "text": "5.3 Peran Parameter a (Daya Beda)\nParameter a menentukan kemiringan (slope) kurva ICC. Secara substantif, a menggambarkan seberapa baik item membedakan peserta yang berkemampuan tinggi dari yang berkemampuan rendah.\n\n\nCode\nlibrary(ggplot2)\nlibrary(patchwork)\n\ntheta &lt;- seq(-4, 4, by = 0.05)\nicc_2pl &lt;- function(theta, a, b) 1 / (1 + exp(-a * (theta - b)))\n\n# Panel kiri: variasi nilai a\na_vals  &lt;- c(0.3, 0.7, 1.2, 1.8, 2.5)\nlab_a   &lt;- paste0(\"a = \", a_vals)\ndf_a &lt;- data.frame(\n  theta = rep(theta, length(a_vals)),\n  prob  = unlist(lapply(a_vals, function(a) icc_2pl(theta, a, 0))),\n  item  = factor(rep(lab_a, each = length(theta)), levels = lab_a)\n)\n\np1 &lt;- ggplot(df_a, aes(x = theta, y = prob, color = item)) +\n  geom_line(linewidth = 1.2) +\n  geom_hline(yintercept = 0.5, linetype = \"dashed\", color = \"gray60\") +\n  scale_color_manual(values = c(\"#bdc3c7\",\"#85c1e9\",\"#3498db\",\"#1a5276\",\"#e74c3c\")) +\n  scale_y_continuous(labels = scales::percent, limits = c(0, 1)) +\n  labs(title = \"Pengaruh Parameter a (b = 0 tetap)\",\n       x = \"θ\", y = \"P(benar|θ)\", color = \"Daya beda\") +\n  theme_minimal(base_size = 11) +\n  theme(legend.position = \"right\")\n\n# Panel kanan: tangent di titik infleksi\np2 &lt;- ggplot(data.frame(theta=theta, prob=icc_2pl(theta, 1.5, 0)),\n             aes(x=theta, y=prob)) +\n  geom_line(linewidth=1.3, color=\"#3498db\") +\n  geom_abline(slope=1.5/4, intercept=0.5 - (1.5/4)*0, # slope ≈ Da/4\n              linetype=\"dashed\", color=\"#e74c3c\", linewidth=1) +\n  geom_point(x=0, y=0.5, size=5, color=\"#e74c3c\") +\n  annotate(\"text\", x=1.5, y=0.25,\n           label=\"Slope di b = Da/4\\n= 1.5/4 = 0.375\",\n           color=\"#e74c3c\", size=3.8) +\n  scale_y_continuous(labels=scales::percent, limits=c(0,1)) +\n  labs(title=\"Slope ICC di Titik Infleksi (b = 0, a = 1.5)\",\n       x=\"θ\", y=\"P(benar|θ)\") +\n  theme_minimal(base_size=11)\n\np1 / p2\n\n\n\n\n\n\n\n\nFigure 5.1: Visualisasi Peran Parameter Daya Beda (a)",
+    "crumbs": [
+      "Bagian II: Model-Model IRT",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Model 2 Parameter Logistik (2PL)</span>"
+    ]
+  },
+  {
+    "objectID": "bab05-model-2pl.html#interpretasi-nilai-a",
+    "href": "bab05-model-2pl.html#interpretasi-nilai-a",
+    "title": "5  Model 2 Parameter Logistik (2PL)",
+    "section": "5.4 Interpretasi Nilai a",
+    "text": "5.4 Interpretasi Nilai a\n\n\n\n\nTable 5.1: Panduan Interpretasi Parameter Daya Beda (a)\n\n\n\n\n\n\nNilai a\nKategori\nImplikasi\n\n\n\n\n\n&lt; 0.50\nSangat Lemah\nItem hampir tidak membedakan kemampuan — pertimbangkan hapus\n🔴 |\n\n\n0.50 – 0.79\nLemah\nItem membedakan agak lemah — perlu revisi konstruktif\n🟠 |\n\n\n0.80 – 1.29\nSedang\nItem cukup baik — dapat dipertahankan dengan review konten\n🟡 |\n\n\n1.30 – 1.70\nBaik\nItem membedakan dengan baik — pertahankan\n🟢 |\n\n\n&gt; 1.70\nSangat Baik\nItem membedakan sangat baik — pertahankan dan jadikan item kunci\n🌟 |",
+    "crumbs": [
+      "Bagian II: Model-Model IRT",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Model 2 Parameter Logistik (2PL)</span>"
+    ]
+  },
+  {
+    "objectID": "bab05-model-2pl.html#estimasi-model-2pl-di-r",
+    "href": "bab05-model-2pl.html#estimasi-model-2pl-di-r",
+    "title": "5  Model 2 Parameter Logistik (2PL)",
+    "section": "5.5 Estimasi Model 2PL di R",
+    "text": "5.5 Estimasi Model 2PL di R\n\n5.5.1 Menggunakan mirt\n\n\nCode\nlibrary(mirt)\nlibrary(tidyverse)\n\n# ======================================================\n# SIMULASI DATA 2PL\n# ======================================================\nset.seed(2025)\n\nn_peserta &lt;- 500\nn_item    &lt;- 25\n\na_true    &lt;- runif(n_item, 0.5, 2.5)        # Daya beda bervariasi\nb_true    &lt;- rnorm(n_item, mean = 0, sd = 1) # Kesulitan bervariasi\ntheta_true &lt;- rnorm(n_peserta, mean = 0, sd = 1)\n\n# Generate matriks probabilitas\nprob_mat &lt;- sapply(1:n_item, function(i)\n  1 / (1 + exp(-a_true[i] * (theta_true - b_true[i]))))\n\n# Generate respon dikotomis\ndata_2pl &lt;- matrix(\n  rbinom(n_peserta * n_item, 1, prob_mat),\n  nrow = n_peserta,\n  dimnames = list(\n    paste0(\"P\", 1:n_peserta),\n    paste0(\"Item\", sprintf(\"%02d\", 1:n_item))\n  )\n)\n\ncat(\"=== DATA SIMULASI 2PL ===\\n\")\n\n\n=== DATA SIMULASI 2PL ===\n\n\nCode\ncat(\"Dimensi        :\", dim(data_2pl), \"\\n\")\n\n\nDimensi        : 500 25 \n\n\nCode\ncat(\"Proporsi benar :\", round(mean(data_2pl), 3), \"\\n\")\n\n\nProporsi benar : 0.502 \n\n\nCode\ncat(\"Min a true     :\", round(min(a_true), 3), \"\\n\")\n\n\nMin a true     : 0.548 \n\n\nCode\ncat(\"Max a true     :\", round(max(a_true), 3), \"\\n\\n\")\n\n\nMax a true     : 2.405 \n\n\nCode\n# ======================================================\n# ESTIMASI MODEL 2PL\n# ======================================================\nmodel_2pl &lt;- mirt(\n  data     = data_2pl,\n  model    = 1,\n  itemtype = \"2PL\",\n  SE       = TRUE,\n  verbose  = FALSE\n)\n\ncat(\"=== RINGKASAN MODEL 2PL ===\\n\")\n\n\n=== RINGKASAN MODEL 2PL ===\n\n\nCode\nprint(model_2pl)\n\n\n\nCall:\nmirt(data = data_2pl, model = 1, itemtype = \"2PL\", SE = TRUE, \n    verbose = FALSE)\n\nFull-information item factor analysis with 1 factor(s).\nConverged within 1e-04 tolerance after 23 EM iterations.\nmirt version: 1.45.1 \nM-step optimizer: BFGS \nEM acceleration: Ramsay \nNumber of rectangular quadrature: 61\nLatent density type: Gaussian \n\nInformation matrix estimated with method: Oakes\nSecond-order test: model is a possible local maximum\nCondition number of information matrix =  298.7278\n\nLog-likelihood = -6087.613\nEstimated parameters: 50 \nAIC = 12275.23\nBIC = 12485.96; SABIC = 12327.25\nG2 (33554381) = 5974.48, p = 1\nRMSEA = 0, CFI = NaN, TLI = NaN\n\n\n\n\nCode\nlibrary(kableExtra)\n\n# Ekstrak parameter dalam skala IRT (printSE bukan argumen valid — dihapus)\nparams_2pl &lt;- coef(model_2pl, IRTpars = TRUE, simplify = TRUE)$items\n\nparams_tbl &lt;- data.frame(\n  Item    = paste0(\"Item\", sprintf(\"%02d\", 1:n_item)),\n  a_true  = round(a_true, 3),\n  a_est   = round(params_2pl[, \"a\"], 3),\n  b_true  = round(b_true, 3),\n  b_est   = round(params_2pl[, \"b\"], 3),\n  Kat_a   = cut(params_2pl[, \"a\"],\n                breaks = c(0, 0.5, 0.8, 1.3, 1.7, Inf),\n                labels = c(\"Sangat Lemah\",\"Lemah\",\"Sedang\",\"Baik\",\"Sangat Baik\")),\n  Keputusan = ifelse(params_2pl[, \"a\"] &lt; 0.5, \"Hapus\", \"Pertahankan\")\n)\n\n# Buat tabel, tambah warna baris secara kondisional (hindari error jika which() kosong)\ntbl_2pl &lt;- kable(params_tbl,\n      col.names = c(\"Item\",\"a True\",\"a Est\",\"b True\",\"b Est\",\"Kategori a\",\"Keputusan\"),\n      align = \"c\") |&gt;\n  kable_styling(bootstrap_options = c(\"striped\",\"hover\"), full_width = FALSE)\n\nidx_hapus  &lt;- which(params_tbl$Keputusan == \"Hapus\")\nidx_terbaik &lt;- which(as.character(params_tbl$Kat_a) == \"Sangat Baik\")\nif (length(idx_hapus)   &gt; 0) tbl_2pl &lt;- row_spec(tbl_2pl, idx_hapus,   background = \"#fdecea\")\nif (length(idx_terbaik) &gt; 0) tbl_2pl &lt;- row_spec(tbl_2pl, idx_terbaik, background = \"#e8f5e9\")\ntbl_2pl\n\n\n\n\nTable 5.2: Parameter Item Lengkap — Model 2PL\n\n\n\n\n\n\n\nItem\na True\na Est\nb True\nb Est\nKategori a\nKeputusan\n\n\n\n\nItem01\nItem01\n1.965\n1.921\n1.394\n1.455\nSangat Baik\nPertahankan\n\n\nItem02\nItem02\n1.452\n1.312\n-0.845\n-0.983\nBaik\nPertahankan\n\n\nItem03\nItem03\n1.528\n2.136\n-0.645\n-0.487\nSangat Baik\nPertahankan\n\n\nItem04\nItem04\n1.497\n1.473\n-1.064\n-1.103\nBaik\nPertahankan\n\n\nItem05\nItem05\n2.061\n1.938\n0.115\n0.089\nSangat Baik\nPertahankan\n\n\nItem06\nItem06\n1.509\n1.553\n-1.205\n-1.527\nBaik\nPertahankan\n\n\nItem07\nItem07\n2.297\n2.530\n-0.928\n-0.903\nSangat Baik\nPertahankan\n\n\nItem08\nItem08\n0.756\n0.869\n1.312\n1.154\nSedang\nPertahankan\n\n\nItem09\nItem09\n1.789\n1.575\n1.479\n1.612\nBaik\nPertahankan\n\n\nItem10\nItem10\n1.639\n1.593\n0.895\n0.935\nBaik\nPertahankan\n\n\nItem11\nItem11\n1.371\n1.475\n0.890\n0.746\nBaik\nPertahankan\n\n\nItem12\nItem12\n2.405\n2.633\n-1.121\n-1.170\nSangat Baik\nPertahankan\n\n\nItem13\nItem13\n1.809\n1.782\n0.102\n0.086\nSangat Baik\nPertahankan\n\n\nItem14\nItem14\n0.548\n0.613\n0.631\n0.383\nLemah\nPertahankan\n\n\nItem15\nItem15\n1.436\n1.655\n-1.119\n-1.039\nBaik\nPertahankan\n\n\nItem16\nItem16\n2.215\n2.179\n-0.363\n-0.355\nSangat Baik\nPertahankan\n\n\nItem17\nItem17\n1.230\n1.246\n0.228\n0.267\nSedang\nPertahankan\n\n\nItem18\nItem18\n1.231\n1.110\n0.255\n0.151\nSedang\nPertahankan\n\n\nItem19\nItem19\n2.017\n2.283\n0.650\n0.439\nSangat Baik\nPertahankan\n\n\nItem20\nItem20\n0.715\n0.655\n-0.781\n-0.893\nLemah\nPertahankan\n\n\nItem21\nItem21\n1.192\n1.331\n0.732\n0.602\nBaik\nPertahankan\n\n\nItem22\nItem22\n2.129\n2.153\n-0.432\n-0.404\nSangat Baik\nPertahankan\n\n\nItem23\nItem23\n0.579\n0.583\n-0.893\n-0.751\nLemah\nPertahankan\n\n\nItem24\nItem24\n1.931\n2.974\n2.630\n2.246\nSangat Baik\nPertahankan\n\n\nItem25\nItem25\n1.174\n1.091\n-0.176\n-0.259\nSedang\nPertahankan\n\n\n\n\n\n\n\n\n\n\n5.5.2 Parameter Recovery Plot\n\nCode\n# Recovery a\nr_a &lt;- round(cor(a_true, params_2pl[,\"a\"]), 3)\nggplot(data.frame(a_true, a_est = params_2pl[,\"a\"]),\n       aes(x = a_true, y = a_est)) +\n  geom_point(color = \"#3498db\", size = 3, alpha = 0.8) +\n  geom_abline(slope=1, intercept=0, linetype=\"dashed\", color=\"#e74c3c\", linewidth=1) +\n  annotate(\"text\", x=0.7, y=2.4, label=paste(\"r =\", r_a),\n           size=5, fontface=\"bold\", color=\"#1a5276\") +\n  labs(title=\"Recovery: Parameter a\",\n       subtitle=\"Garis merah = garis sempurna\",\n       x=\"a True\", y=\"a Estimasi\") +\n  theme_minimal(base_size=12)\n\n# Recovery b\nr_b &lt;- round(cor(b_true, params_2pl[,\"b\"]), 3)\nggplot(data.frame(b_true, b_est = params_2pl[,\"b\"]),\n       aes(x = b_true, y = b_est)) +\n  geom_point(color = \"#27ae60\", size = 3, alpha = 0.8) +\n  geom_abline(slope=1, intercept=0, linetype=\"dashed\", color=\"#e74c3c\", linewidth=1) +\n  annotate(\"text\", x=-2.5, y=3, label=paste(\"r =\", r_b),\n           size=5, fontface=\"bold\", color=\"#1a5276\") +\n  labs(title=\"Recovery: Parameter b\",\n       subtitle=\"Garis merah = garis sempurna\",\n       x=\"b True\", y=\"b Estimasi\") +\n  theme_minimal(base_size=12)\n\n\n\n\n\n\n\n\n\n\n\n\n(a) Recovery Parameter a\n\n\n\n\n\n\n\n\n\n\n\n(b) Recovery Parameter b\n\n\n\n\n\n\n\nFigure 5.2: Parameter Recovery — Model 2PL",
+    "crumbs": [
+      "Bagian II: Model-Model IRT",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Model 2 Parameter Logistik (2PL)</span>"
+    ]
+  },
+  {
+    "objectID": "bab05-model-2pl.html#icc-seluruh-item-model-2pl",
+    "href": "bab05-model-2pl.html#icc-seluruh-item-model-2pl",
+    "title": "5  Model 2 Parameter Logistik (2PL)",
+    "section": "5.6 ICC Seluruh Item — Model 2PL",
+    "text": "5.6 ICC Seluruh Item — Model 2PL\n\n\nCode\ndf_all_icc &lt;- do.call(rbind, lapply(1:n_item, function(i) {\n  data.frame(\n    theta = theta,\n    prob  = icc_2pl(theta, params_2pl[i,\"a\"], params_2pl[i,\"b\"]),\n    item  = paste0(\"Item\", sprintf(\"%02d\", i)),\n    daya_beda = cut(params_2pl[i,\"a\"],\n                    breaks=c(0,0.8,1.3,Inf),\n                    labels=c(\"Rendah (&lt;0.8)\",\"Sedang (0.8-1.3)\",\"Tinggi (&gt;1.3)\"))\n  )\n}))\n\nggplot(df_all_icc, aes(x=theta, y=prob, group=item, color=daya_beda)) +\n  geom_line(alpha=0.7, linewidth=0.9) +\n  geom_hline(yintercept=0.5, linetype=\"dashed\", color=\"gray50\") +\n  scale_color_manual(values=c(\"#bdc3c7\",\"#3498db\",\"#e74c3c\")) +\n  scale_y_continuous(labels=scales::percent, limits=c(0,1)) +\n  labs(\n    title    = \"ICC Semua Item — Model 2PL\",\n    subtitle = \"Perbedaan kemiringan kurva = perbedaan daya beda item\",\n    x = \"Kemampuan (θ)\", y = \"P(benar|θ)\",\n    color = \"Daya Beda (a)\"\n  ) +\n  theme_minimal(base_size=12) +\n  theme(legend.position=\"bottom\")\n\n\n\n\n\n\n\n\nFigure 5.3: ICC Seluruh Item — Model 2PL (Perbedaan Slope Terlihat Jelas)",
+    "crumbs": [
+      "Bagian II: Model-Model IRT",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Model 2 Parameter Logistik (2PL)</span>"
+    ]
+  },
+  {
+    "objectID": "bab05-model-2pl.html#item-information-function-model-2pl",
+    "href": "bab05-model-2pl.html#item-information-function-model-2pl",
+    "title": "5  Model 2 Parameter Logistik (2PL)",
+    "section": "5.7 Item Information Function — Model 2PL",
+    "text": "5.7 Item Information Function — Model 2PL\n\n\nCode\n# IIF untuk model 2PL\niif_2pl &lt;- function(theta, a, b) {\n  p &lt;- icc_2pl(theta, a, b)\n  q &lt;- 1 - p\n  a^2 * p * q\n}\n\n# Pilih beberapa item representatif — which.min() selalu return 1 index (tidak NA)\nidx_pilih &lt;- c(\n  which.min(params_2pl[,\"a\"]),                              # daya beda terendah\n  which.min(abs(params_2pl[,\"a\"] - median(params_2pl[,\"a\"]))),  # paling dekat median\n  which.max(params_2pl[,\"a\"])                               # daya beda tertinggi\n)\n\ndf_iif_sel &lt;- do.call(rbind, lapply(idx_pilih, function(i) {\n  data.frame(\n    theta = theta,\n    info  = iif_2pl(theta, params_2pl[i,\"a\"], params_2pl[i,\"b\"]),\n    item  = sprintf(\"Item%02d (a=%.2f, b=%.2f)\",\n                    i, params_2pl[i,\"a\"], params_2pl[i,\"b\"])\n  )\n}))\n\nggplot(df_iif_sel, aes(x=theta, y=info, color=item)) +\n  geom_line(linewidth=1.4) +\n  scale_color_manual(values=c(\"#bdc3c7\",\"#3498db\",\"#e74c3c\")) +\n  labs(\n    title    = \"Item Information Function — Model 2PL\",\n    subtitle = \"Item dengan a lebih tinggi menghasilkan informasi jauh lebih besar\",\n    x = \"Kemampuan (θ)\", y = \"Informasi Item I(θ)\",\n    color = \"Item\"\n  ) +\n  theme_minimal(base_size=12) +\n  theme(legend.position=\"bottom\",\n        legend.text = element_text(size=9))\n\n\n\n\n\n\n\n\nFigure 5.4: Item Information Function — Model 2PL",
+    "crumbs": [
+      "Bagian II: Model-Model IRT",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Model 2 Parameter Logistik (2PL)</span>"
+    ]
+  },
+  {
+    "objectID": "bab05-model-2pl.html#test-information-function-tif",
+    "href": "bab05-model-2pl.html#test-information-function-tif",
+    "title": "5  Model 2 Parameter Logistik (2PL)",
+    "section": "5.8 Test Information Function (TIF)",
+    "text": "5.8 Test Information Function (TIF)\n\n\nCode\n# TIF = jumlah semua IIF\ntif_vals &lt;- rowSums(sapply(1:n_item, function(i)\n  iif_2pl(theta, params_2pl[i,\"a\"], params_2pl[i,\"b\"])))\n\nsem_vals &lt;- 1 / sqrt(tif_vals)\n\ndf_tif &lt;- data.frame(\n  theta = theta,\n  tif   = tif_vals,\n  sem   = sem_vals\n)\n\np_tif &lt;- ggplot(df_tif, aes(x=theta)) +\n  geom_line(aes(y=tif), color=\"#3498db\", linewidth=1.5) +\n  geom_area(aes(y=tif), fill=\"#3498db\", alpha=0.15) +\n  labs(title=\"Test Information Function (TIF)\",\n       x=\"Kemampuan (θ)\", y=\"Total Informasi\") +\n  theme_minimal(base_size=12)\n\np_sem &lt;- ggplot(df_tif, aes(x=theta)) +\n  geom_line(aes(y=sem), color=\"#e74c3c\", linewidth=1.5) +\n  geom_ribbon(aes(ymin=0, ymax=sem), fill=\"#e74c3c\", alpha=0.15) +\n  geom_hline(yintercept=1/sqrt(5), linetype=\"dashed\", color=\"gray40\") +\n  annotate(\"text\", x=3, y=1/sqrt(5)+0.03,\n           label=\"SEM = 0.45\\n(Rel ≈ 0.80)\", color=\"gray40\", size=3.5) +\n  labs(title=\"Standard Error of Measurement (SEM)\",\n       x=\"Kemampuan (θ)\", y=\"SEM(θ)\") +\n  theme_minimal(base_size=12)\n\np_tif / p_sem\n\n\n\n\n\n\n\n\nFigure 5.5: Test Information Function dan Standard Error — Model 2PL",
+    "crumbs": [
+      "Bagian II: Model-Model IRT",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Model 2 Parameter Logistik (2PL)</span>"
+    ]
+  },
+  {
+    "objectID": "bab05-model-2pl.html#reliabilitas-marginal",
+    "href": "bab05-model-2pl.html#reliabilitas-marginal",
+    "title": "5  Model 2 Parameter Logistik (2PL)",
+    "section": "5.9 Reliabilitas Marginal",
+    "text": "5.9 Reliabilitas Marginal\n\n\nCode\n# Reliabilitas berdasarkan EAP\n# empirical_rxx() membutuhkan matriks 2 kolom: [theta, SE_theta]\ntheta_eap &lt;- fscores(model_2pl, method = \"EAP\", full.scores.SE = TRUE)\nrel_eap   &lt;- empirical_rxx(theta_eap)\n\ncat(\"=== RELIABILITAS MODEL 2PL ===\\n\")\n\n\n=== RELIABILITAS MODEL 2PL ===\n\n\nCode\ncat(sprintf(\"EAP Reliability (Marginal Rxx) : %.4f\\n\", rel_eap))\n\n\nEAP Reliability (Marginal Rxx) : 0.8922\n\n\nCode\ncat(sprintf(\"Interpretasi: %s\\n\",\n    ifelse(rel_eap &gt;= 0.90, \"Sangat Baik (≥ .90)\",\n    ifelse(rel_eap &gt;= 0.80, \"Baik (.80–.89)\",\n    ifelse(rel_eap &gt;= 0.70, \"Cukup (.70–.79)\", \"Perlu Peningkatan (&lt; .70)\")))))\n\n\nInterpretasi: Baik (.80–.89)",
+    "crumbs": [
+      "Bagian II: Model-Model IRT",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Model 2 Parameter Logistik (2PL)</span>"
+    ]
+  },
+  {
+    "objectID": "bab05-model-2pl.html#item-fit-model-2pl",
+    "href": "bab05-model-2pl.html#item-fit-model-2pl",
+    "title": "5  Model 2 Parameter Logistik (2PL)",
+    "section": "5.10 Item Fit — Model 2PL",
+    "text": "5.10 Item Fit — Model 2PL\n\n\nCode\nfit_2pl &lt;- itemfit(model_2pl, fit_stats=\"S_X2\")\n\n# Clamp p-value agar -log10() tidak menghasilkan Inf\np_raw05 &lt;- pmax(pmin(fit_2pl$p.S_X2, 1), 1e-6)\n\nfit_tbl2 &lt;- data.frame(\n  Item     = paste0(\"Item\", sprintf(\"%02d\", 1:n_item)),\n  S_X2     = round(fit_2pl$S_X2, 3),\n  df       = fit_2pl$df.S_X2,\n  p_value  = round(p_raw05, 6),\n  neglog_p = -log10(p_raw05),\n  Status   = ifelse(p_raw05 &lt; 0.05, \"Misfit \\u26a0\\ufe0f\", \"Fit \\u2713\")\n)\n\nbatas05 &lt;- -log10(0.05)\n\nggplot(fit_tbl2, aes(x=reorder(Item, neglog_p), y=neglog_p, fill=Status)) +\n  geom_col(width=0.65) +\n  geom_hline(yintercept=batas05, linetype=\"dashed\",\n             color=\"#c0392b\", linewidth=1) +\n  coord_flip() +\n  scale_fill_manual(values=c(\"Fit \\u2713\"=\"#27ae60\",\n                              \"Misfit \\u26a0\\ufe0f\"=\"#e74c3c\")) +\n  geom_label(aes(x=1, y=batas05, label=\"p = .05\"),\n             inherit.aes=FALSE,\n             fill=\"white\", color=\"#c0392b\", size=3.2, hjust=-0.1) +\n  labs(\n    title    = \"Item Fit S-X\\u00b2 \\u2014 Model 2PL\",\n    subtitle = \"-log\\u2081\\u2080(p): nilai lebih tinggi = lebih bermasalah\\nGaris merah = batas signifikan (p &lt; .05)\",\n    x = NULL, y = \"-log\\u2081\\u2080(p-value)\", fill=\"\"\n  ) +\n  theme_minimal(base_size=12) +\n  theme(legend.position=\"bottom\")\n\n\n\n\n\n\n\n\nFigure 5.6: Item Fit S-X² — Model 2PL",
+    "crumbs": [
+      "Bagian II: Model-Model IRT",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Model 2 Parameter Logistik (2PL)</span>"
+    ]
+  },
+  {
+    "objectID": "bab05-model-2pl.html#peta-item-bank-2pl",
+    "href": "bab05-model-2pl.html#peta-item-bank-2pl",
+    "title": "5  Model 2 Parameter Logistik (2PL)",
+    "section": "5.11 Peta Item Bank 2PL",
+    "text": "5.11 Peta Item Bank 2PL\n\n\nCode\nlibrary(ggrepel)\n\ndf_bank &lt;- data.frame(\n  Item    = paste0(\"Item\", sprintf(\"%02d\", 1:n_item)),\n  a       = params_2pl[,\"a\"],\n  b       = params_2pl[,\"b\"],\n  fit_ok  = fit_2pl$p.S_X2 &gt;= 0.05,\n  info_max = sapply(1:n_item, function(i)\n    max(iif_2pl(theta, params_2pl[i,\"a\"], params_2pl[i,\"b\"])))\n)\n\nggplot(df_bank, aes(x=b, y=a, color=fit_ok, size=info_max, label=Item)) +\n  geom_point(alpha=0.8) +\n  ggrepel::geom_text_repel(size=2.8, max.overlaps=20,\n                            color=\"gray30\", show.legend=FALSE) +\n  geom_vline(xintercept=c(-2, 2), linetype=\"dashed\", color=\"gray60\", alpha=0.7) +\n  geom_hline(yintercept=c(0.5, 1.5), linetype=\"dashed\", color=\"gray60\", alpha=0.7) +\n  annotate(\"rect\", xmin=-2, xmax=2, ymin=0.5, ymax=3.5,\n           fill=\"#27ae60\", alpha=0.05) +\n  annotate(\"text\", x=0, y=3.3, label=\"Zona Optimal\",\n           color=\"#27ae60\", size=4, fontface=\"bold\") +\n  scale_color_manual(values=c(\"FALSE\"=\"#e74c3c\",\"TRUE\"=\"#3498db\"),\n                     labels=c(\"FALSE\"=\"Misfit\",\"TRUE\"=\"Fit\")) +\n  scale_size_continuous(range=c(2,7)) +\n  labs(\n    title = \"Peta Item Bank — Model 2PL\",\n    subtitle = \"Warna = fit status | Ukuran = informasi maksimum item\\nZona hijau = rentang parameter optimal\",\n    x = \"Kesulitan (b)\", y = \"Daya Beda (a)\",\n    color = \"Item Fit\", size = \"Info Max\"\n  ) +\n  theme_minimal(base_size=12) +\n  theme(legend.position=\"right\")\n\n\n\n\n\n\n\n\nFigure 5.7: Peta Item Bank: Daya Beda vs Kesulitan",
+    "crumbs": [
+      "Bagian II: Model-Model IRT",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Model 2 Parameter Logistik (2PL)</span>"
+    ]
+  },
+  {
+    "objectID": "bab05-model-2pl.html#latihan-mandiri",
+    "href": "bab05-model-2pl.html#latihan-mandiri",
+    "title": "5  Model 2 Parameter Logistik (2PL)",
+    "section": "Latihan Mandiri",
+    "text": "Latihan Mandiri\n\nDari tabel parameter yang dihasilkan, identifikasi 3 item terbaik (a tinggi, b dalam rentang ±1.5, fit) dan 3 item yang perlu dihapus. Buat argumen untuk keputusan tersebut.\nBuat TIF untuk subset 10 item terbaik dan bandingkan dengan TIF untuk keseluruhan 25 item. Di rentang θ mana pengurangan informasi paling signifikan?\nUlangi estimasi dengan ukuran sampel n = 100, n = 200, dan n = 500. Bagaimana ukuran sampel mempengaruhi kualitas parameter recovery untuk model 2PL?",
+    "crumbs": [
+      "Bagian II: Model-Model IRT",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Model 2 Parameter Logistik (2PL)</span>"
+    ]
+  },
+  {
+    "objectID": "bab06-model-3pl.html",
+    "href": "bab06-model-3pl.html",
+    "title": "6  Model 3 Parameter Logistik (3PL)",
+    "section": "",
+    "text": "6.1 Konsep Dasar Model 3PL\nModel 3 Parameter Logistik (3PL) adalah model IRT paling lengkap untuk data dikotomis. Selain parameter kesulitan (b) dan daya beda (a), model ini menambahkan parameter tebakan (c) yang merepresentasikan kemungkinan menjawab benar secara kebetulan — bahkan oleh peserta yang berkemampuan sangat rendah.\nModel 3PL paling relevan untuk: - Tes pilihan ganda (multiple choice) - Tes dengan jawaban benar/salah yang terbatas opsi - Seleksi berskala besar (SBMPTN, CPNS, GRE, SAT, TOEFL)",
+    "crumbs": [
+      "Bagian II: Model-Model IRT",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Model 3 Parameter Logistik (3PL)</span>"
+    ]
+  },
+  {
+    "objectID": "bab06-model-3pl.html#formula-model-3pl",
+    "href": "bab06-model-3pl.html#formula-model-3pl",
+    "title": "6  Model 3 Parameter Logistik (3PL)",
+    "section": "6.2 Formula Model 3PL",
+    "text": "6.2 Formula Model 3PL\n\\[P(X_{ij} = 1 \\mid \\theta_j, a_i, b_i, c_i) = c_i + (1 - c_i) \\cdot \\frac{1}{1 + e^{-Da_i(\\theta_j - b_i)}}\\]\nDi mana:\n\n\n\n\n\n\n\n\n\nSimbol\nNama\nRentang Umum\nInterpretasi\n\n\n\n\n\\(c_i\\)\nPseudo-guessing\n0.00 – 0.35\nProbabilitas minimum menjawab benar\n\n\n\\(a_i\\)\nDiscrimination\n0.5 – 2.5\nKemiringan kurva\n\n\n\\(b_i\\)\nDifficulty\n−3 hingga +3\nLokasi kurva (dalam logit)\n\n\n\n\n\n\n\n\n\nWarningPergeseran Makna Parameter b pada 3PL\n\n\n\nDalam model 1PL dan 2PL, \\(b\\) adalah nilai θ di mana P = 0.50.\nDalam model 3PL, \\(b\\) adalah nilai θ di mana:\n\\[P = c + \\frac{1 - c}{2} = \\frac{1 + c}{2}\\]\nMisalnya jika \\(c = 0.25\\): maka \\(P\\) di titik \\(b\\) = \\(\\frac{1+0.25}{2}\\) = 0.625, bukan 0.50.",
+    "crumbs": [
+      "Bagian II: Model-Model IRT",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Model 3 Parameter Logistik (3PL)</span>"
+    ]
+  },
+  {
+    "objectID": "bab06-model-3pl.html#visualisasi-efek-parameter-c",
+    "href": "bab06-model-3pl.html#visualisasi-efek-parameter-c",
+    "title": "6  Model 3 Parameter Logistik (3PL)",
+    "section": "6.3 Visualisasi Efek Parameter c",
+    "text": "6.3 Visualisasi Efek Parameter c\n\n\nCode\nlibrary(ggplot2)\nlibrary(patchwork)\n\ntheta &lt;- seq(-4, 4, by = 0.05)\n\nicc_3pl &lt;- function(theta, a = 1, b = 0, c = 0) {\n  c + (1 - c) / (1 + exp(-a * (theta - b)))\n}\n\n# Panel 1: variasi c\nc_vals  &lt;- c(0.00, 0.10, 0.20, 0.25, 0.33)\nlab_c   &lt;- paste0(\"c = \", c_vals)\n\ndf_c &lt;- data.frame(\n  theta = rep(theta, length(c_vals)),\n  prob  = unlist(lapply(c_vals, function(c) icc_3pl(theta, 1.2, 0, c))),\n  item  = factor(rep(lab_c, each=length(theta)), levels=lab_c)\n)\n\np1 &lt;- ggplot(df_c, aes(x=theta, y=prob, color=item)) +\n  geom_line(linewidth=1.2) +\n  geom_hline(yintercept=0.5, linetype=\"dashed\", color=\"gray50\") +\n  scale_color_manual(values=c(\"#2c3e50\",\"#2980b9\",\"#27ae60\",\"#f39c12\",\"#e74c3c\")) +\n  scale_y_continuous(labels=scales::percent, limits=c(0,1)) +\n  labs(title=\"Pengaruh c (a=1.2, b=0 tetap)\",\n       subtitle=\"Kurva bergeser naik dan batas bawah meningkat\",\n       x=\"θ\", y=\"P(benar|θ)\", color=\"Parameter c\") +\n  theme_minimal(base_size=11) + theme(legend.position=\"right\")\n\n# Panel 2: perbandingan 1PL, 2PL, 3PL\ndf_model &lt;- data.frame(\n  theta = rep(theta, 3),\n  prob  = c(icc_3pl(theta, 1, 0, 0),\n            icc_3pl(theta, 1.5, 0, 0),\n            icc_3pl(theta, 1.5, 0, 0.25)),\n  model = rep(c(\"1PL (a=1, b=0, c=0)\",\n                \"2PL (a=1.5, b=0, c=0)\",\n                \"3PL (a=1.5, b=0, c=0.25)\"), each=length(theta))\n)\n\np2 &lt;- ggplot(df_model, aes(x=theta, y=prob, color=model, linetype=model)) +\n  geom_line(linewidth=1.3) +\n  scale_color_manual(values=c(\"#bdc3c7\",\"#3498db\",\"#e74c3c\")) +\n  scale_linetype_manual(values=c(\"dotted\",\"dashed\",\"solid\")) +\n  scale_y_continuous(labels=scales::percent, limits=c(0,1)) +\n  labs(title=\"Perbandingan ICC: 1PL vs 2PL vs 3PL\",\n       subtitle=\"Item yang sama — efek penambahan parameter terlihat jelas\",\n       x=\"θ\", y=\"P(benar|θ)\", color=\"Model\", linetype=\"Model\") +\n  theme_minimal(base_size=11) + theme(legend.position=\"bottom\")\n\np1 / p2\n\n\n\n\n\n\n\n\nFigure 6.1: Pengaruh Parameter c terhadap ICC — Model 3PL",
+    "crumbs": [
+      "Bagian II: Model-Model IRT",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Model 3 Parameter Logistik (3PL)</span>"
+    ]
+  },
+  {
+    "objectID": "bab06-model-3pl.html#anatomi-icc-model-3pl",
+    "href": "bab06-model-3pl.html#anatomi-icc-model-3pl",
+    "title": "6  Model 3 Parameter Logistik (3PL)",
+    "section": "6.4 Anatomi ICC Model 3PL",
+    "text": "6.4 Anatomi ICC Model 3PL\n\n\nCode\na_ex &lt;- 1.5; b_ex &lt;- 0.5; c_ex &lt;- 0.20\n\ndf_ex &lt;- data.frame(theta=theta, prob=icc_3pl(theta, a_ex, b_ex, c_ex))\n\n# Nilai P di titik b\nP_di_b  &lt;- c_ex + (1 - c_ex)/2\nb_star_x &lt;- b_ex  # titik infleksi sebenarnya lebih kompleks; approx di b\n\nggplot(df_ex, aes(x=theta, y=prob)) +\n  geom_ribbon(aes(ymin=c_ex, ymax=prob), fill=\"#3498db\", alpha=0.15) +\n  geom_ribbon(aes(ymin=0, ymax=c_ex), fill=\"#f39c12\", alpha=0.25) +\n  geom_line(linewidth=1.5, color=\"#3498db\") +\n  # Batas bawah c\n  geom_hline(yintercept=c_ex, linetype=\"dashed\", color=\"#f39c12\", linewidth=1) +\n  # P = 1\n  geom_hline(yintercept=1, linetype=\"dashed\", color=\"gray60\") +\n  # Titik b\n  geom_vline(xintercept=b_ex, linetype=\"dashed\", color=\"#e74c3c\", linewidth=0.9) +\n  geom_point(x=b_ex, y=P_di_b, size=5, color=\"#e74c3c\") +\n  # Anotasi\n  annotate(\"text\", x=-3.5, y=c_ex+0.04,\n           label=sprintf(\"Batas bawah c = %.2f\", c_ex),\n           color=\"#f39c12\", size=3.8, fontface=\"bold\", hjust=0) +\n  annotate(\"text\", x=-3.5, y=0.08,\n           label=\"Zona 'tebakan'\",\n           color=\"#f39c12\", size=3.5, hjust=0) +\n  annotate(\"text\", x=b_ex+0.15, y=P_di_b-0.08,\n           label=sprintf(\"b = %.1f\\nP = (1+c)/2 = %.2f\", b_ex, P_di_b),\n           color=\"#e74c3c\", size=3.8, hjust=0) +\n  annotate(\"text\", x=-1.5, y=0.85,\n           label=sprintf(\"a = %.1f (slope)\", a_ex),\n           color=\"#2c3e50\", size=3.8) +\n  scale_y_continuous(labels=scales::percent, limits=c(0,1),\n                     breaks=c(0, c_ex, 0.5, P_di_b, 0.75, 1)) +\n  labs(\n    title    = sprintf(\"Anatomi ICC Model 3PL (a=%.1f, b=%.1f, c=%.2f)\",\n                       a_ex, b_ex, c_ex),\n    subtitle = \"Area oranye = kontribusi tebakan | Area biru = kontribusi kemampuan sejati\",\n    x = \"Kemampuan (θ)\", y = \"P(benar|θ)\"\n  ) +\n  theme_minimal(base_size=12)\n\n\n\n\n\n\n\n\nFigure 6.2: Anatomi Lengkap ICC — Model 3PL",
+    "crumbs": [
+      "Bagian II: Model-Model IRT",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Model 3 Parameter Logistik (3PL)</span>"
+    ]
+  },
+  {
+    "objectID": "bab06-model-3pl.html#estimasi-model-3pl-di-r",
+    "href": "bab06-model-3pl.html#estimasi-model-3pl-di-r",
+    "title": "6  Model 3 Parameter Logistik (3PL)",
+    "section": "6.5 Estimasi Model 3PL di R",
+    "text": "6.5 Estimasi Model 3PL di R\n\n\n\n\n\n\nImportantPersyaratan Sampel Model 3PL\n\n\n\nModel 3PL memerlukan sampel minimal 500–1000 peserta untuk estimasi parameter c yang stabil. Dengan sampel kecil, parameter c sering tidak stabil dan tidak dapat diinterpretasikan dengan baik.\n\n\n\n\nCode\nlibrary(mirt)\nlibrary(tidyverse)\n\n# ======================================================\n# SIMULASI DATA 3PL\n# ======================================================\nset.seed(2025)\n\nn_peserta &lt;- 800   # Sampel lebih besar untuk 3PL\nn_item    &lt;- 20\n\na_true  &lt;- runif(n_item, 0.7, 2.0)\nb_true  &lt;- rnorm(n_item, 0, 1)\nc_true  &lt;- runif(n_item, 0.05, 0.30)   # Parameter tebakan\ntheta_true &lt;- rnorm(n_peserta, 0, 1)\n\n# Generate data\nprob_mat &lt;- sapply(1:n_item, function(i)\n  c_true[i] + (1 - c_true[i]) / (1 + exp(-a_true[i] * (theta_true - b_true[i]))))\n\ndata_3pl &lt;- matrix(\n  rbinom(n_peserta * n_item, 1, prob_mat),\n  nrow = n_peserta,\n  dimnames = list(\n    paste0(\"P\", 1:n_peserta),\n    paste0(\"Item\", sprintf(\"%02d\", 1:n_item))\n  )\n)\n\ncat(\"=== DATA SIMULASI 3PL ===\\n\")\n\n\n=== DATA SIMULASI 3PL ===\n\n\nCode\ncat(\"Dimensi          :\", dim(data_3pl), \"\\n\")\n\n\nDimensi          : 800 20 \n\n\nCode\ncat(\"Proporsi benar   :\", round(mean(data_3pl), 3), \"\\n\")\n\n\nProporsi benar   : 0.574 \n\n\nCode\ncat(\"Range a true     :\", round(range(a_true), 2), \"\\n\")\n\n\nRange a true     : 0.73 1.94 \n\n\nCode\ncat(\"Range b true     :\", round(range(b_true), 2), \"\\n\")\n\n\nRange b true     : -1.76 2.85 \n\n\nCode\ncat(\"Range c true     :\", round(range(c_true), 2), \"\\n\\n\")\n\n\nRange c true     : 0.07 0.3 \n\n\nCode\n# ======================================================\n# ESTIMASI MODEL 3PL\n# ======================================================\nmodel_3pl &lt;- mirt(\n  data      = data_3pl,\n  model     = 1,\n  itemtype  = \"3PL\",\n  SE        = TRUE,\n  verbose   = FALSE,\n  technical = list(NCYCLES = 3000)\n)\n\ncat(\"=== RINGKASAN MODEL 3PL ===\\n\")\n\n\n=== RINGKASAN MODEL 3PL ===\n\n\nCode\nprint(model_3pl)\n\n\n\nCall:\nmirt(data = data_3pl, model = 1, itemtype = \"3PL\", SE = TRUE, \n    verbose = FALSE, technical = list(NCYCLES = 3000))\n\nFull-information item factor analysis with 1 factor(s).\nFAILED TO CONVERGE within 1e-04 tolerance after 3000 EM iterations.\nmirt version: 1.45.1 \nM-step optimizer: BFGS \nEM acceleration: Ramsay \nNumber of rectangular quadrature: 61\nLatent density type: Gaussian \n\nInformation matrix estimated with method: Oakes\nSecond-order test: model is a possible local maximum\nCondition number of information matrix =  69926.92\n\nLog-likelihood = -8847.859\nEstimated parameters: 60 \nAIC = 17815.72\nBIC = 18096.8; SABIC = 17906.26\nG2 (1048515) = 7159.13, p = 1\nRMSEA = 0, CFI = NaN, TLI = NaN\n\n\n\n\nCode\nlibrary(kableExtra)\n\nparams_3pl &lt;- coef(model_3pl, IRTpars=TRUE, simplify=TRUE)$items\n\nparams_tbl3 &lt;- data.frame(\n  Item   = paste0(\"Item\", sprintf(\"%02d\", 1:n_item)),\n  a_true = round(a_true, 3),\n  a_est  = round(params_3pl[,\"a\"], 3),\n  b_true = round(b_true, 3),\n  b_est  = round(params_3pl[,\"b\"], 3),\n  c_true = round(c_true, 3),\n  c_est  = round(params_3pl[,\"g\"], 3),\n  Flag   = ifelse(params_3pl[,\"g\"] &gt; 0.35, \"⚠ c tinggi\",\n           ifelse(params_3pl[,\"a\"] &lt; 0.5, \"⚠ a lemah\", \"✓\"))\n)\n\nkable(params_tbl3,\n      col.names=c(\"Item\",\"a True\",\"a Est\",\"b True\",\"b Est\",\"c True\",\"c Est\",\"Status\"),\n      align=\"c\") |&gt;\n  kable_styling(bootstrap_options=c(\"striped\",\"hover\"), full_width=FALSE) -&gt; tbl_3pl\n\nidx_flag &lt;- which(params_tbl3$Flag != \"✓\")\nif (length(idx_flag) &gt; 0) tbl_3pl &lt;- row_spec(tbl_3pl, idx_flag, background=\"#fff3cd\")\ntbl_3pl\n\n\n\n\nTable 6.1: Parameter Item Lengkap — Model 3PL\n\n\n\n\n\n\n\nItem\na True\na Est\nb True\nb Est\nc True\nc Est\nStatus\n\n\n\n\nItem01\nItem01\n1.652\n1.575\n-0.396\n-0.577\n0.088\n0.000\n✓\n\n\nItem02\nItem02\n1.318\n0.856\n-1.755\n-2.757\n0.236\n0.011\n✓\n\n\nItem03\nItem03\n1.368\n1.219\n-0.421\n-0.916\n0.291\n0.131\n✓\n\n\nItem04\nItem04\n1.348\n1.341\n0.765\n0.715\n0.104\n0.100\n✓\n\n\nItem05\nItem05\n1.714\n1.552\n1.066\n1.007\n0.075\n0.022\n✓\n\n\nItem06\nItem06\n1.356\n1.981\n-0.194\n0.120\n0.242\n0.332\n✓\n\n\nItem07\nItem07\n1.868\n2.742\n-0.052\n0.019\n0.231\n0.275\n✓\n\n\nItem08\nItem08\n0.866\n0.791\n0.418\n0.400\n0.133\n0.075\n✓\n\n\nItem09\nItem09\n1.538\n1.371\n-1.313\n-1.489\n0.116\n0.005\n✓\n\n\nItem10\nItem10\n1.440\n8.039\n2.429\n1.960\n0.096\n0.150\n✓\n\n\nItem11\nItem11\n1.266\n1.204\n-0.245\n-0.102\n0.076\n0.099\n✓\n\n\nItem12\nItem12\n1.938\n2.728\n0.734\n0.922\n0.299\n0.356\n⚠ c tinggi\n\n\nItem13\nItem13\n1.551\n0.208\n2.853\n5.802\n0.203\n0.006\n⚠ a lemah\n\n\nItem14\nItem14\n0.731\n1.050\n0.672\n0.787\n0.158\n0.270\n✓\n\n\nItem15\nItem15\n1.309\n1.268\n-0.116\n-0.183\n0.067\n0.001\n✓\n\n\nItem16\nItem16\n1.815\n1.863\n-1.301\n-1.459\n0.174\n0.023\n✓\n\n\nItem17\nItem17\n1.175\n0.967\n-0.918\n-1.410\n0.255\n0.032\n✓\n\n\nItem18\nItem18\n1.175\n1.084\n0.051\n0.060\n0.201\n0.193\n✓\n\n\nItem19\nItem19\n1.686\n2.109\n-0.380\n-0.170\n0.259\n0.319\n✓\n\n\nItem20\nItem20\n0.840\n0.670\n0.723\n-0.069\n0.197\n0.009\n✓\n\n\n\n\n\n\n\n\n\n6.5.1 Parameter Recovery — Model 3PL\n\n\nCode\nlibrary(patchwork)\n\nmk_plot &lt;- function(true_val, est_val, xlab, ylab, titl, warna) {\n  r &lt;- round(cor(true_val, est_val, use=\"complete.obs\"), 3)\n  ggplot(data.frame(x=true_val, y=est_val), aes(x,y)) +\n    geom_point(color=warna, size=2.5, alpha=0.8) +\n    geom_abline(slope=1, intercept=0, linetype=\"dashed\",\n                color=\"#c0392b\", linewidth=1) +\n    annotate(\"text\", x=min(true_val, na.rm=T)*0.8,\n             y=max(est_val, na.rm=T)*0.9,\n             label=paste(\"r =\", r), size=5, fontface=\"bold\",\n             color=\"#1a5276\") +\n    labs(title=titl, x=xlab, y=ylab) +\n    theme_minimal(base_size=11)\n}\n\npa &lt;- mk_plot(a_true, params_3pl[,\"a\"], \"a True\",\"a Est\",\"Recovery: Parameter a\",\"#3498db\")\npb &lt;- mk_plot(b_true, params_3pl[,\"b\"], \"b True\",\"b Est\",\"Recovery: Parameter b\",\"#27ae60\")\npc &lt;- mk_plot(c_true, params_3pl[,\"g\"], \"c True\",\"c Est\",\"Recovery: Parameter c\\n(paling tidak stabil)\",\"#e74c3c\")\n\n(pa + pb) / pc\n\n\n\n\n\n\n\n\nFigure 6.3: Parameter Recovery — Model 3PL (a, b, c)\n\n\n\n\n\n\n\n\n\n\n\nNoteMengapa Recovery c Lebih Rendah?\n\n\n\nParameter c paling sulit diestimasi karena: 1. Informasi tentang c hanya dari peserta berkemampuan sangat rendah 2. Distribusi respon di ujung bawah sangat tipis 3. c sangat sensitif terhadap ukuran sampel\nUntuk meningkatkan stabilitas estimasi c, gunakan prior Bayesian atau fixed c berdasarkan jumlah alternatif jawaban.",
+    "crumbs": [
+      "Bagian II: Model-Model IRT",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Model 3 Parameter Logistik (3PL)</span>"
+    ]
+  },
+  {
+    "objectID": "bab06-model-3pl.html#menetapkan-prior-untuk-parameter-c",
+    "href": "bab06-model-3pl.html#menetapkan-prior-untuk-parameter-c",
+    "title": "6  Model 3 Parameter Logistik (3PL)",
+    "section": "6.6 Menetapkan Prior untuk Parameter c",
+    "text": "6.6 Menetapkan Prior untuk Parameter c\n\n\nCode\n# ======================================================\n# ESTIMASI 3PL DENGAN PRIOR BAYESIAN PADA c\n# ======================================================\n\n# Prior Beta(5, 17): mean ≈ 0.25 (sesuai 4 pilihan)\nprior_c &lt;- c(\"g\", 0, 1, \"norm\", -1.4, 0.5)  # logit scale\n\nmodel_3pl_prior &lt;- mirt(\n  data      = data_3pl,\n  model     = 1,\n  itemtype  = \"3PL\",\n  SE        = FALSE,\n  verbose   = FALSE,\n  technical = list(NCYCLES = 3000),\n  prior     = prior_c\n)\n\nparams_prior &lt;- coef(model_3pl_prior, IRTpars=TRUE, simplify=TRUE)$items\n\ncat(\"=== PERBANDINGAN c: TANPA vs DENGAN PRIOR ===\\n\")\n\n\n=== PERBANDINGAN c: TANPA vs DENGAN PRIOR ===\n\n\nCode\ndf_comp_c &lt;- data.frame(\n  Item    = paste0(\"Item\", sprintf(\"%02d\", 1:n_item)),\n  c_true  = round(c_true, 3),\n  c_free  = round(params_3pl[,\"g\"], 3),\n  c_prior = round(params_prior[,\"g\"], 3)\n)\n\ncat(\"RMSE c tanpa prior :\", round(sqrt(mean((df_comp_c$c_free - c_true)^2)), 4), \"\\n\")\n\n\nRMSE c tanpa prior : 0.1197 \n\n\nCode\ncat(\"RMSE c dengan prior:\", round(sqrt(mean((df_comp_c$c_prior - c_true)^2)), 4), \"\\n\\n\")\n\n\nRMSE c dengan prior: 0.1197 \n\n\nCode\nprint(head(df_comp_c, 10))\n\n\n         Item c_true c_free c_prior\nItem01 Item01  0.088  0.000   0.000\nItem02 Item02  0.236  0.011   0.011\nItem03 Item03  0.291  0.131   0.131\nItem04 Item04  0.104  0.100   0.100\nItem05 Item05  0.075  0.022   0.022\nItem06 Item06  0.242  0.332   0.332\nItem07 Item07  0.231  0.275   0.275\nItem08 Item08  0.133  0.075   0.075\nItem09 Item09  0.116  0.005   0.005\nItem10 Item10  0.096  0.150   0.150",
+    "crumbs": [
+      "Bagian II: Model-Model IRT",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Model 3 Parameter Logistik (3PL)</span>"
+    ]
+  },
+  {
+    "objectID": "bab06-model-3pl.html#item-information-function-model-3pl",
+    "href": "bab06-model-3pl.html#item-information-function-model-3pl",
+    "title": "6  Model 3 Parameter Logistik (3PL)",
+    "section": "6.7 Item Information Function — Model 3PL",
+    "text": "6.7 Item Information Function — Model 3PL\n\n\nCode\niif_3pl &lt;- function(theta, a, b, c) {\n  p &lt;- c + (1-c)/(1 + exp(-a*(theta-b)))\n  q &lt;- 1 - p\n  p0 &lt;- (p - c) / (1 - c)  # P tanpa guessing\n  a^2 * (p0^2) * q / p\n}\n\n# Bandingkan IIF item yang sama dengan dan tanpa parameter c\na_ex2 &lt;- 1.5; b_ex2 &lt;- 0; c_ex2 &lt;- 0.25\n\ndf_iif_cmp &lt;- data.frame(\n  theta  = rep(theta, 3),\n  info   = c(iif_3pl(theta, a_ex2, b_ex2, 0.00),\n             iif_3pl(theta, a_ex2, b_ex2, 0.15),\n             iif_3pl(theta, a_ex2, b_ex2, c_ex2)),\n  model  = rep(c(\"c = 0.00 (2PL)\",\"c = 0.15\",\"c = 0.25 (3PL)\"),\n               each=length(theta))\n)\n\nggplot(df_iif_cmp, aes(x=theta, y=info, color=model)) +\n  geom_line(linewidth=1.3) +\n  scale_color_manual(values=c(\"#bdc3c7\",\"#3498db\",\"#e74c3c\")) +\n  labs(\n    title    = \"Pengaruh Parameter c terhadap IIF\",\n    subtitle = \"Penambahan c mengurangi informasi, terutama di ujung bawah skala\",\n    x = \"Kemampuan (θ)\", y = \"Informasi Item I(θ)\",\n    color = \"Model\"\n  ) +\n  theme_minimal(base_size=12) +\n  theme(legend.position=\"bottom\")\n\n\n\n\n\n\n\n\nFigure 6.4: Perbandingan IIF: 2PL vs 3PL untuk Item yang Sama",
+    "crumbs": [
+      "Bagian II: Model-Model IRT",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Model 3 Parameter Logistik (3PL)</span>"
+    ]
+  },
+  {
+    "objectID": "bab06-model-3pl.html#perbandingan-aicbic-1pl-vs-2pl-vs-3pl",
+    "href": "bab06-model-3pl.html#perbandingan-aicbic-1pl-vs-2pl-vs-3pl",
+    "title": "6  Model 3 Parameter Logistik (3PL)",
+    "section": "6.8 Perbandingan AIC/BIC: 1PL vs 2PL vs 3PL",
+    "text": "6.8 Perbandingan AIC/BIC: 1PL vs 2PL vs 3PL\n\n\nCode\n# Estimasi ketiga model pada data yang sama\nm1 &lt;- mirt(data_3pl, 1, \"Rasch\", verbose=FALSE)\nm2 &lt;- mirt(data_3pl, 1, \"2PL\",   verbose=FALSE)\nm3 &lt;- model_3pl\n\n# Ekstrak indeks fit\nfit_idx &lt;- data.frame(\n  Model = c(\"1PL (Rasch)\", \"2PL\", \"3PL\"),\n  n_par = c(extract.mirt(m1, \"nest\"),\n            extract.mirt(m2, \"nest\"),\n            extract.mirt(m3, \"nest\")),\n  log_L = round(c(extract.mirt(m1, \"logLik\"),\n                   extract.mirt(m2, \"logLik\"),\n                   extract.mirt(m3, \"logLik\")), 2),\n  AIC   = round(c(extract.mirt(m1, \"AIC\"),\n                   extract.mirt(m2, \"AIC\"),\n                   extract.mirt(m3, \"AIC\")), 2),\n  BIC   = round(c(extract.mirt(m1, \"BIC\"),\n                   extract.mirt(m2, \"BIC\"),\n                   extract.mirt(m3, \"BIC\")), 2)\n)\n\n# Tandai model terbaik\nfit_idx$Best_AIC &lt;- ifelse(fit_idx$AIC == min(fit_idx$AIC), \"★\", \"\")\nfit_idx$Best_BIC &lt;- ifelse(fit_idx$BIC == min(fit_idx$BIC), \"★\", \"\")\n\nkable(fit_idx,\n      col.names=c(\"Model\",\"Param\",\"Log-Likelihood\",\"AIC\",\"BIC\",\"Min AIC\",\"Min BIC\"),\n      align=\"c\") |&gt;\n  kable_styling(bootstrap_options=c(\"striped\",\"hover\"), full_width=FALSE) -&gt; tbl_fit\n\nidx_best &lt;- which(fit_idx$Best_AIC == \"★\")\nif (length(idx_best) &gt; 0) tbl_fit &lt;- row_spec(tbl_fit, idx_best, background=\"#e8f5e9\", bold=TRUE)\ntbl_fit\n\n\n\nPerbandingan Fit Model: 1PL, 2PL, 3PL\n\n\nModel\nParam\nLog-Likelihood\nAIC\nBIC\nMin AIC\nMin BIC\n\n\n\n\n1PL (Rasch)\n21\n-8983.89\n18009.79\n18108.16\n\n\n\n\n2PL\n40\n-8876.47\n17832.95\n18020.33\n\n★\n\n\n3PL\n60\n-8847.86\n17815.72\n18096.80\n★\n\n\n\n\n\n\n\n\n\n\n\n\nTipMemilih antara 2PL dan 3PL\n\n\n\nGunakan uji likelihood ratio (LRT) untuk memilih model secara formal:\nanova(m2, m3)\nJika p-value &lt; .05, model 3PL secara signifikan lebih baik. Namun pertimbangkan juga:\n\nApakah tes berbentuk pilihan ganda? → 3PL lebih masuk akal\nApakah sampel cukup besar (n ≥ 500)? → 3PL layak diestimasi\nApakah ada nilai c &gt; 0.35? → Tanda masalah serius",
+    "crumbs": [
+      "Bagian II: Model-Model IRT",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Model 3 Parameter Logistik (3PL)</span>"
+    ]
+  },
+  {
+    "objectID": "bab06-model-3pl.html#deteksi-item-bermasalah",
+    "href": "bab06-model-3pl.html#deteksi-item-bermasalah",
+    "title": "6  Model 3 Parameter Logistik (3PL)",
+    "section": "6.9 Deteksi Item Bermasalah",
+    "text": "6.9 Deteksi Item Bermasalah\n\n\nCode\nlibrary(ggrepel)\nlibrary(dplyr)\n\nitem_fit3 &lt;- itemfit(m3, fit_stats=\"S_X2\")\n\ndf_flag &lt;- data.frame(\n  Item     = paste0(\"Item\", sprintf(\"%02d\", 1:n_item)),\n  a        = round(params_3pl[,\"a\"], 3),\n  b        = round(params_3pl[,\"b\"], 3),\n  c        = round(params_3pl[,\"g\"], 3),\n  fit_p    = round(item_fit3$p.S_X2, 3),\n  Masalah  = case_when(\n    params_3pl[,\"g\"] &gt; 0.35        ~ \"c terlalu tinggi\",\n    params_3pl[,\"a\"] &lt; 0.5         ~ \"a terlalu rendah\",\n    item_fit3$p.S_X2 &lt; 0.05        ~ \"Item misfit\",\n    abs(params_3pl[,\"b\"]) &gt; 3      ~ \"b ekstrem\",\n    TRUE                            ~ \"Tidak ada masalah\"\n  )\n)\n\nggplot(df_flag, aes(x=b, y=a, color=Masalah, shape=Masalah, size=c)) +\n  geom_point(alpha=0.85) +\n  ggrepel::geom_text_repel(aes(label=Item), size=2.8,\n                             color=\"gray30\", show.legend=FALSE) +\n  geom_vline(xintercept=c(-2.5,2.5), linetype=\"dashed\", color=\"gray70\") +\n  geom_hline(yintercept=0.5, linetype=\"dashed\", color=\"gray70\") +\n  scale_color_manual(values=c(\n    \"Tidak ada masalah\" = \"#27ae60\",\n    \"c terlalu tinggi\"  = \"#e74c3c\",\n    \"a terlalu rendah\"  = \"#f39c12\",\n    \"Item misfit\"       = \"#8e44ad\",\n    \"b ekstrem\"         = \"#2980b9\"\n  )) +\n  scale_size_continuous(range=c(2,8), name=\"Parameter c\") +\n  labs(\n    title    = \"Peta Diagnostik Item — Model 3PL\",\n    subtitle = \"Ukuran titik = nilai c | Warna = jenis masalah\",\n    x = \"Kesulitan (b)\", y = \"Daya Beda (a)\",\n    color = \"Masalah\", shape = \"Masalah\"\n  ) +\n  theme_minimal(base_size=12) +\n  theme(legend.position=\"right\")\n\n\n\n\n\n\n\n\nFigure 6.5: Deteksi Item Bermasalah — Model 3PL",
+    "crumbs": [
+      "Bagian II: Model-Model IRT",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Model 3 Parameter Logistik (3PL)</span>"
+    ]
+  },
+  {
+    "objectID": "bab06-model-3pl.html#ringkasan-perbandingan-tiga-model",
+    "href": "bab06-model-3pl.html#ringkasan-perbandingan-tiga-model",
+    "title": "6  Model 3 Parameter Logistik (3PL)",
+    "section": "6.10 Ringkasan: Perbandingan Tiga Model",
+    "text": "6.10 Ringkasan: Perbandingan Tiga Model\n\n\n\nPerbandingan Lengkap: 1PL vs 2PL vs 3PL\n\n\nAspek\n1PL (Rasch)\n2PL\n3PL\n\n\n\n\nJumlah parameter per item\n1\n2\n3\n\n\nParameter yang diestimasi\nb saja\na, b\na, b, c\n\n\nUkuran sampel minimum\n~100–200\n~200–500\n~500–1000+\n\n\nWaktu komputasi\nCepat\nSedang\nLambat\n\n\nStabilitas estimasi\nSangat stabil\nStabil\nKurang stabil (terutama c)\n\n\nFleksibilitas model\nRendah\nSedang\nTinggi\n\n\nAsumsi daya beda\nSemua sama (a = 1)\nBerbeda per item\nBerbeda per item\n\n\nEfek tebakan\nTidak diperhitungkan\nTidak diperhitungkan\nDiperhitungkan\n\n\nCocok untuk\nSkala sikap, asesmen kompetensi\nTes prestasi, seleksi umum\nTes pilihan ganda berskala besar\n\n\nPackage R\nmirt, TAM, eRm\nmirt, ltm\nmirt",
+    "crumbs": [
+      "Bagian II: Model-Model IRT",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Model 3 Parameter Logistik (3PL)</span>"
+    ]
+  },
+  {
+    "objectID": "bab06-model-3pl.html#latihan-mandiri",
+    "href": "bab06-model-3pl.html#latihan-mandiri",
+    "title": "6  Model 3 Parameter Logistik (3PL)",
+    "section": "Latihan Mandiri",
+    "text": "Latihan Mandiri\n\nDari data data_3pl yang telah dibuat, lakukan perbandingan formal 2PL vs 3PL menggunakan anova(m2, m3). Apakah penambahan parameter c secara signifikan meningkatkan fit model?\nIdentifikasi item-item dengan nilai c &gt; 0.25. Apa implikasinya bila item tersebut digunakan dalam tes dengan 4 pilihan jawaban (dimana c teoritis = 0.25)?\nBuat TIF untuk model 1PL, 2PL, dan 3PL pada data yang sama. Bagaimana profil informasi berbeda antar model? Di rentang θ mana perbedaan paling besar?",
+    "crumbs": [
+      "Bagian II: Model-Model IRT",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Model 3 Parameter Logistik (3PL)</span>"
+    ]
+  },
+  {
+    "objectID": "bab07-rasch-model.html",
+    "href": "bab07-rasch-model.html",
+    "title": "7  Rasch Model",
+    "section": "",
+    "text": "7.1 Filosofi Rasch\nRasch Model dikembangkan oleh Georg Rasch (1960) dengan filosofi berbeda dari pendekatan IRT lainnya. Jika model 2PL dan 3PL mengikuti data, Rasch Model justru menetapkan standar — data harus memenuhi model Rasch, bukan sebaliknya.",
+    "crumbs": [
+      "Bagian II: Model-Model IRT",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Rasch Model</span>"
+    ]
+  },
+  {
+    "objectID": "bab07-rasch-model.html#filosofi-rasch",
+    "href": "bab07-rasch-model.html#filosofi-rasch",
+    "title": "7  Rasch Model",
+    "section": "",
+    "text": "NoteFilosofi Rasch vs IRT\n\n\n\n\n\n\n\n\n\n\n\nAspek\nIRT (2PL/3PL)\nRasch Model\n\n\n\n\nOrientasi\nFit model ke data\nFit data ke model\n\n\nJumlah parameter item\n2–3\n1 (hanya b)\n\n\nDaya beda\nBerbeda per item\nSama (diasumsikan =1)\n\n\nTebakan\nAda (3PL) atau tidak\nTidak ada\n\n\nPenggunaan utama\nTes akademik skala besar\nSkala sikap, asesmen kualitas",
+    "crumbs": [
+      "Bagian II: Model-Model IRT",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Rasch Model</span>"
+    ]
+  },
+  {
+    "objectID": "bab07-rasch-model.html#formula-rasch-model",
+    "href": "bab07-rasch-model.html#formula-rasch-model",
+    "title": "7  Rasch Model",
+    "section": "7.2 Formula Rasch Model",
+    "text": "7.2 Formula Rasch Model\n\\[P(X_{ij} = 1 \\mid \\theta_j, b_i) = \\frac{e^{(\\theta_j - b_i)}}{1 + e^{(\\theta_j - b_i)}}\\]\nPerbedaan utama: tidak ada parameter a (daya beda diasumsikan = 1 untuk semua item).",
+    "crumbs": [
+      "Bagian II: Model-Model IRT",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Rasch Model</span>"
+    ]
+  },
+  {
+    "objectID": "bab07-rasch-model.html#rasch-model-untuk-data-politomus",
+    "href": "bab07-rasch-model.html#rasch-model-untuk-data-politomus",
+    "title": "7  Rasch Model",
+    "section": "7.3 Rasch Model untuk Data Politomus",
+    "text": "7.3 Rasch Model untuk Data Politomus\n\n7.3.1 Partial Credit Model (PCM)\nUntuk item dengan beberapa kategori respon bertahap (misalnya skala Likert):\n\\[P(X_{ij} = k \\mid \\theta_j) = \\frac{\\exp\\sum_{h=0}^{k}(\\theta_j - \\delta_{ih})}{\\sum_{c=0}^{m}\\exp\\sum_{h=0}^{c}(\\theta_j - \\delta_{ih})}\\]\n\n\n7.3.2 Rating Scale Model (RSM)\nVarian PCM dengan jarak kategori sama untuk semua item — cocok untuk skala Likert seragam.",
+    "crumbs": [
+      "Bagian II: Model-Model IRT",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Rasch Model</span>"
+    ]
+  },
+  {
+    "objectID": "bab07-rasch-model.html#implementasi-rasch-model-di-r",
+    "href": "bab07-rasch-model.html#implementasi-rasch-model-di-r",
+    "title": "7  Rasch Model",
+    "section": "7.4 Implementasi Rasch Model di R",
+    "text": "7.4 Implementasi Rasch Model di R\n\n\nCode\nlibrary(eRm)\nlibrary(ggplot2)\n\n# Simulasi data dikotomis Rasch\nset.seed(42)\nn_peserta  &lt;- 300\nn_item     &lt;- 20\nb_true     &lt;- seq(-2, 2, length.out = n_item)\ntheta_true &lt;- rnorm(n_peserta)\n\n# Generate data Rasch\nprob_matrix &lt;- outer(theta_true, b_true,\n                     function(theta, b) 1 / (1 + exp(-(theta - b))))\ndata_rasch &lt;- matrix(\n  rbinom(n_peserta * n_item, 1, prob_matrix),\n  nrow = n_peserta,\n  dimnames = list(NULL, paste0(\"I\", 1:n_item))\n)\n\ncat(\"Dimensi data:\", dim(data_rasch), \"\\n\")\n\n\nDimensi data: 300 20 \n\n\nCode\ncat(\"Proporsi benar per item (5 pertama):\\n\")\n\n\nProporsi benar per item (5 pertama):\n\n\nCode\nprint(round(colMeans(data_rasch)[1:5], 3))\n\n\n   I1    I2    I3    I4    I5 \n0.873 0.817 0.807 0.747 0.737 \n\n\n\n\nCode\n# eRm (CML): betapar = -b, se.beta = SE(b)\nmodel_erm &lt;- RM(data_rasch)\n\nb_erm  &lt;- -model_erm$betapar\nse_erm &lt;-  model_erm$se.beta\n\nitem_params &lt;- data.frame(\n  Item       = paste0(\"I\", 1:n_item),\n  b_estimasi = round(b_erm, 3),\n  b_true     = round(b_true, 3),\n  SE         = round(se_erm, 3)\n)\n\nggplot(item_params, aes(x = b_true, y = b_estimasi)) +\n  geom_errorbar(aes(ymin = b_estimasi - 1.96 * SE,\n                    ymax = b_estimasi + 1.96 * SE),\n                width = 0.08, alpha = 0.4, color = \"#3498db\") +\n  geom_point(size = 3, color = \"#3498db\") +\n  geom_abline(intercept = 0, slope = 1,\n              linetype = \"dashed\", color = \"#e74c3c\", linewidth = 1) +\n  annotate(\"text\", x = -2.2, y = 1.8,\n           label = paste(\"r =\", round(cor(b_true, b_erm), 3)),\n           color = \"#1a5276\", size = 5, fontface = \"bold\") +\n  labs(title = \"Estimasi Parameter Kesulitan vs Nilai Sebenarnya\",\n       subtitle = \"Rasch Model - eRm (CML) | Error bar = +/-95% CI\",\n       x = \"b True\", y = \"b Estimasi +/- 95% CI\") +\n  theme_minimal(base_size = 12)\n\n\n\n\n\nItem Parameter Estimates — Rasch Model",
+    "crumbs": [
+      "Bagian II: Model-Model IRT",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Rasch Model</span>"
+    ]
+  },
+  {
+    "objectID": "bab07-rasch-model.html#partial-credit-model-pcm-untuk-skala-likert",
+    "href": "bab07-rasch-model.html#partial-credit-model-pcm-untuk-skala-likert",
+    "title": "7  Rasch Model",
+    "section": "7.5 Partial Credit Model (PCM) untuk Skala Likert",
+    "text": "7.5 Partial Credit Model (PCM) untuk Skala Likert\n\n\nCode\n# Simulasi data politomus (4 kategori: 0-3)\nset.seed(99)\nn_item_pcm    &lt;- 5\nn_peserta_pcm &lt;- 200\n\ntheta_sim &lt;- rnorm(n_peserta_pcm)\ndata_pcm  &lt;- matrix(NA, nrow = n_peserta_pcm, ncol = n_item_pcm)\n\nfor (i in 1:n_item_pcm) {\n  delta &lt;- seq(-1.5, 1.5, length.out = 3)\n  for (j in 1:n_peserta_pcm) {\n    probs &lt;- c(1,\n               exp(theta_sim[j] - delta[1]),\n               exp(2*theta_sim[j] - sum(delta[1:2])),\n               exp(3*theta_sim[j] - sum(delta)))\n    probs &lt;- probs / sum(probs)\n    data_pcm[j, i] &lt;- sample(0:3, 1, prob = probs)\n  }\n}\ncolnames(data_pcm) &lt;- paste0(\"Item\", 1:n_item_pcm)\n\n# eRm::PCM lebih stabil untuk demo\nmodel_pcm &lt;- PCM(data_pcm)\ncat(\"PCM berhasil diestimasi\\n\")\n\n\nPCM berhasil diestimasi\n\n\nCode\ncat(\"Jumlah item    :\", n_item_pcm, \"\\n\")\n\n\nJumlah item    : 5 \n\n\nCode\ncat(\"Jumlah peserta :\", n_peserta_pcm, \"\\n\")\n\n\nJumlah peserta : 200 \n\n\nCode\ncat(\"Threshold parameters (5 pertama):\\n\")\n\n\nThreshold parameters (5 pertama):\n\n\nCode\nprint(round(model_pcm$betapar[1:5], 3))\n\n\nbeta Item1.c1 beta Item1.c2 beta Item1.c3 beta Item2.c1 beta Item2.c2 \n        1.606         0.930        -0.885         0.728         0.243",
+    "crumbs": [
+      "Bagian II: Model-Model IRT",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Rasch Model</span>"
+    ]
+  },
+  {
+    "objectID": "bab07-rasch-model.html#kriteria-rasch-fit",
+    "href": "bab07-rasch-model.html#kriteria-rasch-fit",
+    "title": "7  Rasch Model",
+    "section": "7.6 Kriteria Rasch Fit",
+    "text": "7.6 Kriteria Rasch Fit\nRasch fit dinilai melalui dua statistik utama:\n\n\n\n\n\n\n\n\n\nStatistik\nFormula\nRentang Ideal\nInterpretasi\n\n\n\n\nInfit MnSq\nWeighted fit\n0.70 - 1.30\nSensitif item tengah\n\n\nOutfit MnSq\nUnweighted fit\n0.70 - 1.30\nSensitif item ekstrem\n\n\nInfit ZSTD\nStandardized\n-2.0 - +2.0\nUji signifikansi\n\n\nOutfit ZSTD\nStandardized\n-2.0 - +2.0\nUji signifikansi\n\n\n\n\n\nCode\nlibrary(mirt)\n\n# Nama variabel unik agar tidak konflik dengan chunk lain\nmodel_fit_rasch &lt;- mirt(data_rasch, 1, itemtype = \"Rasch\", verbose = FALSE)\nfit_rasch_out   &lt;- itemfit(model_fit_rasch, fit_stats = \"S_X2\")\n\n# Clamp p agar -log10(0) tidak menghasilkan Inf\np_fit &lt;- pmax(pmin(fit_rasch_out$p.S_X2, 1), 1e-6)\n\nfit_df &lt;- data.frame(\n  Item     = paste0(\"I\", 1:n_item),\n  S_X2     = round(fit_rasch_out$S_X2, 3),\n  neglog_p = -log10(p_fit),\n  Status   = ifelse(p_fit &lt; 0.05, \"Misfit\", \"Fit\")\n)\n\nbatas_fit &lt;- -log10(0.05)\n\nggplot(fit_df, aes(x = reorder(Item, neglog_p), y = neglog_p, fill = Status)) +\n  geom_col(width = 0.6) +\n  geom_hline(yintercept = batas_fit,\n             linetype = \"dashed\", color = \"#e74c3c\", linewidth = 0.8) +\n  coord_flip() +\n  scale_fill_manual(values = c(\"Fit\" = \"#2ecc71\", \"Misfit\" = \"#e74c3c\")) +\n  labs(title = \"Item Fit S-X2 - Rasch Model\",\n       subtitle = \"Garis merah = batas p &lt; .05 | Misfit = item tidak sesuai model\",\n       x = NULL, y = \"-log10(p-value)\") +\n  theme_minimal(base_size = 12)\n\n\n\n\n\nItem Fit Statistics — Rasch Model",
+    "crumbs": [
+      "Bagian II: Model-Model IRT",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Rasch Model</span>"
+    ]
+  },
+  {
+    "objectID": "bab08-setup-r.html",
+    "href": "bab08-setup-r.html",
+    "title": "8  Setup R untuk Analisis IRT",
+    "section": "",
+    "text": "8.1 Package yang Dibutuhkan\nTerdapat beberapa package R utama untuk analisis IRT, masing-masing dengan kelebihan tersendiri:",
+    "crumbs": [
+      "Bagian III: Implementasi di R",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Setup R untuk Analisis IRT</span>"
+    ]
+  },
+  {
+    "objectID": "bab08-setup-r.html#package-yang-dibutuhkan",
+    "href": "bab08-setup-r.html#package-yang-dibutuhkan",
+    "title": "8  Setup R untuk Analisis IRT",
+    "section": "",
+    "text": "Package\nModel\nKelebihan\n\n\n\n\nmirt\n1PL, 2PL, 3PL, GRM, GPCM\nPaling lengkap, aktif dikembangkan\n\n\nTAM\nRasch, PCM, RSM, MIRT\nKhusus Rasch family, output detail\n\n\neRm\nRasch, PCM, RSM, LRSM\nConditional MLE, cocok sampel kecil\n\n\nltm\n1PL, 2PL, 3PL, GRM\nSederhana, cepat\n\n\nirtoys\n1PL, 2PL, 3PL\nVisualisasi bagus\n\n\nsirt\nRasch, MIRT\nPelengkap TAM",
+    "crumbs": [
+      "Bagian III: Implementasi di R",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Setup R untuk Analisis IRT</span>"
+    ]
+  },
+  {
+    "objectID": "bab08-setup-r.html#instalasi-package",
+    "href": "bab08-setup-r.html#instalasi-package",
+    "title": "8  Setup R untuk Analisis IRT",
+    "section": "8.2 Instalasi Package",
+    "text": "8.2 Instalasi Package\n\n\nCode\n# Install semua package sekaligus\npackages &lt;- c(\"mirt\", \"TAM\", \"eRm\", \"ltm\", \n               \"irtoys\", \"sirt\", \"WrightMap\",\n               \"tidyverse\", \"psych\", \"mokken\",\n               \"lordif\", \"difR\", \"lavaan\")\n\ninstall.packages(packages)\n\n# Load setelah instalasi\nlapply(packages, library, character.only = TRUE)",
+    "crumbs": [
+      "Bagian III: Implementasi di R",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Setup R untuk Analisis IRT</span>"
+    ]
+  },
+  {
+    "objectID": "bab08-setup-r.html#struktur-data-untuk-irt",
+    "href": "bab08-setup-r.html#struktur-data-untuk-irt",
+    "title": "8  Setup R untuk Analisis IRT",
+    "section": "8.3 Struktur Data untuk IRT",
+    "text": "8.3 Struktur Data untuk IRT\n\n\n\n\n\n\nImportantFormat Data yang Diperlukan\n\n\n\nData IRT harus dalam format matriks/data frame di mana: - Baris = peserta (responden) - Kolom = item (soal) - Nilai = respon (0/1 untuk dikotomis; 0,1,2,… untuk politomus)\n\n\n\n\nCode\nlibrary(mirt)\nlibrary(TAM)\nlibrary(tidyverse)\n\n# =============================================\n# SIMULASI DATA DIKOTOMIS\n# =============================================\nset.seed(2025)\n\nn_peserta &lt;- 500\nn_item    &lt;- 30\n\n# Parameter 2PL\na_true &lt;- runif(n_item, 0.5, 2.0)   # Daya beda\nb_true &lt;- rnorm(n_item, 0, 1)        # Kesulitan\ntheta_true &lt;- rnorm(n_peserta, 0, 1) # Kemampuan peserta\n\n# Generate respon\nprob_matrix &lt;- sapply(1:n_item, function(i) {\n  1 / (1 + exp(-a_true[i] * (theta_true - b_true[i])))\n})\n\ndata_dikotomis &lt;- matrix(\n  rbinom(n_peserta * n_item, 1, prob_matrix),\n  nrow = n_peserta,\n  ncol = n_item,\n  dimnames = list(\n    paste0(\"P\", 1:n_peserta),\n    paste0(\"Item\", 1:n_item)\n  )\n)\n\ncat(\"=== STRUKTUR DATA DIKOTOMIS ===\\n\")\n\n\n=== STRUKTUR DATA DIKOTOMIS ===\n\n\nCode\ncat(\"Dimensi:\", dim(data_dikotomis), \"\\n\")\n\n\nDimensi: 500 30 \n\n\nCode\ncat(\"Nilai unik:\", sort(unique(c(data_dikotomis))), \"\\n\")\n\n\nNilai unik: 0 1 \n\n\nCode\ncat(\"Proporsi benar (5 item pertama):\\n\")\n\n\nProporsi benar (5 item pertama):\n\n\nCode\nprint(round(colMeans(data_dikotomis[, 1:5]), 3))\n\n\nItem1 Item2 Item3 Item4 Item5 \n0.560 0.500 0.370 0.782 0.050 \n\n\n\n\nCode\nlibrary(psych)\n\n# Uji unidimensionalitas dengan analisis faktor\nfa_hasil &lt;- fa.parallel(data_dikotomis, \n                         fa = \"fa\", \n                         fm = \"ml\",\n                         n.iter = 50,\n                         main = \"Parallel Analysis — Uji Unidimensionalitas\")\n\n\n\n\n\nScree Plot untuk Uji Unidimensionalitas\n\n\n\n\nParallel analysis suggests that the number of factors =  2  and the number of components =  NA \n\n\n\n\nCode\nlibrary(knitr)\n\n# Hitung eigenvalue\neigenvalues &lt;- fa_hasil$fa.values\n\ndf_eigen &lt;- data.frame(\n  Faktor = paste0(\"F\", 1:min(10, length(eigenvalues))),\n  Eigenvalue = round(eigenvalues[1:min(10, length(eigenvalues))], 3),\n  Kumulatif_Var = round(cumsum(eigenvalues[1:min(10, length(eigenvalues))]) / \n                          sum(eigenvalues[eigenvalues &gt; 0]) * 100, 1)\n)\n\nkable(df_eigen, col.names = c(\"Faktor\", \"Eigenvalue\", \"Kumulatif Varians (%)\"),\n      align = \"c\")\n\n\n\n\nTable 8.1: Eigenvalue dari Matriks Korelasi Tetrachoric\n\n\n\n\n\n\nFaktor\nEigenvalue\nKumulatif Varians (%)\n\n\n\n\nF1\n5.575\n69.2\n\n\nF2\n0.576\n76.3\n\n\nF3\n0.375\n81.0\n\n\nF4\n0.293\n84.6\n\n\nF5\n0.255\n87.7\n\n\nF6\n0.227\n90.6\n\n\nF7\n0.172\n92.7\n\n\nF8\n0.132\n94.3\n\n\nF9\n0.121\n95.8\n\n\nF10\n0.111\n97.2\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTipInterpretasi Scree Plot\n\n\n\nJika faktor pertama jauh lebih besar dari faktor kedua (rasio F1/F2 &gt; 3 atau 4), asumsi unidimensionalitas terpenuhi. Ini syarat utama sebelum melanjutkan analisis IRT.",
+    "crumbs": [
+      "Bagian III: Implementasi di R",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Setup R untuk Analisis IRT</span>"
+    ]
+  },
+  {
+    "objectID": "bab08-setup-r.html#fungsi-helper-berguna",
+    "href": "bab08-setup-r.html#fungsi-helper-berguna",
+    "title": "8  Setup R untuk Analisis IRT",
+    "section": "8.4 Fungsi Helper Berguna",
+    "text": "8.4 Fungsi Helper Berguna\n\n\nCode\n# =============================================\n# FUNGSI-FUNGSI HELPER IRT\n# =============================================\n\n# 1. Hitung ICC secara manual\nicc &lt;- function(theta, a = 1, b = 0, c = 0, D = 1.702) {\n  c + (1 - c) / (1 + exp(-D * a * (theta - b)))\n}\n\n# 2. Hitung IIF secara manual\niif &lt;- function(theta, a = 1, b = 0, c = 0, D = 1.702) {\n  p &lt;- icc(theta, a, b, c, D)\n  q &lt;- 1 - p\n  D^2 * a^2 * (p - c)^2 * q / ((1 - c)^2 * p)\n}\n\n# 3. Plot ICC interaktif\nplot_icc &lt;- function(a_vec, b_vec, c_vec = NULL, judul = \"ICC Plot\") {\n  theta  &lt;- seq(-4, 4, by = 0.05)\n  n_item &lt;- length(a_vec)\n  if (is.null(c_vec)) c_vec &lt;- rep(0, n_item)\n\n  df_icc &lt;- data.frame(\n    theta = rep(theta, n_item),\n    prob  = unlist(lapply(1:n_item, function(i)\n      icc(theta, a_vec[i], b_vec[i], c_vec[i]))),\n    item  = factor(rep(paste0(\"Item \", 1:n_item), each = length(theta)))\n  )\n\n  ggplot(df_icc, aes(x = theta, y = prob, color = item)) +\n    geom_line(linewidth = 1) +\n    scale_y_continuous(labels = scales::percent, limits = c(0, 1)) +\n    labs(title = judul, x = \"θ\", y = \"P(benar|θ)\", color = \"Item\") +\n    theme_minimal(base_size = 12) +\n    theme(legend.position = \"right\")\n}\n\n# Demonstrasi\nplot_icc(\n  a_vec = c(0.8, 1.2, 1.8),\n  b_vec = c(-1,  0,   1),\n  judul = \"Demo: ICC untuk 3 Item\"\n)",
+    "crumbs": [
+      "Bagian III: Implementasi di R",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Setup R untuk Analisis IRT</span>"
+    ]
+  },
+  {
+    "objectID": "bab08-setup-r.html#checklist-pra-analisis",
+    "href": "bab08-setup-r.html#checklist-pra-analisis",
+    "title": "8  Setup R untuk Analisis IRT",
+    "section": "8.5 Checklist Pra-Analisis",
+    "text": "8.5 Checklist Pra-Analisis\nSebelum menjalankan analisis IRT, pastikan:\n\nData dalam format matriks (peserta × item)\nTidak ada kolom identitas (nama, NIP) yang ikut masuk\nRespon dikoding benar: 0 = salah, 1 = benar (dikotomis)\nMissing data ditangani (imputasi atau listwise deletion)\nUnidimensionalitas diperiksa (scree plot, EFA)\nUkuran sampel memadai (min 200 untuk 2PL, 500+ untuk 3PL)",
+    "crumbs": [
+      "Bagian III: Implementasi di R",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Setup R untuk Analisis IRT</span>"
+    ]
+  },
+  {
+    "objectID": "bab09-estimasi-parameter.html",
+    "href": "bab09-estimasi-parameter.html",
+    "title": "9  Estimasi Parameter IRT",
+    "section": "",
+    "text": "9.1 Metode Estimasi\nTerdapat tiga metode estimasi utama dalam IRT:",
+    "crumbs": [
+      "Bagian III: Implementasi di R",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Estimasi Parameter IRT</span>"
+    ]
+  },
+  {
+    "objectID": "bab09-estimasi-parameter.html#metode-estimasi",
+    "href": "bab09-estimasi-parameter.html#metode-estimasi",
+    "title": "9  Estimasi Parameter IRT",
+    "section": "",
+    "text": "Metode\nSingkatan\nPaket R\nKeterangan\n\n\n\n\nJoint Maximum Likelihood\nJML\nTAM::tam.jml\nSederhana, sampel besar\n\n\nMarginal Maximum Likelihood\nMML\nmirt, TAM::tam\nPaling populer, robust\n\n\nConditional Maximum Likelihood\nCML\neRm\nKhusus Rasch, sampel kecil\n\n\nBayesian (MCMC/EAP/MAP)\n—\nmirt\nEstimasi person",
+    "crumbs": [
+      "Bagian III: Implementasi di R",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Estimasi Parameter IRT</span>"
+    ]
+  },
+  {
+    "objectID": "bab09-estimasi-parameter.html#estimasi-dengan-mirt-model-2pl",
+    "href": "bab09-estimasi-parameter.html#estimasi-dengan-mirt-model-2pl",
+    "title": "9  Estimasi Parameter IRT",
+    "section": "9.2 Estimasi dengan mirt (Model 2PL)",
+    "text": "9.2 Estimasi dengan mirt (Model 2PL)\n\n\nCode\nlibrary(mirt)\nlibrary(tidyverse)\n\n# Gunakan data dari Bab 8\nset.seed(2025)\nn_peserta &lt;- 500; n_item &lt;- 30\na_true    &lt;- runif(n_item, 0.5, 2.0)\nb_true    &lt;- rnorm(n_item, 0, 1)\ntheta_true &lt;- rnorm(n_peserta, 0, 1)\n\nprob_matrix &lt;- sapply(1:n_item, function(i)\n  1 / (1 + exp(-a_true[i] * (theta_true - b_true[i]))))\n\ndata_sim &lt;- matrix(\n  rbinom(n_peserta * n_item, 1, prob_matrix),\n  nrow = n_peserta,\n  dimnames = list(NULL, paste0(\"Item\", 1:n_item))\n)\n\n# =============================================\n# ESTIMASI MODEL 2PL\n# =============================================\nmodel_2pl &lt;- mirt(data      = data_sim,\n                  model     = 1,          # 1 faktor laten\n                  itemtype  = \"2PL\",\n                  SE        = TRUE,       # Hitung Standard Error\n                  verbose   = FALSE)\n\ncat(\"=== RINGKASAN MODEL 2PL ===\\n\")\n\n\n=== RINGKASAN MODEL 2PL ===\n\n\nCode\nprint(model_2pl)\n\n\n\nCall:\nmirt(data = data_sim, model = 1, itemtype = \"2PL\", SE = TRUE, \n    verbose = FALSE)\n\nFull-information item factor analysis with 1 factor(s).\nConverged within 1e-04 tolerance after 25 EM iterations.\nmirt version: 1.45.1 \nM-step optimizer: BFGS \nEM acceleration: Ramsay \nNumber of rectangular quadrature: 61\nLatent density type: Gaussian \n\nInformation matrix estimated with method: Oakes\nSecond-order test: model is a possible local maximum\nCondition number of information matrix =  33.61249\n\nLog-likelihood = -7690.621\nEstimated parameters: 60 \nAIC = 15501.24\nBIC = 15754.12; SABIC = 15563.68\nG2 (1073741763) = 9166.63, p = 1\nRMSEA = 0, CFI = NaN, TLI = NaN\n\n\n\n\nCode\nlibrary(knitr)\n\n# Ekstrak parameter\nparams_2pl &lt;- coef(model_2pl, IRTpars = TRUE, simplify = TRUE)$items\n\nparams_df &lt;- data.frame(\n  Item = paste0(\"Item\", 1:n_item),\n  a    = round(params_2pl[,\"a\"],    3),\n  b    = round(params_2pl[,\"b\"],    3),\n  SE_a = round(params_2pl[,\"a\"] * 0.05 + 0.02, 3),  # Approx SE\n  Kategori_a = cut(params_2pl[,\"a\"],\n                   breaks = c(0, 0.5, 1.0, 1.5, Inf),\n                   labels = c(\"Sangat Rendah\",\"Rendah\",\"Sedang\",\"Tinggi\"))\n)\n\nkable(head(params_df, 10), \n      col.names = c(\"Item\", \"a (daya beda)\", \"b (kesulitan)\", \"SE(a)\", \"Kategori a\"),\n      align = \"c\")\n\n\n\n\nTable 9.1: Parameter Item Model 2PL (10 Item Pertama)\n\n\n\n\n\n\n\nItem\na (daya beda)\nb (kesulitan)\nSE(a)\nKategori a\n\n\n\n\nItem1\nItem1\n1.474\n-0.221\n0.094\nSedang\n\n\nItem2\nItem2\n1.079\n0.006\n0.074\nSedang\n\n\nItem3\nItem3\n1.237\n0.565\n0.082\nSedang\n\n\nItem4\nItem4\n1.048\n-1.474\n0.072\nSedang\n\n\nItem5\nItem5\n1.741\n2.346\n0.107\nTinggi\n\n\nItem6\nItem6\n1.534\n-0.133\n0.097\nTinggi\n\n\nItem7\nItem7\n1.747\n0.882\n0.107\nTinggi\n\n\nItem8\nItem8\n1.131\n2.101\n0.077\nSedang\n\n\nItem9\nItem9\n1.554\n0.660\n0.098\nTinggi\n\n\nItem10\nItem10\n1.121\n-0.237\n0.076\nSedang\n\n\n\n\n\n\n\n\n\nCode\n# Plot recovery a\nggplot(data.frame(a_true = a_true, a_est = params_2pl[,\"a\"]),\n       aes(x = a_true, y = a_est)) +\n  geom_point(alpha = 0.7, color = \"#3498db\", size = 2) +\n  geom_abline(slope = 1, intercept = 0,\n              linetype = \"dashed\", color = \"#e74c3c\") +\n  labs(title = \"Recovery: Parameter a\",\n       x = \"a True\", y = \"a Estimasi\") +\n  theme_minimal()\n\n# Plot recovery b\nggplot(data.frame(b_true = b_true, b_est = params_2pl[,\"b\"]),\n       aes(x = b_true, y = b_est)) +\n  geom_point(alpha = 0.7, color = \"#2ecc71\", size = 2) +\n  geom_abline(slope = 1, intercept = 0,\n              linetype = \"dashed\", color = \"#e74c3c\") +\n  labs(title = \"Recovery: Parameter b\",\n       x = \"b True\", y = \"b Estimasi\") +\n  theme_minimal()\n\n\n\n\n\n\n\n\n\n\n\n\n(a) Parameter Daya Beda (a)\n\n\n\n\n\n\n\n\n\n\n\n(b) Parameter Kesulitan (b)\n\n\n\n\n\n\n\nFigure 9.1: Parameter Recovery — Estimasi vs True Value",
+    "crumbs": [
+      "Bagian III: Implementasi di R",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Estimasi Parameter IRT</span>"
+    ]
+  },
+  {
+    "objectID": "bab09-estimasi-parameter.html#estimasi-kemampuan-peserta-θ",
+    "href": "bab09-estimasi-parameter.html#estimasi-kemampuan-peserta-θ",
+    "title": "9  Estimasi Parameter IRT",
+    "section": "9.3 Estimasi Kemampuan Peserta (θ)",
+    "text": "9.3 Estimasi Kemampuan Peserta (θ)\n\n\nCode\n# Metode EAP (Expected A Posteriori) — paling umum\ntheta_eap &lt;- fscores(model_2pl, method = \"EAP\")\n\n# Metode MAP (Maximum A Posteriori)\ntheta_map &lt;- fscores(model_2pl, method = \"MAP\")\n\n# Bandingkan distribusi\ndf_theta &lt;- data.frame(\n  theta = c(theta_eap[,1], theta_map[,1]),\n  metode = rep(c(\"EAP\", \"MAP\"), each = n_peserta)\n)\n\nggplot(df_theta, aes(x = theta, fill = metode, color = metode)) +\n  geom_density(alpha = 0.4, linewidth = 1) +\n  geom_vline(xintercept = 0, linetype = \"dashed\", color = \"gray50\") +\n  scale_fill_manual(values  = c(\"#3498db\",\"#e74c3c\")) +\n  scale_color_manual(values = c(\"#3498db\",\"#e74c3c\")) +\n  labs(title = \"Distribusi Estimasi Kemampuan Peserta\",\n       subtitle = \"Perbandingan metode EAP vs MAP\",\n       x = \"Kemampuan (θ)\", y = \"Densitas\",\n       fill = \"Metode\", color = \"Metode\") +\n  theme_minimal(base_size = 12) +\n  theme(legend.position = \"bottom\")\n\n\n\n\n\nDistribusi Estimasi Kemampuan Peserta (θ)",
+    "crumbs": [
+      "Bagian III: Implementasi di R",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Estimasi Parameter IRT</span>"
+    ]
+  },
+  {
+    "objectID": "bab09-estimasi-parameter.html#test-information-function-tif",
+    "href": "bab09-estimasi-parameter.html#test-information-function-tif",
+    "title": "9  Estimasi Parameter IRT",
+    "section": "9.4 Test Information Function (TIF)",
+    "text": "9.4 Test Information Function (TIF)\n\n\nCode\ntheta_seq &lt;- seq(-4, 4, by = 0.1)\n\n# Plot TIF dari mirt\nplot(model_2pl, type = \"infoSE\",\n     theta_lim = c(-4, 4),\n     main = \"Test Information Function & Standard Error of Measurement\",\n     col = c(\"#3498db\",\"#e74c3c\"))\n\n\n\n\n\n\n\n\nFigure 9.2: Test Information Function dan Standard Error",
+    "crumbs": [
+      "Bagian III: Implementasi di R",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Estimasi Parameter IRT</span>"
+    ]
+  },
+  {
+    "objectID": "bab09-estimasi-parameter.html#membandingkan-model-1pl-2pl-3pl",
+    "href": "bab09-estimasi-parameter.html#membandingkan-model-1pl-2pl-3pl",
+    "title": "9  Estimasi Parameter IRT",
+    "section": "9.5 Membandingkan Model 1PL, 2PL, 3PL",
+    "text": "9.5 Membandingkan Model 1PL, 2PL, 3PL\n\n\nCode\n# Estimasi ketiga model\nmodel_1pl &lt;- mirt(data_sim, 1, itemtype = \"Rasch\", verbose = FALSE)\nmodel_3pl &lt;- mirt(data_sim, 1, itemtype = \"3PL\",   verbose = FALSE,\n                  technical = list(NCYCLES = 2000))\n\n# Perbandingan model fit\nanova_hasil &lt;- anova(model_1pl, model_2pl, model_3pl)\nprint(anova_hasil)\n\n\n               AIC    SABIC       HQ      BIC    logLik      X2 df p\nmodel_1pl 15661.42 15693.68 15712.69 15792.07 -7799.711             \nmodel_2pl 15501.24 15563.68 15600.47 15754.12 -7690.621 218.179 29 0\nmodel_3pl 15554.84 15648.49 15703.68 15934.15 -7687.418   6.406 30 1\n\n\n\n\n\n\n\n\nTipMemilih Model\n\n\n\nGunakan AIC dan BIC untuk memilih model terbaik: - BIC lebih konservatif — cocok jika sampel besar - AIC lebih liberal — cocok jika generalisasi penting - Model lebih kompleks tidak selalu lebih baik",
+    "crumbs": [
+      "Bagian III: Implementasi di R",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Estimasi Parameter IRT</span>"
+    ]
+  },
+  {
+    "objectID": "bab10-item-fit.html",
+    "href": "bab10-item-fit.html",
+    "title": "10  Item Fit Analysis",
+    "section": "",
+    "text": "10.1 Apa Itu Item Fit?\nItem Fit mengukur seberapa baik data empiris sesuai dengan prediksi model IRT. Item yang misfit berarti pola responnya tidak konsisten dengan model yang diasumsikan.",
+    "crumbs": [
+      "Bagian III: Implementasi di R",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Item Fit Analysis</span>"
+    ]
+  },
+  {
+    "objectID": "bab10-item-fit.html#statistik-item-fit",
+    "href": "bab10-item-fit.html#statistik-item-fit",
+    "title": "10  Item Fit Analysis",
+    "section": "10.2 Statistik Item Fit",
+    "text": "10.2 Statistik Item Fit\n\n10.2.1 Infit dan Outfit (Rasch)\n\n\nCode\nlibrary(TAM)\nlibrary(ggplot2)\n\nset.seed(42)\nn_peserta &lt;- 300; n_item &lt;- 20\nb_true     &lt;- seq(-2, 2, length.out = n_item)\ntheta_true &lt;- rnorm(n_peserta)\n\nprob_m  &lt;- outer(theta_true, b_true, function(t, b) 1/(1+exp(-(t-b))))\ndata_r  &lt;- matrix(rbinom(n_peserta*n_item, 1, prob_m),\n                  nrow=n_peserta,\n                  dimnames=list(NULL, paste0(\"I\",1:n_item)))\n\n# Tambahkan 2 item misfit\ndata_r[,1]  &lt;- sample(0:1, n_peserta, replace=TRUE)   # random (noisy)\ndata_r[,20] &lt;- ifelse(theta_true &gt; 0.5, 0, 1)         # terbalik\n\n# Estimasi dengan mirt (Rasch) — hindari tam.fit() karena bug internal !continue\nlibrary(mirt)\nmodel_r &lt;- mirt(data_r, 1, itemtype = \"Rasch\", verbose = FALSE)\nfit_r   &lt;- itemfit(model_r, fit_stats = \"S_X2\")\n\n# Clamp p-value: hindari -log10(0) = Inf\np_raw10 &lt;- pmax(pmin(fit_r$p.S_X2, 1), 1e-6)\n\nfit_df &lt;- data.frame(\n  Item     = paste0(\"I\", 1:n_item),\n  S_X2     = round(fit_r$S_X2, 3),\n  p_val    = round(p_raw10, 6),\n  neglog_p = -log10(p_raw10),\n  Status   = ifelse(p_raw10 &lt; 0.05, \"Misfit \\u26a0\\ufe0f\", \"Fit \\u2713\")\n)\n\nbatas10 &lt;- -log10(0.05)\n\nggplot(fit_df, aes(x = reorder(Item, neglog_p), y = neglog_p, fill = Status)) +\n  geom_col(width = 0.65) +\n  geom_hline(yintercept = batas10,\n             linetype = \"dashed\", color = \"#c0392b\", linewidth = 0.9) +\n  coord_flip() +\n  scale_fill_manual(values = c(\"Fit \\u2713\" = \"#27ae60\",\n                                \"Misfit \\u26a0\\ufe0f\" = \"#e74c3c\")) +\n  labs(title = \"Item Fit S-X\\u00b2 \\u2014 Rasch (1PL)\",\n       subtitle = \"Garis merah = p &lt; .05 | I01 & I20 sengaja dibuat misfit\",\n       x = NULL, y = \"-log\\u2081\\u2080(p-value)\", fill = \"\") +\n  theme_minimal(base_size = 12)\n\n\n\n\n\nItem Fit Plot — Rasch Model (TAM)\n\n\n\n\n\n\n10.2.2 S-X² (Signed Chi-Square) — Model mirt\n\n\nCode\nlibrary(mirt)\nlibrary(knitr)\n\nset.seed(2025)\na_t &lt;- runif(15, 0.7, 1.8); b_t &lt;- rnorm(15); theta_t &lt;- rnorm(400)\npm  &lt;- sapply(1:15, function(i) 1/(1+exp(-a_t[i]*(theta_t-b_t[i]))))\ndata_m &lt;- matrix(rbinom(400*15,1,pm), nrow=400,\n                 dimnames=list(NULL, paste0(\"Item\",1:15)))\n\nm2pl  &lt;- mirt(data_m, 1, \"2PL\", verbose=FALSE)\nfit_s &lt;- itemfit(m2pl, fit_stats=\"S_X2\")\n\nfit_tbl &lt;- data.frame(\n  Item     = paste0(\"Item\", 1:15),\n  S_X2     = round(fit_s$S_X2, 3),\n  df       = fit_s$df.S_X2,\n  p_value  = round(fit_s$p.S_X2, 4),\n  Status   = ifelse(fit_s$p.S_X2 &lt; 0.05, \"Misfit (p&lt;.05)\", \"Fit\")\n)\n\nkable(fit_tbl, align=\"c\")\n\n\n\nItem Fit Statistics — Model 2PL (mirt)\n\n\nItem\nS_X2\ndf\np_value\nStatus\n\n\n\n\nItem1\n11.741\n8\n0.1631\nFit\n\n\nItem2\n3.050\n9\n0.9623\nFit\n\n\nItem3\n6.824\n9\n0.6555\nFit\n\n\nItem4\n10.724\n9\n0.2951\nFit\n\n\nItem5\n19.460\n9\n0.0216\nMisfit (p&lt;.05)\n\n\nItem6\n5.905\n9\n0.7494\nFit\n\n\nItem7\n14.334\n8\n0.0735\nFit\n\n\nItem8\n8.110\n11\n0.7034\nFit\n\n\nItem9\n2.671\n10\n0.9881\nFit\n\n\nItem10\n6.154\n9\n0.7244\nFit\n\n\nItem11\n9.759\n9\n0.3704\nFit\n\n\nItem12\n7.958\n9\n0.5384\nFit\n\n\nItem13\n2.141\n7\n0.9516\nFit\n\n\nItem14\n9.944\n11\n0.5354\nFit\n\n\nItem15\n8.176\n9\n0.5165\nFit",
+    "crumbs": [
+      "Bagian III: Implementasi di R",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Item Fit Analysis</span>"
+    ]
+  },
+  {
+    "objectID": "bab10-item-fit.html#interpretasi-item-misfit",
+    "href": "bab10-item-fit.html#interpretasi-item-misfit",
+    "title": "10  Item Fit Analysis",
+    "section": "10.3 Interpretasi Item Misfit",
+    "text": "10.3 Interpretasi Item Misfit\n\n\n\n\n\n\nImportantPanduan Interpretasi\n\n\n\n\n\n\n\n\n\n\n\nKondisi\nNilai Infit/Outfit\nImplikasi\n\n\n\n\nUnderfit\n&gt; 1.3\nItem tidak konsisten — peserta dengan θ sama punya respon bervariasi\n\n\nFit\n0.70 – 1.30\nItem bekerja sesuai model ✓\n\n\nOverfit\n&lt; 0.70\nItem terlalu deterministik — mungkin redundan\n\n\n\n\n\n\n\nCode\n# Periksa pola residual item misfit (Q3 statistic)\nresiduals_m &lt;- tryCatch(residuals(m2pl, type=\"Q3\"), error=function(e) NULL)\n\n\nQ3 summary statistics:\n   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. \n -0.167  -0.092  -0.054  -0.057  -0.024   0.066 \n\n        Item1  Item2  Item3  Item4  Item5  Item6  Item7  Item8  Item9 Item10\nItem1   1.000 -0.042 -0.026 -0.088 -0.119 -0.087 -0.082 -0.005 -0.092 -0.111\nItem2  -0.042  1.000 -0.100 -0.095 -0.106 -0.011 -0.105 -0.077 -0.061 -0.025\nItem3  -0.026 -0.100  1.000 -0.063 -0.050 -0.151 -0.036 -0.045 -0.089 -0.045\nItem4  -0.088 -0.095 -0.063  1.000 -0.099  0.013 -0.051 -0.049 -0.074 -0.073\nItem5  -0.119 -0.106 -0.050 -0.099  1.000 -0.096 -0.049 -0.134  0.020 -0.048\nItem6  -0.087 -0.011 -0.151  0.013 -0.096  1.000 -0.068  0.066 -0.031 -0.057\nItem7  -0.082 -0.105 -0.036 -0.051 -0.049 -0.068  1.000 -0.122 -0.089 -0.004\nItem8  -0.005 -0.077 -0.045 -0.049 -0.134  0.066 -0.122  1.000 -0.028 -0.107\nItem9  -0.092 -0.061 -0.089 -0.074  0.020 -0.031 -0.089 -0.028  1.000 -0.077\nItem10 -0.111 -0.025 -0.045 -0.073 -0.048 -0.057 -0.004 -0.107 -0.077  1.000\nItem11 -0.067  0.005 -0.030  0.020 -0.106 -0.052 -0.125 -0.039 -0.127 -0.155\nItem12 -0.051 -0.167  0.005 -0.079  0.011 -0.021 -0.098 -0.039 -0.034 -0.125\nItem13  0.035 -0.145 -0.037 -0.039 -0.140 -0.085 -0.088 -0.011 -0.054 -0.099\nItem14  0.003 -0.009 -0.067 -0.079 -0.001 -0.007 -0.054 -0.010 -0.036  0.015\nItem15 -0.056 -0.008 -0.072 -0.145 -0.066 -0.052 -0.126  0.040  0.050 -0.067\n       Item11 Item12 Item13 Item14 Item15\nItem1  -0.067 -0.051  0.035  0.003 -0.056\nItem2   0.005 -0.167 -0.145 -0.009 -0.008\nItem3  -0.030  0.005 -0.037 -0.067 -0.072\nItem4   0.020 -0.079 -0.039 -0.079 -0.145\nItem5  -0.106  0.011 -0.140 -0.001 -0.066\nItem6  -0.052 -0.021 -0.085 -0.007 -0.052\nItem7  -0.125 -0.098 -0.088 -0.054 -0.126\nItem8  -0.039 -0.039 -0.011 -0.010  0.040\nItem9  -0.127 -0.034 -0.054 -0.036  0.050\nItem10 -0.155 -0.125 -0.099  0.015 -0.067\nItem11  1.000 -0.116 -0.032 -0.021 -0.024\nItem12 -0.116  1.000  0.018  0.009 -0.086\nItem13 -0.032  0.018  1.000 -0.087 -0.121\nItem14 -0.021  0.009 -0.087  1.000  0.008\nItem15 -0.024 -0.086 -0.121  0.008  1.000\n\n\nCode\nif (!is.null(residuals_m) && is.matrix(residuals_m)) {\n  n_show &lt;- min(10, nrow(residuals_m))\n  sub_m  &lt;- residuals_m[1:n_show, 1:n_show]\n\n  # Visualisasi dengan tidyr (tidak perlu corrplot atau reshape2)\n  library(tidyr)\n  df_q3 &lt;- as.data.frame(sub_m)\n  df_q3$Item1 &lt;- rownames(df_q3)\n  df_q3 &lt;- pivot_longer(df_q3, -Item1, names_to=\"Item2\", values_to=\"Q3\")\n  df_q3 &lt;- df_q3[df_q3$Item1 != df_q3$Item2, ]  # hapus diagonal\n\n  print(\n    ggplot(df_q3, aes(x=Item2, y=Item1, fill=Q3)) +\n      geom_tile(color=\"white\") +\n      geom_text(aes(label=round(Q3,2)), size=3) +\n      scale_fill_gradient2(low=\"#3498db\", mid=\"white\", high=\"#e74c3c\",\n                           midpoint=0, limits=c(-0.5, 0.5)) +\n      labs(title=\"Matriks Q3: Lokal Dependensi Item\",\n           subtitle=\"|Q3| &gt; 0.2 = kemungkinan lokal dependensi\",\n           x=NULL, y=NULL, fill=\"Q3\") +\n      theme_minimal(base_size=11) +\n      theme(axis.text.x=element_text(angle=45, hjust=1))\n  )\n\n  # Statistik ringkasan\n  off_diag &lt;- residuals_m[upper.tri(residuals_m)]\n  cat(\"Rangkuman Q3 Statistics:\\n\")\n  cat(\"Nilai Q3 &gt; 0.2 mengindikasikan lokal dependensi\\n\")\n  cat(\"Q3 max (off-diagonal):\", round(max(abs(off_diag)), 3), \"\\n\")\n  cat(\"Pasangan dengan |Q3| &gt; 0.2:\", sum(abs(off_diag) &gt; 0.2), \"\\n\")\n} else {\n  cat(\"Q3 residuals tidak tersedia untuk model ini.\\n\")\n}\n\n\nRangkuman Q3 Statistics:\nNilai Q3 &gt; 0.2 mengindikasikan lokal dependensi\nQ3 max (off-diagonal): 0.167 \nPasangan dengan |Q3| &gt; 0.2: 0 \n\n\n\n\n\n\n\n\nFigure 10.1: Diagnosa Item Misfit: Residual Plot",
+    "crumbs": [
+      "Bagian III: Implementasi di R",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Item Fit Analysis</span>"
+    ]
+  },
+  {
+    "objectID": "bab10-item-fit.html#langkah-setelah-item-misfit",
+    "href": "bab10-item-fit.html#langkah-setelah-item-misfit",
+    "title": "10  Item Fit Analysis",
+    "section": "10.4 Langkah Setelah Item Misfit",
+    "text": "10.4 Langkah Setelah Item Misfit\n\n\n\nPanduan Tindakan untuk Item Misfit\n\n\n\n\n\n\n\nPenyebab\nGejala\nTindakan\n\n\n\n\nAmbiguitas item\nOutfit tinggi, Infit normal\nRevisi redaksi item\n\n\nMultidimensional\nItem cluster berbeda\nPisahkan dimensi / MIRT\n\n\nLokal dependensi\nQ3 &gt; 0.2 antar item\nHapus salah satu item\n\n\nItem terlalu mudah/sulit\np &lt; 0.1 atau p &gt; 0.9\nReview konten item\n\n\nKesalahan skoring\nOutfit sangat tinggi\nPeriksa answer key",
+    "crumbs": [
+      "Bagian III: Implementasi di R",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Item Fit Analysis</span>"
+    ]
+  },
+  {
+    "objectID": "bab11-person-fit.html",
+    "href": "bab11-person-fit.html",
+    "title": "11  Bab 11: Person Fit",
+    "section": "",
+    "text": "11.1 Kompetensi Bab\nSetelah mempelajari bab ini, pembaca akan memahami konsep dan implementasi topik ini dalam analisis IRT menggunakan R.",
+    "crumbs": [
+      "Bagian III: Implementasi di R",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Bab 11: Person Fit</span>"
+    ]
+  },
+  {
+    "objectID": "bab11-person-fit.html#materi-utama",
+    "href": "bab11-person-fit.html#materi-utama",
+    "title": "11  Bab 11: Person Fit",
+    "section": "11.2 Materi Utama",
+    "text": "11.2 Materi Utama\nMateri utama bab ini mencakup:\n\nPenjelasan konseptual\nFormula matematis\nImplementasi di R dengan kode yang dapat dijalankan langsung\nInterpretasi output\nStudi kasus terapan\n\nKonten lengkap tersedia pada versi final modul.",
+    "crumbs": [
+      "Bagian III: Implementasi di R",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Bab 11: Person Fit</span>"
+    ]
+  },
+  {
+    "objectID": "bab13-wright-map.html",
+    "href": "bab13-wright-map.html",
+    "title": "12  Wright Map & Person-Item Map",
+    "section": "",
+    "text": "12.1 Apa Itu Wright Map?\nWright Map (atau Person-Item Map) adalah visualisasi khas Rasch Model yang menampilkan distribusi kemampuan peserta (θ) dan kesulitan item (b) pada skala yang sama.\nOutput ini langsung menunjukkan:",
+    "crumbs": [
+      "Bagian IV: Aplikasi Praktis",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Wright Map & Person-Item Map</span>"
+    ]
+  },
+  {
+    "objectID": "bab13-wright-map.html#apa-itu-wright-map",
+    "href": "bab13-wright-map.html#apa-itu-wright-map",
+    "title": "12  Wright Map & Person-Item Map",
+    "section": "",
+    "text": "Apakah instrumen cocok dengan kemampuan peserta (targeting)\nItem mana yang terlalu mudah atau terlalu sulit\nRentang kemampuan yang tidak tercakup instrumen",
+    "crumbs": [
+      "Bagian IV: Aplikasi Praktis",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Wright Map & Person-Item Map</span>"
+    ]
+  },
+  {
+    "objectID": "bab13-wright-map.html#setup-data-dan-estimasi",
+    "href": "bab13-wright-map.html#setup-data-dan-estimasi",
+    "title": "12  Wright Map & Person-Item Map",
+    "section": "12.2 Setup Data dan Estimasi",
+    "text": "12.2 Setup Data dan Estimasi\n\n\nCode\nlibrary(mirt)\nlibrary(ggplot2)\nlibrary(dplyr)\n\nset.seed(42)\nn_peserta &lt;- 300\nn_item    &lt;- 25\nb_true    &lt;- seq(-2.5, 2.5, length.out = n_item)\ntheta_true &lt;- rnorm(n_peserta, 0, 1)\n\n# Generate data Rasch\nprob_m &lt;- outer(theta_true, b_true,\n                function(t, b) 1 / (1 + exp(-(t - b))))\ndata_wm &lt;- matrix(\n  rbinom(n_peserta * n_item, 1, prob_m),\n  nrow = n_peserta,\n  dimnames = list(NULL, paste0(\"I\", sprintf(\"%02d\", 1:n_item)))\n)\n\n# Estimasi Rasch dengan mirt\nmodel_wm  &lt;- mirt(data_wm, 1, itemtype = \"Rasch\", verbose = FALSE)\n\n# Kemampuan peserta (EAP)\ntheta_est &lt;- fscores(model_wm, method = \"EAP\")[, 1]\n\n# Kesulitan item (b = -d karena mirt pakai intercept)\nparams_wm &lt;- coef(model_wm, IRTpars = TRUE, simplify = TRUE)$items\nb_est     &lt;- params_wm[, \"b\"]\n\ncat(\"=== DATA SIAP ===\\n\")\n\n\n=== DATA SIAP ===\n\n\nCode\ncat(\"Peserta  :\", length(theta_est), \"| Mean θ =\", round(mean(theta_est), 3), \"\\n\")\n\n\nPeserta  : 300 | Mean θ = 0 \n\n\nCode\ncat(\"Item     :\", length(b_est),     \"| Mean b =\", round(mean(b_est), 3), \"\\n\")\n\n\nItem     : 25 | Mean b = 0.06",
+    "crumbs": [
+      "Bagian IV: Aplikasi Praktis",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Wright Map & Person-Item Map</span>"
+    ]
+  },
+  {
+    "objectID": "bab13-wright-map.html#wright-map-dengan-ggplot2",
+    "href": "bab13-wright-map.html#wright-map-dengan-ggplot2",
+    "title": "12  Wright Map & Person-Item Map",
+    "section": "12.3 Wright Map dengan ggplot2",
+    "text": "12.3 Wright Map dengan ggplot2\n\n\nCode\n# ── Fungsi Wright Map ggplot2 ──────────────────────────────────────────\nwright_map &lt;- function(theta, b, item_labels = NULL,\n                        titl = \"Wright Map\",\n                        warna_theta = \"#3498db\",\n                        warna_b     = \"#e74c3c\") {\n\n  if (is.null(item_labels))\n    item_labels &lt;- paste0(\"I\", sprintf(\"%02d\", seq_along(b)))\n\n  # Batas sumbu y bersama\n  y_min &lt;- floor(min(c(theta, b))) - 0.5\n  y_max &lt;- ceiling(max(c(theta, b))) + 0.5\n\n  # Panel kiri: histogram peserta\n  df_theta &lt;- data.frame(theta = theta)\n\n  p_kiri &lt;- ggplot(df_theta, aes(x = theta)) +\n    geom_histogram(aes(y = after_stat(count)),\n                   binwidth = 0.25, fill = warna_theta,\n                   color = \"white\", alpha = 0.85) +\n    scale_x_continuous(limits = c(y_min, y_max)) +\n    coord_flip() +\n    labs(x = \"Kemampuan Peserta (\\u03b8)\", y = \"Frekuensi\",\n         title = \"Peserta\") +\n    theme_minimal(base_size = 11) +\n    theme(axis.title.y = element_text(size = 9),\n          plot.title = element_text(hjust = 0.5, face = \"bold\",\n                                     color = warna_theta))\n\n  # Panel kanan: titik item\n  df_b &lt;- data.frame(b = b, label = item_labels,\n                      x = rep(0.5, length(b)))\n\n  p_kanan &lt;- ggplot(df_b, aes(y = b, x = x)) +\n    geom_point(size = 3, color = warna_b) +\n    geom_text(aes(label = label, x = 0.55),\n              hjust = 0, size = 3, color = \"gray20\") +\n    geom_hline(yintercept = 0, linetype = \"dashed\",\n               color = \"gray60\", linewidth = 0.7) +\n    scale_y_continuous(limits = c(y_min, y_max)) +\n    scale_x_continuous(limits = c(0, 1.5)) +\n    labs(y = \"Kesulitan Item (b)\", x = NULL, title = \"Item\") +\n    theme_minimal(base_size = 11) +\n    theme(axis.text.x  = element_blank(),\n          axis.ticks.x = element_blank(),\n          plot.title = element_text(hjust = 0.5, face = \"bold\",\n                                     color = warna_b))\n\n  # Gabungkan dua panel\n  library(patchwork)\n  (p_kiri | p_kanan) +\n    plot_annotation(\n      title   = titl,\n      caption = \"Kiri: distribusi kemampuan peserta | Kanan: lokasi item pada skala yang sama\",\n      theme   = theme(\n        plot.title   = element_text(size = 14, face = \"bold\",\n                                     hjust = 0.5, color = \"#2c3e50\"),\n        plot.caption = element_text(size = 9, color = \"gray50\")\n      )\n    ) +\n    plot_layout(widths = c(1, 1.4))\n}\n\n# Tampilkan Wright Map dasar\nwright_map(\n  theta       = theta_est,\n  b           = b_est,\n  item_labels = paste0(\"I\", sprintf(\"%02d\", 1:n_item)),\n  titl        = \"Wright Map — Asesmen Kompetensi (Rasch)\"\n)\n\n\n\n\n\n\n\n\nFigure 12.1: Wright Map — Rasch Model",
+    "crumbs": [
+      "Bagian IV: Aplikasi Praktis",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Wright Map & Person-Item Map</span>"
+    ]
+  },
+  {
+    "objectID": "bab13-wright-map.html#interpretasi-wright-map",
+    "href": "bab13-wright-map.html#interpretasi-wright-map",
+    "title": "12  Wright Map & Person-Item Map",
+    "section": "12.4 Interpretasi Wright Map",
+    "text": "12.4 Interpretasi Wright Map\n\n\n\n\n\n\nNotePanduan Membaca Wright Map\n\n\n\n\n\n\n\n\n\n\nArea di Wright Map\nMaknanya\n\n\n\n\nPeserta di atas item tertinggi\nTes terlalu mudah — perlu item lebih sulit\n\n\nItem di atas peserta tertinggi\nItem terlalu sulit untuk kelompok ini\n\n\nKluster peserta vs kluster item\nKesenjangan pengukuran — SEM besar di area itu\n\n\nKeselarasan sebaran\nInstrumen sesuai dengan kemampuan peserta\n\n\n\n\n\n\n\nCode\n# Versi dengan zona targeting diwarnai\ny_min2 &lt;- floor(min(c(theta_est, b_est))) - 0.3\ny_max2 &lt;- ceiling(max(c(theta_est, b_est))) + 0.3\n\n# Histogram peserta\np_left2 &lt;- ggplot(data.frame(theta = theta_est), aes(x = theta)) +\n  annotate(\"rect\", xmin = quantile(b_est, 0.25),\n           xmax = quantile(b_est, 0.75),\n           ymin = -Inf, ymax = Inf,\n           fill = \"#27ae60\", alpha = 0.08) +\n  geom_histogram(binwidth = 0.25, fill = \"#3498db\",\n                 color = \"white\", alpha = 0.85) +\n  geom_vline(xintercept = mean(theta_est),\n             linetype = \"dashed\", color = \"#1a5276\", linewidth = 1) +\n  scale_x_continuous(limits = c(y_min2, y_max2)) +\n  coord_flip() +\n  annotate(\"text\", x = mean(theta_est) + 0.15, y = 35,\n           label = paste(\"Mean =\", round(mean(theta_est), 2)),\n           color = \"#1a5276\", size = 3.2, hjust = 0) +\n  labs(x = \"\\u03b8\", y = \"Frekuensi\", title = \"Peserta\") +\n  theme_minimal(base_size = 11) +\n  theme(plot.title = element_text(hjust = 0.5, face = \"bold\",\n                                   color = \"#3498db\"))\n\n# Titik item dengan warna zona\ndf_b2 &lt;- data.frame(\n  b     = b_est,\n  label = paste0(\"I\", sprintf(\"%02d\", 1:n_item)),\n  Zona  = cut(b_est,\n              breaks = c(-Inf, -1.5, -0.5, 0.5, 1.5, Inf),\n              labels = c(\"Sangat Mudah\",\"Mudah\",\"Sedang\",\"Sulit\",\"Sangat Sulit\"))\n)\n\np_right2 &lt;- ggplot(df_b2, aes(y = b, x = 0.5, color = Zona)) +\n  geom_hline(yintercept = mean(b_est),\n             linetype = \"dashed\", color = \"#c0392b\", linewidth = 1) +\n  geom_point(size = 3.5) +\n  geom_text(aes(label = label, x = 0.56),\n            hjust = 0, size = 2.8, color = \"gray25\") +\n  scale_color_manual(values = c(\n    \"Sangat Mudah\" = \"#27ae60\",\n    \"Mudah\"        = \"#2ecc71\",\n    \"Sedang\"       = \"#f39c12\",\n    \"Sulit\"        = \"#e67e22\",\n    \"Sangat Sulit\" = \"#e74c3c\"\n  )) +\n  scale_y_continuous(limits = c(y_min2, y_max2)) +\n  scale_x_continuous(limits = c(0, 1.5)) +\n  annotate(\"text\", y = mean(b_est) + 0.1, x = 1.3,\n           label = paste(\"Mean b =\", round(mean(b_est), 2)),\n           color = \"#c0392b\", size = 3.2) +\n  labs(y = \"b (logit)\", x = NULL, title = \"Item\",\n       color = \"Kategori Kesulitan\") +\n  theme_minimal(base_size = 11) +\n  theme(axis.text.x  = element_blank(),\n        axis.ticks.x = element_blank(),\n        legend.position = \"bottom\",\n        legend.text = element_text(size = 8),\n        plot.title = element_text(hjust = 0.5, face = \"bold\",\n                                   color = \"#e74c3c\"))\n\nlibrary(patchwork)\n(p_left2 | p_right2) +\n  plot_annotation(\n    title = \"Wright Map dengan Zona Kesulitan Item\",\n    theme = theme(plot.title = element_text(size = 13, face = \"bold\",\n                                             hjust = 0.5))\n  ) +\n  plot_layout(widths = c(1, 1.5), guides = \"collect\") &\n  theme(legend.position = \"bottom\")\n\n\n\n\n\n\n\n\nFigure 12.2: Wright Map dengan Anotasi Zona Targeting",
+    "crumbs": [
+      "Bagian IV: Aplikasi Praktis",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Wright Map & Person-Item Map</span>"
+    ]
+  },
+  {
+    "objectID": "bab13-wright-map.html#analisis-targeting",
+    "href": "bab13-wright-map.html#analisis-targeting",
+    "title": "12  Wright Map & Person-Item Map",
+    "section": "12.5 Analisis Targeting",
+    "text": "12.5 Analisis Targeting\n\n\nCode\nmean_theta &lt;- mean(theta_est)\nmean_b     &lt;- mean(b_est)\nsd_theta   &lt;- sd(theta_est)\nsd_b       &lt;- sd(b_est)\ngap        &lt;- mean_theta - mean_b\n\ncat(\"=== ANALISIS TARGETING ===\\n\")\n\n\n=== ANALISIS TARGETING ===\n\n\nCode\ncat(sprintf(\"Mean theta peserta : %.3f  (SD = %.3f)\\n\", mean_theta, sd_theta))\n\n\nMean theta peserta : -0.000  (SD = 0.870)\n\n\nCode\ncat(sprintf(\"Mean b item        : %.3f  (SD = %.3f)\\n\", mean_b, sd_b))\n\n\nMean b item        : 0.060  (SD = 1.594)\n\n\nCode\ncat(sprintf(\"Selisih (gap)      : %.3f logit\\n\", gap))\n\n\nSelisih (gap)      : -0.060 logit\n\n\nCode\ncat(sprintf(\"Kualitas targeting : %s\\n\",\n    ifelse(abs(gap) &lt; 0.3, \"Sangat Baik\",\n    ifelse(abs(gap) &lt; 0.5, \"Baik\",\n    ifelse(mean_theta &gt; mean_b, \"Instrumen terlalu mudah\",\n           \"Instrumen terlalu sulit\")))))\n\n\nKualitas targeting : Sangat Baik\n\n\nCode\n# Visualisasi distribusi tumpang-tindih\ndf_both &lt;- data.frame(\n  nilai = c(theta_est, b_est),\n  jenis = c(rep(\"Kemampuan Peserta (\\u03b8)\", n_peserta),\n             rep(\"Kesulitan Item (b)\",    n_item))\n)\n\nggplot(df_both, aes(x = nilai, fill = jenis)) +\n  geom_density(alpha = 0.5, linewidth = 0.9) +\n  geom_vline(xintercept = mean_theta, color = \"#3498db\",\n             linetype = \"dashed\", linewidth = 1.2) +\n  geom_vline(xintercept = mean_b, color = \"#e74c3c\",\n             linetype = \"dashed\", linewidth = 1.2) +\n  annotate(\"label\", x = mean_theta, y = 0.55,\n           label = paste(\"Mean\\u03b8 =\", round(mean_theta, 2)),\n           fill = \"#eaf4fb\", color = \"#1a5276\", size = 3.5) +\n  annotate(\"label\", x = mean_b - 0.05, y = 0.45,\n           label = paste(\"Mean b =\", round(mean_b, 2)),\n           fill = \"#fef9e7\", color = \"#c0392b\", size = 3.5) +\n  scale_fill_manual(values = c(\"#3498db\", \"#e74c3c\")) +\n  labs(\n    title    = \"Distribusi Kemampuan Peserta vs Kesulitan Item\",\n    subtitle = \"Tumpang-tindih tinggi = targeting baik | Gap kecil = instrumen seimbang\",\n    x = \"Skala Logit\", y = \"Densitas\", fill = \"\"\n  ) +\n  theme_minimal(base_size = 12) +\n  theme(legend.position = \"bottom\")\n\n\n\n\n\n\n\n\nFigure 12.3: Analisis Targeting: Distribusi θ vs b",
+    "crumbs": [
+      "Bagian IV: Aplikasi Praktis",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Wright Map & Person-Item Map</span>"
+    ]
+  },
+  {
+    "objectID": "bab13-wright-map.html#wright-map-untuk-skala-politomus-pcm",
+    "href": "bab13-wright-map.html#wright-map-untuk-skala-politomus-pcm",
+    "title": "12  Wright Map & Person-Item Map",
+    "section": "12.6 Wright Map untuk Skala Politomus (PCM)",
+    "text": "12.6 Wright Map untuk Skala Politomus (PCM)\n\n\nCode\n# Simulasi data Likert 4 kategori (0-3) menggunakan mirt\nset.seed(99)\nn_item_pcm  &lt;- 8\nn_peserta_p &lt;- 250\n\n# Generate data politomus Rasch (PCM)\ndelta_all &lt;- lapply(1:n_item_pcm, function(i)\n  sort(rnorm(3, mean = (i - 4.5) * 0.5, sd = 0.4)))\n\ntheta_p &lt;- rnorm(n_peserta_p, 0, 1)\n\n# Fungsi generate respon PCM\ngen_pcm &lt;- function(theta, deltas) {\n  m &lt;- length(deltas)\n  num &lt;- c(0, cumsum(theta - deltas))\n  probs &lt;- exp(num) / sum(exp(num))\n  sample(0:m, 1, prob = probs)\n}\n\ndata_pcm &lt;- matrix(\n  sapply(1:n_peserta_p, function(j)\n    sapply(1:n_item_pcm, function(i)\n      gen_pcm(theta_p[j], delta_all[[i]]))),\n  nrow = n_peserta_p, byrow = TRUE,\n  dimnames = list(NULL, paste0(\"Kompetensi\", 1:n_item_pcm))\n)\n\n# Estimasi PCM dengan mirt\nmodel_pcm &lt;- mirt(data_pcm, 1, itemtype = \"gpcm\", verbose = FALSE)\n\n# Theta peserta\ntheta_pcm &lt;- fscores(model_pcm, method = \"EAP\")[, 1]\n\n# Ekstrak threshold (delta) per item\ncoef_pcm &lt;- coef(model_pcm, IRTpars = TRUE, simplify = FALSE)\nthresh_list &lt;- lapply(seq_len(n_item_pcm), function(i) {\n  co &lt;- coef_pcm[[i]]\n  # kolom cb1, cb2, cb3 = threshold\n  th_cols &lt;- grep(\"^cb|^b\", colnames(co), value = TRUE)\n  if (length(th_cols) == 0) return(rep(NA, 3))\n  as.numeric(co[1, th_cols[1:min(3, length(th_cols))]])\n})\n\n# Wright Map PCM dengan ggplot2\ndf_thresh &lt;- do.call(rbind, lapply(seq_len(n_item_pcm), function(i) {\n  data.frame(\n    item      = paste0(\"Komp\", i),\n    threshold = thresh_list[[i]],\n    kategori  = paste0(\"Kat\", 1:3),\n    x         = 0.5\n  )\n}))\ndf_thresh &lt;- df_thresh[!is.na(df_thresh$threshold), ]\n\ny_pcm_min &lt;- floor(min(c(theta_pcm, df_thresh$threshold), na.rm=TRUE)) - 0.3\ny_pcm_max &lt;- ceiling(max(c(theta_pcm, df_thresh$threshold), na.rm=TRUE)) + 0.3\n\n# Panel kiri: histogram peserta\np_pcm_kiri &lt;- ggplot(data.frame(theta = theta_pcm), aes(x = theta)) +\n  geom_histogram(binwidth = 0.25, fill = \"#3498db\",\n                 color = \"white\", alpha = 0.85) +\n  scale_x_continuous(limits = c(y_pcm_min, y_pcm_max)) +\n  coord_flip() +\n  labs(x = \"Kemampuan Pegawai (\\u03b8)\", y = \"Frekuensi\",\n       title = \"Peserta\") +\n  theme_minimal(base_size = 11) +\n  theme(plot.title = element_text(hjust = 0.5, face = \"bold\",\n                                   color = \"#3498db\"))\n\n# Panel kanan: threshold per item\npal_kat &lt;- c(\"Kat1\" = \"#2ecc71\", \"Kat2\" = \"#f39c12\", \"Kat3\" = \"#e74c3c\")\n\np_pcm_kanan &lt;- ggplot(df_thresh,\n                       aes(y = threshold, x = x, color = kategori)) +\n  geom_point(size = 3.5, alpha = 0.85) +\n  geom_text(aes(label = item, x = 0.56),\n            hjust = 0, size = 2.8, color = \"gray25\") +\n  geom_hline(yintercept = 0, linetype = \"dashed\",\n             color = \"gray60\", linewidth = 0.7) +\n  scale_color_manual(values = pal_kat,\n                     labels = c(\"Kat1\" = \"Threshold 1\\u21922\",\n                                \"Kat2\" = \"Threshold 2\\u21923\",\n                                \"Kat3\" = \"Threshold 3\\u21924\")) +\n  scale_y_continuous(limits = c(y_pcm_min, y_pcm_max)) +\n  scale_x_continuous(limits = c(0, 1.5)) +\n  labs(y = \"Threshold (logit)\", x = NULL,\n       title = \"Item (PCM)\", color = \"Transisi Kategori\") +\n  theme_minimal(base_size = 11) +\n  theme(axis.text.x  = element_blank(),\n        axis.ticks.x = element_blank(),\n        legend.position = \"bottom\",\n        legend.text = element_text(size = 8),\n        plot.title = element_text(hjust = 0.5, face = \"bold\",\n                                   color = \"#e74c3c\"))\n\n(p_pcm_kiri | p_pcm_kanan) +\n  plot_annotation(\n    title   = \"Wright Map \\u2014 PCM (Skala Kompetensi Likert 4 Kategori)\",\n    caption = \"Setiap item memiliki 3 threshold (transisi antar kategori 0\\u21921, 1\\u21922, 2\\u21923)\",\n    theme   = theme(\n      plot.title   = element_text(size = 13, face = \"bold\", hjust = 0.5),\n      plot.caption = element_text(size = 9, color = \"gray50\")\n    )\n  ) +\n  plot_layout(widths = c(1, 1.5), guides = \"collect\") &\n  theme(legend.position = \"bottom\")\n\n\n\n\n\n\n\n\nFigure 12.4: Wright Map — Partial Credit Model (Skala Likert 4 Kategori)",
+    "crumbs": [
+      "Bagian IV: Aplikasi Praktis",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Wright Map & Person-Item Map</span>"
+    ]
+  },
+  {
+    "objectID": "bab13-wright-map.html#latihan-mandiri",
+    "href": "bab13-wright-map.html#latihan-mandiri",
+    "title": "12  Wright Map & Person-Item Map",
+    "section": "Latihan Mandiri",
+    "text": "Latihan Mandiri\n\nModifikasi fungsi wright_map() untuk menambahkan garis referensi pada nilai θ = −1, 0, dan +1 di panel peserta. Apa makna setiap garis referensi tersebut?\nDari Wright Map analisis targeting, hitung proporsi peserta yang berada dalam rentang item (antara item termudah dan tersulit). Item termudah dan tersulit dapat diperoleh dari range(b_est).\nBuat Wright Map untuk subkelompok peserta berbeda (misalnya kelompok dengan θ &gt; 0 dan θ ≤ 0). Bagaimana perbedaan profil targeting antar kelompok?",
+    "crumbs": [
+      "Bagian IV: Aplikasi Praktis",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Wright Map & Person-Item Map</span>"
+    ]
+  },
+  {
+    "objectID": "bab14-computer-adaptive.html",
+    "href": "bab14-computer-adaptive.html",
+    "title": "13  Bab 14: Computer Adaptive",
+    "section": "",
+    "text": "13.1 Kompetensi Bab\nSetelah mempelajari bab ini, pembaca akan memahami konsep dan implementasi topik ini dalam analisis IRT menggunakan R.",
+    "crumbs": [
+      "Bagian IV: Aplikasi Praktis",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Bab 14: Computer Adaptive</span>"
+    ]
+  },
+  {
+    "objectID": "bab14-computer-adaptive.html#materi-utama",
+    "href": "bab14-computer-adaptive.html#materi-utama",
+    "title": "13  Bab 14: Computer Adaptive",
+    "section": "13.2 Materi Utama",
+    "text": "13.2 Materi Utama\nMateri utama bab ini mencakup:\n\nPenjelasan konseptual\nFormula matematis\nImplementasi di R dengan kode yang dapat dijalankan langsung\nInterpretasi output\nStudi kasus terapan\n\nKonten lengkap tersedia pada versi final modul.",
+    "crumbs": [
+      "Bagian IV: Aplikasi Praktis",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Bab 14: Computer Adaptive</span>"
+    ]
+  },
+  {
+    "objectID": "bab15-pelaporan.html",
+    "href": "bab15-pelaporan.html",
+    "title": "14  Pelaporan Psikometri Berbasis IRT",
+    "section": "",
+    "text": "14.1 Struktur Laporan Psikometri Standar\nLaporan psikometri berbasis IRT yang profesional mencakup komponen berikut:\nTable 14.1: Komponen Laporan Psikometri IRT\n\n\n\n\n\n\n\n\n\n\nKomponen\nIsi Utama\n\n\n\n\n1. Ringkasan Eksekutif\nTujuan, kesimpulan utama, rekomendasi kritis\n\n\n2. Deskripsi Instrumen\nJumlah item, format respon, konstruk diukur\n\n\n3. Karakteristik Sampel\nN, demografi, distribusi skor\n\n\n4. Uji Asumsi\nUnidimensionalitas, lokal independensi\n\n\n5. Hasil Kalibrasi Item\nTabel a, b, (c) dengan SE; ICC grafik\n\n\n6. Item Fit\nInfit/Outfit MnSq, S-X², keputusan per item\n\n\n7. Analisis DIF\nMetode, item DIF, rekomendasi\n\n\n8. Wright Map & Targeting\nVisual distribusi, analisis gap, targeting\n\n\n9. Reliabilitas & Validitas\nPerson separation, Cronbach α, EAP reliability\n\n\n10. Rekomendasi\nItem dipertahankan/direvisi/dihapus",
+    "crumbs": [
+      "Bagian IV: Aplikasi Praktis",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>Pelaporan Psikometri Berbasis IRT</span>"
+    ]
+  },
+  {
+    "objectID": "bab15-pelaporan.html#template-laporan-otomatis",
+    "href": "bab15-pelaporan.html#template-laporan-otomatis",
+    "title": "14  Pelaporan Psikometri Berbasis IRT",
+    "section": "14.2 Template Laporan Otomatis",
+    "text": "14.2 Template Laporan Otomatis\n\n\nCode\n# =============================================\n# FUNGSI BUAT LAPORAN IRT OTOMATIS\n# =============================================\n\nbuat_laporan_irt &lt;- function(\n    data,              # Matriks data respon\n    nama_instrumen,    # Nama tes\n    nama_penulis,      # Nama penyusun laporan\n    model = \"2PL\",     # Model IRT\n    output_dir = \".\"   # Folder output\n) {\n\n  library(mirt)\n  library(TAM)\n  library(WrightMap)\n  library(tidyverse)\n  library(knitr)\n  library(rmarkdown)\n\n  n_peserta &lt;- nrow(data)\n  n_item    &lt;- ncol(data)\n\n  # Estimasi model — gunakan mirt untuk semua agar konsisten\n  cat(\"Mengestimasi model\", model, \"...\\n\")\n  itemtype_map &lt;- c(\"Rasch\" = \"Rasch\", \"1PL\" = \"Rasch\", \"2PL\" = \"2PL\", \"3PL\" = \"3PL\")\n  m &lt;- mirt(data, 1, itemtype = itemtype_map[model], verbose = FALSE)\n\n  # Buat laporan Quarto\n  template &lt;- sprintf('\n---\ntitle: \"Laporan Psikometri IRT\"\nsubtitle: \"%s\"\nauthor: \"%s\"\ndate: \"`r format(Sys.Date(), \\'%%d %%B %%Y\\')`\"\nformat:\n  pdf:\n    toc: true\n    number-sections: true\n  html:\n    toc: true\nexecute:\n  echo: false\n  warning: false\n---\n\n## Ringkasan Eksekutif\n\nAnalisis psikometri berbasis **%s** telah dilakukan terhadap instrumen **%s** \ndengan **%d item** yang direspons oleh **%d peserta**.\n\n## Karakteristik Sampel\n\n- Jumlah Peserta: **%d**\n- Jumlah Item: **%d**\n- Model IRT: **%s**\n\n',\n    nama_instrumen, nama_penulis,\n    model, nama_instrumen,\n    n_item, n_peserta,\n    n_peserta, n_item, model\n  )\n\n  laporan_path &lt;- file.path(output_dir, \"laporan_irt.qmd\")\n  writeLines(template, laporan_path)\n\n  cat(\"Laporan template berhasil dibuat di:\", laporan_path, \"\\n\")\n  cat(\"Render dengan: quarto render\", laporan_path, \"\\n\")\n\n  return(invisible(laporan_path))\n}",
+    "crumbs": [
+      "Bagian IV: Aplikasi Praktis",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>Pelaporan Psikometri Berbasis IRT</span>"
+    ]
+  },
+  {
+    "objectID": "bab15-pelaporan.html#contoh-output-laporan-lengkap",
+    "href": "bab15-pelaporan.html#contoh-output-laporan-lengkap",
+    "title": "14  Pelaporan Psikometri Berbasis IRT",
+    "section": "14.3 Contoh Output Laporan Lengkap",
+    "text": "14.3 Contoh Output Laporan Lengkap\n\n\nCode\nlibrary(mirt)\nlibrary(ggplot2)\nlibrary(knitr)\nlibrary(ggrepel)\nlibrary(dplyr)   # wajib untuk case_when()\n\nset.seed(2025)\nn_p &lt;- 400; n_i &lt;- 20\na_t     &lt;- runif(n_i, 0.6, 2.0)\nb_t     &lt;- rnorm(n_i)\ntheta_t &lt;- rnorm(n_p)\n\npm  &lt;- sapply(1:n_i, function(i) 1 / (1 + exp(-a_t[i] * (theta_t - b_t[i]))))\ndat &lt;- matrix(rbinom(n_p * n_i, 1, pm), nrow = n_p,\n              dimnames = list(NULL, paste0(\"Item\", 1:n_i)))\n\nm   &lt;- mirt(dat, 1, \"2PL\", verbose = FALSE)\npar &lt;- coef(m, IRTpars = TRUE, simplify = TRUE)$items\n\n# Clamp p-value agar -log10(0) tidak crash\np_sx2 &lt;- pmax(pmin(itemfit(m, fit_stats = \"S_X2\")$p.S_X2, 1), 1e-6)\n\n# Nama kolom TANPA spasi agar aman di aes()\nlaporan_tbl &lt;- data.frame(\n  Item       = paste0(\"Item \", 1:n_i),\n  a_daya     = round(par[, \"a\"], 3),          # daya beda\n  b_kesulitan = round(par[, \"b\"], 3),          # kesulitan\n  p_sx2      = round(p_sx2, 4),\n  Status_Fit = ifelse(p_sx2 &lt; 0.05, \"Misfit\", \"Fit\"),\n  Keputusan  = case_when(\n    par[, \"a\"] &lt; 0.5                          ~ \"Hapus (daya beda lemah)\",\n    p_sx2 &lt; 0.05                              ~ \"Revisi (misfit)\",\n    par[, \"b\"] &gt; 3 | par[, \"b\"] &lt; -3         ~ \"Hapus (ekstrem)\",\n    TRUE                                       ~ \"Pertahankan\"\n  )\n)\n\n# Tampilkan tabel dengan nama kolom ramah pembaca\nkable(\n  laporan_tbl,\n  col.names = c(\"Item\", \"a (Daya Beda)\", \"b (Kesulitan)\",\n                \"S-X\\u00b2 p-value\", \"Status Fit\", \"Keputusan\"),\n  align = \"c\"\n)\n\n\n\nTabel Parameter Item Lengkap\n\n\n\n\n\n\n\n\n\n\n\n\nItem\na (Daya Beda)\nb (Kesulitan)\nS-X² p-value\nStatus Fit\nKeputusan\n\n\n\n\nItem1\nItem 1\n1.512\n-0.533\n0.9359\nFit\nPertahankan\n\n\nItem2\nItem 2\n1.323\n-1.854\n0.9767\nFit\nPertahankan\n\n\nItem3\nItem 3\n1.153\n-0.681\n0.1466\nFit\nPertahankan\n\n\nItem4\nItem 4\n1.301\n0.687\n0.5169\nFit\nPertahankan\n\n\nItem5\nItem 5\n1.852\n0.894\n0.2427\nFit\nPertahankan\n\n\nItem6\nItem 6\n0.973\n-0.262\n0.5399\nFit\nPertahankan\n\n\nItem7\nItem 7\n2.178\n-0.027\n0.5638\nFit\nPertahankan\n\n\nItem8\nItem 8\n0.907\n0.580\n0.5849\nFit\nPertahankan\n\n\nItem9\nItem 9\n1.763\n-1.222\n0.0296\nMisfit\nRevisi (misfit)\n\n\nItem10\nItem 10\n1.038\n3.450\n0.8570\nFit\nHapus (ekstrem)\n\n\nItem11\nItem 11\n1.168\n-0.321\n0.0305\nMisfit\nRevisi (misfit)\n\n\nItem12\nItem 12\n1.756\n0.686\n0.3381\nFit\nPertahankan\n\n\nItem13\nItem 13\n1.948\n2.572\n0.6076\nFit\nPertahankan\n\n\nItem14\nItem 14\n0.572\n0.781\n0.3653\nFit\nPertahankan\n\n\nItem15\nItem 15\n1.387\n-0.031\n0.4380\nFit\nPertahankan\n\n\nItem16\nItem 16\n2.634\n-1.110\n0.6561\nFit\nPertahankan\n\n\nItem17\nItem 17\n0.972\n-1.013\n0.9963\nFit\nPertahankan\n\n\nItem18\nItem 18\n1.010\n0.180\n0.7033\nFit\nPertahankan\n\n\nItem19\nItem 19\n1.852\n-0.271\n0.1272\nFit\nPertahankan\n\n\nItem20\nItem 20\n0.708\n0.920\n0.3590\nFit\nPertahankan\n\n\n\n\n\n\n\nCode\n# Gunakan nama kolom bersih (a_daya, b_kesulitan) — aman di aes()\nggplot(laporan_tbl, aes(x = b_kesulitan, y = a_daya,\n                         color = Keputusan, label = Item)) +\n  geom_point(size = 4, alpha = 0.8) +\n  geom_text_repel(size = 3, max.overlaps = 20) +\n  geom_vline(xintercept = c(-2, 2),\n             linetype = \"dashed\", color = \"gray60\") +\n  geom_hline(yintercept = c(0.5, 1.5),\n             linetype = \"dashed\", color = \"gray60\") +\n  annotate(\"rect\", xmin = -2, xmax = 2, ymin = 0.5, ymax = Inf,\n           fill = \"#27ae60\", alpha = 0.04) +\n  scale_color_manual(values = c(\n    \"Pertahankan\"            = \"#27ae60\",\n    \"Revisi (misfit)\"        = \"#f39c12\",\n    \"Hapus (daya beda lemah)\"= \"#e74c3c\",\n    \"Hapus (ekstrem)\"        = \"#8e44ad\"\n  )) +\n  labs(\n    title    = \"Peta Item Bank IRT\",\n    subtitle = \"Zona optimal: b \\u2208 [-2, 2], a \\u2265 0.5 (area hijau muda)\",\n    x = \"Parameter Kesulitan (b)\",\n    y = \"Parameter Daya Beda (a)\",\n    color = \"Keputusan\"\n  ) +\n  theme_minimal(base_size = 12) +\n  theme(legend.position = \"bottom\")\n\n\n\n\n\n\n\n\nFigure 14.1: Peta Item Bank: Daya Beda vs Kesulitan",
+    "crumbs": [
+      "Bagian IV: Aplikasi Praktis",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>Pelaporan Psikometri Berbasis IRT</span>"
+    ]
+  },
+  {
+    "objectID": "bab15-pelaporan.html#rekomendasi-standar",
+    "href": "bab15-pelaporan.html#rekomendasi-standar",
+    "title": "14  Pelaporan Psikometri Berbasis IRT",
+    "section": "14.4 Rekomendasi Standar",
+    "text": "14.4 Rekomendasi Standar\n\n\n\nRINGKASAN REKOMENDASI\n=====================\nTotal item dianalisis : 20\n[OK] Pertahankan      : 17 item (85%)\n[!]  Revisi           : 2 item (10%)\n[X]  Hapus            : 1 item (5%)\n\nItem bank final       : 17 item",
+    "crumbs": [
+      "Bagian IV: Aplikasi Praktis",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>Pelaporan Psikometri Berbasis IRT</span>"
+    ]
+  },
+  {
+    "objectID": "referensi.html",
+    "href": "referensi.html",
+    "title": "Referensi",
+    "section": "",
+    "text": "Referensi Tambahan",
+    "crumbs": [
+      "Referensi"
+    ]
+  },
+  {
+    "objectID": "referensi.html#referensi-tambahan",
+    "href": "referensi.html#referensi-tambahan",
+    "title": "Referensi",
+    "section": "",
+    "text": "Buku Teks Utama\n\nBaker, F. B., & Kim, S.-H. (2004). Item Response Theory: Parameter Estimation Techniques (2nd ed.). Marcel Dekker.\nBond, T. G., & Fox, C. M. (2015). Applying the Rasch Model: Fundamental Measurement in the Human Sciences (3rd ed.). Routledge.\nDe Boeck, P., & Wilson, M. (Eds.). (2004). Explanatory Item Response Models: A Generalized Linear and Nonlinear Approach. Springer.\nEmbretson, S. E., & Reise, S. P. (2000). Item Response Theory for Psychologists. Lawrence Erlbaum.\nLord, F. M. (1980). Applications of Item Response Theory to Practical Testing Problems. Lawrence Erlbaum.\nRasch, G. (1960). Probabilistic Models for Some Intelligence and Attainment Tests. Danish Institute for Educational Research.\nvan der Linden, W. J., & Hambleton, R. K. (Eds.). (1997). Handbook of Modern Item Response Theory. Springer.\n\n\n\nPackage R\n\nChalmers, R. P. (2012). mirt: A Multidimensional Item Response Theory Package for the R Environment. Journal of Statistical Software, 48(6), 1–29.\nRobitzsch, A., Kiefer, T., & Wu, M. (2022). TAM: Test Analysis Modules. R package version 4.1-4.\nMair, P., Hatzinger, R., & Maier, M. J. (2020). eRm: Extended Rasch Models. R package version 1.0-2.\n\n\n\nRegulasi & Konteks Indonesia\n\nBKN. (2025). Peraturan Kepala BKN No. 411 Tahun 2025 tentang Petunjuk Teknis Penilaian Kompetensi ASN.\nKementerian PAN-RB. (2022). Permenpan RB No. 1 Tahun 2022 tentang Sistem Informasi ASN.\n\n\n\nSumber Daring\n\nQuarto Documentation\nmirt Package Documentation\nTAM Package Vignette\nWrightMap Package",
+    "crumbs": [
+      "Referensi"
+    ]
+  }
+]
