@@ -1,0 +1,180 @@
+# Pengantar Psikometri dan IRT
+
+## Apa Itu Psikometri?
+
+**Psikometri** (*psychometrics*) adalah cabang ilmu psikologi yang berfokus pada **teori dan teknik pengukuran psikologis**. Psikometri mencakup pengembangan instrumen, analisis data tes, dan evaluasi kualitas pengukuran.
+
+Pengukuran psikologis berbeda dari pengukuran fisik karena:
+
+- Konstruk yang diukur **tidak langsung terobservasi** (laten)
+- Pengukuran mengandung **error**
+- Skala pengukuran bersifat **relatif**, bukan absolut
+
+## Sejarah Singkat IRT
+
+```{r}
+#| label: fig-timeline
+#| fig-cap: "Perkembangan Teori Pengukuran Psikologis"
+#| echo: false
+#| fig-width: 10
+#| fig-height: 4.5
+
+library(ggplot2)
+
+timeline <- data.frame(
+  tahun = c(1904, 1936, 1952, 1960, 1968, 1980, 2000, 2010, 2025),
+  peristiwa = c(
+    "Spearman\n(CTT Awal)",
+    "Lord\n(True Score)",
+    "Guttman\n(Skalogram)",
+    "Rasch\n(Rasch Model)",
+    "Birnbaum\n(2PL & 3PL)",
+    "Lord & Novick\n(IRT Modern)",
+    "CAT\nBerkembang",
+    "IRT di\nPemerintahan",
+    "IRT &\nAI Terintegrasi"
+  )
+)
+
+# Posisi bergantian atas-bawah agar tidak bertumpuk
+# Atas (+): ganjil | Bawah (-): genap
+arah     <- ifelse(seq_len(nrow(timeline)) %% 2 == 1, 1, -1)
+y_label  <- ifelse(arah ==  1,  1.45, 0.48)   # posisi teks
+y_ujung  <- ifelse(arah ==  1,  1.28, 0.68)   # ujung garis vertikal
+vjust_lb <- ifelse(arah ==  1,  0,    1)        # rata teks
+
+timeline$arah    <- arah
+timeline$y_label <- y_label
+timeline$y_ujung <- y_ujung
+timeline$vjust   <- vjust_lb
+
+ggplot(timeline, aes(x = tahun)) +
+  # Garis horizontal utama
+  geom_hline(yintercept = 1, color = "gray35", linewidth = 1.2) +
+  # Garis vertikal ke label (atas atau bawah)
+  geom_segment(aes(xend = tahun, y = 1, yend = y_ujung),
+               color = "#1a73e8", linewidth = 0.7) +
+  # Titik pada garis
+  geom_point(aes(y = 1), size = 4, color = "#1a73e8") +
+  # Label peristiwa
+  geom_text(aes(y = y_label, label = peristiwa, vjust = vjust),
+            size = 3, lineheight = 0.9, fontface = "bold",
+            color = "#1a5276") +
+  # Tahun di dekat titik (sisi berlawanan dari label)
+  geom_text(aes(y = ifelse(arah == 1, 0.88, 1.10), label = tahun),
+            size = 2.8, color = "gray30") +
+  theme_void() +
+  ylim(0.35, 1.75) +
+  xlim(1890, 2038) +
+  labs(title = "Timeline Perkembangan Psikometri Modern") +
+  theme(plot.title = element_text(hjust = 0.5, size = 13,
+                                   face = "bold", color = "#2c3e50"))
+```
+
+
+## Mengapa IRT Penting?
+
+### Keterbatasan CTT
+
+Classical Test Theory memiliki beberapa kelemahan fundamental:
+
+::: {.callout-warning title="Keterbatasan CTT"}
+1. **Sample-dependent** — Statistik item (tingkat kesulitan, daya beda) berubah tergantung kelompok peserta
+2. **Test-dependent** — Skor peserta bergantung pada tes yang digunakan, bukan kemampuan sejatinya
+3. **True score tidak terobservasi** — Hanya bisa diestimasikan dengan asumsi ketat
+4. **Error seragam** — CTT mengasumsikan *error* pengukuran sama untuk semua level kemampuan
+:::
+
+### Keunggulan IRT
+
+::: {.callout-note title="Keunggulan IRT"}
+1. **Parameter Invariance** — Parameter item tidak bergantung pada sampel; parameter peserta tidak bergantung pada instrumen
+2. **Item Information Function** — Setiap item memberikan informasi berbeda di setiap level kemampuan
+3. **Conditional Independence** — Respon terhadap item bersifat independen secara kondisional
+4. **Skala Logit** — Kemampuan dan kesulitan diukur pada skala yang sama (logit/theta)
+:::
+
+## Konsep Dasar IRT
+
+### Kemampuan Laten (θ)
+
+Dalam IRT, kemampuan peserta dilambangkan dengan **θ** (theta), dinyatakan dalam skala logit dengan:
+
+- Mean = 0
+- SD = 1 (umumnya)
+- Rentang praktis: −3 hingga +3
+
+### Item Characteristic Curve (ICC)
+
+**ICC** (*Item Characteristic Curve*) atau Kurva Karakteristik Item menggambarkan **probabilitas menjawab benar** sebagai fungsi dari kemampuan θ.
+
+```{r}
+#| label: fig-icc-dasar
+#| fig-cap: "Contoh Item Characteristic Curve (ICC)"
+
+library(ggplot2)
+
+theta <- seq(-4, 4, by = 0.01)
+
+# Fungsi logistik 1PL
+prob_1pl <- function(theta, b) {
+  1 / (1 + exp(-(theta - b)))
+}
+
+df <- data.frame(
+  theta = rep(theta, 3),
+  prob  = c(prob_1pl(theta, -1),
+            prob_1pl(theta,  0),
+            prob_1pl(theta,  1)),
+  item  = rep(c("Item Mudah (b = -1)",
+                "Item Sedang (b = 0)",
+                "Item Sulit (b = +1)"), each = length(theta))
+)
+
+ggplot(df, aes(x = theta, y = prob, color = item, linetype = item)) +
+  geom_line(linewidth = 1.2) +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "gray50") +
+  geom_hline(yintercept = 0.5, linetype = "dashed", color = "gray50") +
+  scale_color_manual(values = c("#2ecc71", "#3498db", "#e74c3c")) +
+  scale_y_continuous(labels = scales::percent, limits = c(0, 1)) +
+  labs(
+    title = "Item Characteristic Curve (ICC)",
+    subtitle = "Model 1PL — Tiga Level Kesulitan",
+    x = "Kemampuan (θ)",
+    y = "P(benar | θ)",
+    color = "Item",
+    linetype = "Item"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "bottom")
+```
+
+### Asumsi IRT
+
+IRT bergantung pada tiga asumsi utama:
+
+| Asumsi | Penjelasan | Cara Uji |
+|--------|------------|----------|
+| **Unidimensionalitas** | Satu faktor laten dominan mengukur semua item | Analisis Faktor, Scree plot |
+| **Local Independence** | Respon antar item independen jika θ dikontrol | *Q3 statistic*, *LD χ²* |
+| **Monotonisitas** | P(benar) meningkat seiring peningkatan θ | *Mokken scale analysis* |
+
+## Aplikasi IRT di Indonesia
+
+IRT telah diterapkan secara luas di berbagai konteks Indonesia:
+
+- **BKN** — Seleksi CPNS (CAT-BKN berbasis IRT)
+- **Kemendikbudristek** — PISA, PIRLS, UN berbasis IRT
+- **Perbankan & BUMN** — Seleksi karyawan berbasis kompetensi
+- **DJP** — Asesmen kompetensi pegawai
+
+::: {.callout-tip title="Koneksi ke Regulasi"}
+Penerapan IRT di asesmen kompetensi ASN relevan dengan **Peraturan BKN No. 411/2025** yang mengatur skala penilaian kompetensi 0–5 untuk jabatan fungsional dan struktural.
+:::
+
+## Latihan Mandiri {.unnumbered}
+
+1. Gambarkan ICC untuk item dengan parameter: *b* = 0.5, menggunakan kertas grafik manual.
+2. Jelaskan mengapa "parameter invariance" menjadi keunggulan utama IRT dibandingkan CTT.
+3. Cari satu contoh penggunaan IRT dalam konteks seleksi ASN di Indonesia.
+

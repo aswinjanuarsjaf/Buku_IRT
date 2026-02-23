@@ -1,0 +1,168 @@
+# Teori Dasar IRT
+
+## Model Logistik IRT
+
+Semua model IRT dikembangkan dari **model logistik**. Probabilitas menjawab benar diformulasikan sebagai:
+
+### Model Logistik Umum (3PL)
+
+$$P(X_{ij} = 1 \mid \theta_j) = c_i + (1 - c_i) \cdot \frac{e^{Da_i(\theta_j - b_i)}}{1 + e^{Da_i(\theta_j - b_i)}}$$
+
+Di mana:
+
+| Parameter | Simbol | Nama | Rentang |
+|-----------|--------|------|---------|
+| Kemampuan | θ | *Theta* / Ability | −∞ hingga +∞ (praktis: −3 s/d +3) |
+| Kesulitan | *b* | *Difficulty / Location* | −3 hingga +3 |
+| Daya beda | *a* | *Discrimination* | 0 hingga +3 (umumnya 0.5–2.0) |
+| Tebakan | *c* | *Pseudo-guessing* | 0 hingga 1 (umumnya < 0.35) |
+| Konstanta | *D* | Scaling factor | 1.0 atau 1.702 |
+
+## Parameter Kesulitan (b)
+
+Parameter **b** menentukan di mana pada skala θ probabilitas menjawab benar adalah 50% (untuk model 1PL dan 2PL).
+
+```{r}
+#| label: fig-parameter-b
+#| fig-cap: "Pengaruh Parameter Kesulitan (b) terhadap ICC"
+
+library(ggplot2)
+
+theta <- seq(-4, 4, by = 0.05)
+
+icc_1pl <- function(theta, b) 1 / (1 + exp(-(theta - b)))
+
+df_b <- data.frame(
+  theta = rep(theta, 5),
+  prob  = c(icc_1pl(theta, -2), icc_1pl(theta, -1),
+            icc_1pl(theta, 0),  icc_1pl(theta, 1),
+            icc_1pl(theta, 2)),
+  b_val = factor(rep(c("b = -2", "b = -1", "b = 0", "b = +1", "b = +2"),
+                     each = length(theta)),
+                 levels = c("b = -2","b = -1","b = 0","b = +1","b = +2"))
+)
+
+ggplot(df_b, aes(x = theta, y = prob, color = b_val)) +
+  geom_line(linewidth = 1.1) +
+  geom_hline(yintercept = 0.5, linetype = "dashed", color = "gray60") +
+  scale_color_brewer(palette = "RdYlBu", direction = -1) +
+  scale_y_continuous(labels = scales::percent, limits = c(0,1)) +
+  labs(title = "Pengaruh Parameter Kesulitan (b)",
+       subtitle = "a = 1.0 (tetap), c = 0 — Kurva bergeser kanan saat item makin sulit",
+       x = "Kemampuan (θ)", y = "P(benar | θ)", color = "Parameter b") +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "right")
+```
+
+## Parameter Daya Beda (a)
+
+Parameter **a** menentukan **kemiringan (slope)** ICC. Semakin besar nilai *a*, semakin curam ICC, dan semakin baik item membedakan peserta.
+
+```{r}
+#| label: fig-parameter-a
+#| fig-cap: "Pengaruh Parameter Daya Beda (a) terhadap ICC"
+
+icc_2pl <- function(theta, a, b) 1 / (1 + exp(-a * (theta - b)))
+
+df_a <- data.frame(
+  theta = rep(theta, 4),
+  prob  = c(icc_2pl(theta, 0.5, 0), icc_2pl(theta, 1.0, 0),
+            icc_2pl(theta, 1.5, 0), icc_2pl(theta, 2.5, 0)),
+  a_val = factor(rep(c("a = 0.5 (lemah)", "a = 1.0 (sedang)",
+                       "a = 1.5 (baik)", "a = 2.5 (sangat baik)"),
+                     each = length(theta)))
+)
+
+ggplot(df_a, aes(x = theta, y = prob, color = a_val)) +
+  geom_line(linewidth = 1.1) +
+  geom_hline(yintercept = 0.5, linetype = "dashed", color = "gray60") +
+  scale_color_manual(values = c("#bdc3c7","#3498db","#2ecc71","#e74c3c")) +
+  scale_y_continuous(labels = scales::percent, limits = c(0,1)) +
+  labs(title = "Pengaruh Parameter Daya Beda (a)",
+       subtitle = "b = 0 (tetap), c = 0 — Semakin besar a, kurva semakin curam",
+       x = "Kemampuan (θ)", y = "P(benar | θ)", color = "Parameter a") +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "right")
+```
+
+## Parameter Tebakan (c)
+
+Parameter **c** (*pseudo-guessing*) merepresentasikan probabilitas minimum menjawab benar, bahkan bagi peserta dengan kemampuan sangat rendah. Relevan terutama untuk tes pilihan ganda.
+
+```{r}
+#| label: fig-parameter-c
+#| fig-cap: "Pengaruh Parameter Tebakan (c) terhadap ICC"
+
+icc_3pl <- function(theta, a, b, c) c + (1-c) / (1 + exp(-a * (theta - b)))
+
+df_c <- data.frame(
+  theta = rep(theta, 4),
+  prob  = c(icc_3pl(theta, 1, 0, 0.00),
+            icc_3pl(theta, 1, 0, 0.10),
+            icc_3pl(theta, 1, 0, 0.20),
+            icc_3pl(theta, 1, 0, 0.33)),
+  c_val = factor(rep(c("c = 0.00 (no guessing)",
+                       "c = 0.10",
+                       "c = 0.20",
+                       "c = 0.33 (1 dari 3)"),
+                     each = length(theta)))
+)
+
+ggplot(df_c, aes(x = theta, y = prob, color = c_val)) +
+  geom_line(linewidth = 1.1) +
+  scale_color_manual(values = c("#2c3e50","#3498db","#f39c12","#e74c3c")) +
+  scale_y_continuous(labels = scales::percent, limits = c(0,1)) +
+  labs(title = "Pengaruh Parameter Tebakan (c)",
+       subtitle = "a = 1.0, b = 0 (tetap) — Batas bawah ICC naik sesuai nilai c",
+       x = "Kemampuan (θ)", y = "P(benar | θ)", color = "Parameter c") +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "right")
+```
+
+## Item Information Function (IIF)
+
+**IIF** (*Item Information Function*) menggambarkan seberapa banyak **informasi** yang diberikan item pada setiap level θ. Semakin tinggi informasi, semakin kecil error pengukuran.
+
+$$I_i(\theta) = \frac{[P'_i(\theta)]^2}{P_i(\theta) \cdot Q_i(\theta)}$$
+
+```{r}
+#| label: fig-iif
+#| fig-cap: "Item Information Function (IIF)"
+
+# IIF untuk model 2PL
+iif_2pl <- function(theta, a, b) {
+  p <- icc_2pl(theta, a, b)
+  q <- 1 - p
+  (a^2 * p * q)
+}
+
+df_iif <- data.frame(
+  theta = rep(theta, 3),
+  info  = c(iif_2pl(theta, 0.5, 0),
+            iif_2pl(theta, 1.0, 0),
+            iif_2pl(theta, 2.0, 0)),
+  item  = rep(c("a=0.5 (daya beda rendah)",
+                "a=1.0 (daya beda sedang)",
+                "a=2.0 (daya beda tinggi)"), each = length(theta))
+)
+
+ggplot(df_iif, aes(x = theta, y = info, color = item)) +
+  geom_line(linewidth = 1.1) +
+  scale_color_manual(values = c("#bdc3c7","#3498db","#e74c3c")) +
+  labs(title = "Item Information Function (IIF)",
+       subtitle = "b = 0 (tetap) — Informasi maksimal pada θ = b",
+       x = "Kemampuan (θ)", y = "Informasi Item I(θ)", color = "Item") +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "bottom")
+```
+
+## Test Information Function (TIF)
+
+TIF adalah penjumlahan IIF semua item dalam tes:
+
+$$I(\theta) = \sum_{i=1}^{n} I_i(\theta)$$
+
+Hubungan TIF dengan Standard Error of Measurement (SEM):
+
+$$SEM(\theta) = \frac{1}{\sqrt{I(\theta)}}$$
+

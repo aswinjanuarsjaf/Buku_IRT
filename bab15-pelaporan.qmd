@@ -1,0 +1,232 @@
+# Pelaporan Psikometri Berbasis IRT
+
+## Struktur Laporan Psikometri Standar
+
+Laporan psikometri berbasis IRT yang profesional mencakup komponen berikut:
+
+```{r}
+#| label: tbl-struktur-laporan
+#| echo: false
+#| tbl-cap: "Komponen Laporan Psikometri IRT"
+
+library(knitr)
+
+df_lap <- data.frame(
+  Bagian = c(
+    "1. Ringkasan Eksekutif",
+    "2. Deskripsi Instrumen",
+    "3. Karakteristik Sampel",
+    "4. Uji Asumsi",
+    "5. Hasil Kalibrasi Item",
+    "6. Item Fit",
+    "7. Analisis DIF",
+    "8. Wright Map & Targeting",
+    "9. Reliabilitas & Validitas",
+    "10. Rekomendasi"
+  ),
+  Konten = c(
+    "Tujuan, kesimpulan utama, rekomendasi kritis",
+    "Jumlah item, format respon, konstruk diukur",
+    "N, demografi, distribusi skor",
+    "Unidimensionalitas, lokal independensi",
+    "Tabel a, b, (c) dengan SE; ICC grafik",
+    "Infit/Outfit MnSq, S-X², keputusan per item",
+    "Metode, item DIF, rekomendasi",
+    "Visual distribusi, analisis gap, targeting",
+    "Person separation, Cronbach α, EAP reliability",
+    "Item dipertahankan/direvisi/dihapus"
+  )
+)
+
+kable(df_lap, col.names=c("Komponen", "Isi Utama"), align="l")
+```
+
+## Template Laporan Otomatis
+
+```{r}
+#| label: laporan-otomatis
+#| eval: false
+
+# =============================================
+# FUNGSI BUAT LAPORAN IRT OTOMATIS
+# =============================================
+
+buat_laporan_irt <- function(
+    data,              # Matriks data respon
+    nama_instrumen,    # Nama tes
+    nama_penulis,      # Nama penyusun laporan
+    model = "2PL",     # Model IRT
+    output_dir = "."   # Folder output
+) {
+
+  library(mirt)
+  library(TAM)
+  library(WrightMap)
+  library(tidyverse)
+  library(knitr)
+  library(rmarkdown)
+
+  n_peserta <- nrow(data)
+  n_item    <- ncol(data)
+
+  # Estimasi model — gunakan mirt untuk semua agar konsisten
+  cat("Mengestimasi model", model, "...\n")
+  itemtype_map <- c("Rasch" = "Rasch", "1PL" = "Rasch", "2PL" = "2PL", "3PL" = "3PL")
+  m <- mirt(data, 1, itemtype = itemtype_map[model], verbose = FALSE)
+
+  # Buat laporan Quarto
+  template <- sprintf('
+---
+title: "Laporan Psikometri IRT"
+subtitle: "%s"
+author: "%s"
+date: "`r format(Sys.Date(), \'%%d %%B %%Y\')`"
+format:
+  pdf:
+    toc: true
+    number-sections: true
+  html:
+    toc: true
+execute:
+  echo: false
+  warning: false
+---
+
+## Ringkasan Eksekutif
+
+Analisis psikometri berbasis **%s** telah dilakukan terhadap instrumen **%s** 
+dengan **%d item** yang direspons oleh **%d peserta**.
+
+## Karakteristik Sampel
+
+- Jumlah Peserta: **%d**
+- Jumlah Item: **%d**
+- Model IRT: **%s**
+
+',
+    nama_instrumen, nama_penulis,
+    model, nama_instrumen,
+    n_item, n_peserta,
+    n_peserta, n_item, model
+  )
+
+  laporan_path <- file.path(output_dir, "laporan_irt.qmd")
+  writeLines(template, laporan_path)
+
+  cat("Laporan template berhasil dibuat di:", laporan_path, "\n")
+  cat("Render dengan: quarto render", laporan_path, "\n")
+
+  return(invisible(laporan_path))
+}
+```
+
+## Contoh Output Laporan Lengkap
+
+```{r}
+#| label: laporan-contoh
+#| tbl-cap: "Tabel Parameter Item Lengkap"
+
+library(mirt)
+library(ggplot2)
+library(knitr)
+library(ggrepel)
+library(dplyr)   # wajib untuk case_when()
+
+set.seed(2025)
+n_p <- 400; n_i <- 20
+a_t     <- runif(n_i, 0.6, 2.0)
+b_t     <- rnorm(n_i)
+theta_t <- rnorm(n_p)
+
+pm  <- sapply(1:n_i, function(i) 1 / (1 + exp(-a_t[i] * (theta_t - b_t[i]))))
+dat <- matrix(rbinom(n_p * n_i, 1, pm), nrow = n_p,
+              dimnames = list(NULL, paste0("Item", 1:n_i)))
+
+m   <- mirt(dat, 1, "2PL", verbose = FALSE)
+par <- coef(m, IRTpars = TRUE, simplify = TRUE)$items
+
+# Clamp p-value agar -log10(0) tidak crash
+p_sx2 <- pmax(pmin(itemfit(m, fit_stats = "S_X2")$p.S_X2, 1), 1e-6)
+
+# Nama kolom TANPA spasi agar aman di aes()
+laporan_tbl <- data.frame(
+  Item       = paste0("Item ", 1:n_i),
+  a_daya     = round(par[, "a"], 3),          # daya beda
+  b_kesulitan = round(par[, "b"], 3),          # kesulitan
+  p_sx2      = round(p_sx2, 4),
+  Status_Fit = ifelse(p_sx2 < 0.05, "Misfit", "Fit"),
+  Keputusan  = case_when(
+    par[, "a"] < 0.5                          ~ "Hapus (daya beda lemah)",
+    p_sx2 < 0.05                              ~ "Revisi (misfit)",
+    par[, "b"] > 3 | par[, "b"] < -3         ~ "Hapus (ekstrem)",
+    TRUE                                       ~ "Pertahankan"
+  )
+)
+
+# Tampilkan tabel dengan nama kolom ramah pembaca
+kable(
+  laporan_tbl,
+  col.names = c("Item", "a (Daya Beda)", "b (Kesulitan)",
+                "S-X\u00b2 p-value", "Status Fit", "Keputusan"),
+  align = "c"
+)
+```
+
+```{r}
+#| label: fig-item-bank-summary
+#| fig-cap: "Peta Item Bank: Daya Beda vs Kesulitan"
+
+# Gunakan nama kolom bersih (a_daya, b_kesulitan) — aman di aes()
+ggplot(laporan_tbl, aes(x = b_kesulitan, y = a_daya,
+                         color = Keputusan, label = Item)) +
+  geom_point(size = 4, alpha = 0.8) +
+  geom_text_repel(size = 3, max.overlaps = 20) +
+  geom_vline(xintercept = c(-2, 2),
+             linetype = "dashed", color = "gray60") +
+  geom_hline(yintercept = c(0.5, 1.5),
+             linetype = "dashed", color = "gray60") +
+  annotate("rect", xmin = -2, xmax = 2, ymin = 0.5, ymax = Inf,
+           fill = "#27ae60", alpha = 0.04) +
+  scale_color_manual(values = c(
+    "Pertahankan"            = "#27ae60",
+    "Revisi (misfit)"        = "#f39c12",
+    "Hapus (daya beda lemah)"= "#e74c3c",
+    "Hapus (ekstrem)"        = "#8e44ad"
+  )) +
+  labs(
+    title    = "Peta Item Bank IRT",
+    subtitle = "Zona optimal: b \u2208 [-2, 2], a \u2265 0.5 (area hijau muda)",
+    x = "Parameter Kesulitan (b)",
+    y = "Parameter Daya Beda (a)",
+    color = "Keputusan"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "bottom")
+```
+
+## Rekomendasi Standar
+
+```{r}
+#| echo: false
+
+n_pertahankan <- sum(laporan_tbl$Keputusan == "Pertahankan")
+n_revisi      <- sum(grepl("Revisi", laporan_tbl$Keputusan))
+n_hapus       <- sum(grepl("Hapus",  laporan_tbl$Keputusan))
+
+cat(sprintf(paste0(
+  "\nRINGKASAN REKOMENDASI\n",
+  "=====================\n",
+  "Total item dianalisis : %d\n",
+  "[OK] Pertahankan      : %d item (%.0f%%)\n",
+  "[!]  Revisi           : %d item (%.0f%%)\n",
+  "[X]  Hapus            : %d item (%.0f%%)\n",
+  "\nItem bank final       : %d item\n"
+),
+  n_i,
+  n_pertahankan, n_pertahankan / n_i * 100,
+  n_revisi,      n_revisi      / n_i * 100,
+  n_hapus,       n_hapus       / n_i * 100,
+  n_pertahankan
+))
+```
+

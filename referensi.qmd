@@ -1,0 +1,35 @@
+# Referensi {.unnumbered}
+
+::: {#refs}
+:::
+
+## Referensi Tambahan
+
+### Buku Teks Utama
+
+- **Baker, F. B., & Kim, S.-H.** (2004). *Item Response Theory: Parameter Estimation Techniques* (2nd ed.). Marcel Dekker.
+- **Bond, T. G., & Fox, C. M.** (2015). *Applying the Rasch Model: Fundamental Measurement in the Human Sciences* (3rd ed.). Routledge.
+- **De Boeck, P., & Wilson, M.** (Eds.). (2004). *Explanatory Item Response Models: A Generalized Linear and Nonlinear Approach*. Springer.
+- **Embretson, S. E., & Reise, S. P.** (2000). *Item Response Theory for Psychologists*. Lawrence Erlbaum.
+- **Lord, F. M.** (1980). *Applications of Item Response Theory to Practical Testing Problems*. Lawrence Erlbaum.
+- **Rasch, G.** (1960). *Probabilistic Models for Some Intelligence and Attainment Tests*. Danish Institute for Educational Research.
+- **van der Linden, W. J., & Hambleton, R. K.** (Eds.). (1997). *Handbook of Modern Item Response Theory*. Springer.
+
+### Package R
+
+- **Chalmers, R. P.** (2012). mirt: A Multidimensional Item Response Theory Package for the R Environment. *Journal of Statistical Software, 48*(6), 1–29.
+- **Robitzsch, A., Kiefer, T., & Wu, M.** (2022). *TAM: Test Analysis Modules.* R package version 4.1-4.
+- **Mair, P., Hatzinger, R., & Maier, M. J.** (2020). *eRm: Extended Rasch Models.* R package version 1.0-2.
+
+### Regulasi & Konteks Indonesia
+
+- **BKN.** (2025). *Peraturan Kepala BKN No. 411 Tahun 2025 tentang Petunjuk Teknis Penilaian Kompetensi ASN.*
+- **Kementerian PAN-RB.** (2022). *Permenpan RB No. 1 Tahun 2022 tentang Sistem Informasi ASN.*
+
+### Sumber Daring
+
+- [Quarto Documentation](https://quarto.org/docs)
+- [mirt Package Documentation](https://cran.r-project.org/package=mirt)
+- [TAM Package Vignette](https://cran.r-project.org/package=TAM)
+- [WrightMap Package](https://cran.r-project.org/package=WrightMap)
+

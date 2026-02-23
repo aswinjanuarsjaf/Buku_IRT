@@ -1,0 +1,21 @@
+# Bab 14: Computer Adaptive
+
+::: {.callout-note}
+Bab ini sedang dalam pengembangan. Isi akan dilengkapi pada edisi berikutnya.
+:::
+
+## Kompetensi Bab
+
+Setelah mempelajari bab ini, pembaca akan memahami konsep dan implementasi topik ini dalam analisis IRT menggunakan R.
+
+## Materi Utama
+
+Materi utama bab ini mencakup:
+
+- Penjelasan konseptual
+- Formula matematis
+- Implementasi di R dengan kode yang dapat dijalankan langsung
+- Interpretasi output
+- Studi kasus terapan
+
+*Konten lengkap tersedia pada versi final modul.*

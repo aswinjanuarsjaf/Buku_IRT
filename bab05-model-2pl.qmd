@@ -1,0 +1,458 @@
+# Model 2 Parameter Logistik (2PL)
+
+## Konsep Dasar Model 2PL
+
+**Model 2 Parameter Logistik (2PL)** adalah model IRT yang mengizinkan setiap item memiliki **dua parameter berbeda**: parameter kesulitan (*b*) dan parameter daya beda (*a*). Dengan demikian, tidak semua item memiliki kurva yang sama — item yang "lebih baik" (daya beda tinggi) akan memiliki kurva yang lebih curam.
+
+Model 2PL adalah model yang paling banyak digunakan dalam asesmen skala besar karena menyeimbangkan **fleksibilitas** dan **parsimoni**.
+
+## Formula Model 2PL
+
+$$P(X_{ij} = 1 \mid \theta_j, a_i, b_i) = \frac{1}{1 + e^{-Da_i(\theta_j - b_i)}}$$
+
+Di mana:
+
+- $a_i$ = parameter **daya beda** (*discrimination*) item $i$
+- $b_i$ = parameter **kesulitan** (*difficulty / location*) item $i$
+- $\theta_j$ = **kemampuan** peserta $j$
+- $D$ = konstanta skalasi (1.0 atau 1.702)
+
+::: {.callout-note title="Konstanta D = 1 vs D = 1.702"}
+- **D = 1.0** → model logistik murni (default `mirt`)
+- **D = 1.702** → aproksimasi model normal ogive (lebih umum di literatur lama)
+
+Kedua versi valid — pastikan konsisten dalam satu analisis!
+:::
+
+## Peran Parameter *a* (Daya Beda)
+
+Parameter *a* menentukan **kemiringan (slope)** kurva ICC. Secara substantif, *a* menggambarkan seberapa baik item membedakan peserta yang berkemampuan tinggi dari yang berkemampuan rendah.
+
+```{r}
+#| label: fig-peran-parameter-a
+#| fig-cap: "Visualisasi Peran Parameter Daya Beda (a)"
+#| fig-height: 7
+
+library(ggplot2)
+library(patchwork)
+
+theta <- seq(-4, 4, by = 0.05)
+icc_2pl <- function(theta, a, b) 1 / (1 + exp(-a * (theta - b)))
+
+# Panel kiri: variasi nilai a
+a_vals  <- c(0.3, 0.7, 1.2, 1.8, 2.5)
+lab_a   <- paste0("a = ", a_vals)
+df_a <- data.frame(
+  theta = rep(theta, length(a_vals)),
+  prob  = unlist(lapply(a_vals, function(a) icc_2pl(theta, a, 0))),
+  item  = factor(rep(lab_a, each = length(theta)), levels = lab_a)
+)
+
+p1 <- ggplot(df_a, aes(x = theta, y = prob, color = item)) +
+  geom_line(linewidth = 1.2) +
+  geom_hline(yintercept = 0.5, linetype = "dashed", color = "gray60") +
+  scale_color_manual(values = c("#bdc3c7","#85c1e9","#3498db","#1a5276","#e74c3c")) +
+  scale_y_continuous(labels = scales::percent, limits = c(0, 1)) +
+  labs(title = "Pengaruh Parameter a (b = 0 tetap)",
+       x = "θ", y = "P(benar|θ)", color = "Daya beda") +
+  theme_minimal(base_size = 11) +
+  theme(legend.position = "right")
+
+# Panel kanan: tangent di titik infleksi
+p2 <- ggplot(data.frame(theta=theta, prob=icc_2pl(theta, 1.5, 0)),
+             aes(x=theta, y=prob)) +
+  geom_line(linewidth=1.3, color="#3498db") +
+  geom_abline(slope=1.5/4, intercept=0.5 - (1.5/4)*0, # slope ≈ Da/4
+              linetype="dashed", color="#e74c3c", linewidth=1) +
+  geom_point(x=0, y=0.5, size=5, color="#e74c3c") +
+  annotate("text", x=1.5, y=0.25,
+           label="Slope di b = Da/4\n= 1.5/4 = 0.375",
+           color="#e74c3c", size=3.8) +
+  scale_y_continuous(labels=scales::percent, limits=c(0,1)) +
+  labs(title="Slope ICC di Titik Infleksi (b = 0, a = 1.5)",
+       x="θ", y="P(benar|θ)") +
+  theme_minimal(base_size=11)
+
+p1 / p2
+```
+
+## Interpretasi Nilai *a*
+
+```{r}
+#| label: tbl-interpretasi-a
+#| echo: false
+#| tbl-cap: "Panduan Interpretasi Parameter Daya Beda (a)"
+
+library(knitr)
+library(kableExtra)
+
+df_int_a <- data.frame(
+  Nilai_a    = c("< 0.50", "0.50 – 0.79", "0.80 – 1.29", "1.30 – 1.70", "> 1.70"),
+  Kategori   = c("Sangat Lemah", "Lemah", "Sedang", "Baik", "Sangat Baik"),
+  Implikasi  = c(
+    "Item hampir tidak membedakan kemampuan — pertimbangkan hapus",
+    "Item membedakan agak lemah — perlu revisi konstruktif",
+    "Item cukup baik — dapat dipertahankan dengan review konten",
+    "Item membedakan dengan baik — pertahankan",
+    "Item membedakan sangat baik — pertahankan dan jadikan item kunci"
+  ),
+  Warna = c("🔴","🟠","🟡","🟢","🌟")
+)
+
+kable(df_int_a, col.names = c("Nilai a", "Kategori", "Implikasi", ""),
+      align = c("c","c","l","c")) |>
+  kable_styling(bootstrap_options = c("striped","hover"), full_width = FALSE) |>
+  row_spec(4:5, background = "#e8f5e9") |>
+  row_spec(1,   background = "#fdecea")
+```
+
+## Estimasi Model 2PL di R
+
+### Menggunakan `mirt`
+
+```{r}
+#| label: estimasi-2pl
+#| cache: true
+
+library(mirt)
+library(tidyverse)
+
+# ======================================================
+# SIMULASI DATA 2PL
+# ======================================================
+set.seed(2025)
+
+n_peserta <- 500
+n_item    <- 25
+
+a_true    <- runif(n_item, 0.5, 2.5)        # Daya beda bervariasi
+b_true    <- rnorm(n_item, mean = 0, sd = 1) # Kesulitan bervariasi
+theta_true <- rnorm(n_peserta, mean = 0, sd = 1)
+
+# Generate matriks probabilitas
+prob_mat <- sapply(1:n_item, function(i)
+  1 / (1 + exp(-a_true[i] * (theta_true - b_true[i]))))
+
+# Generate respon dikotomis
+data_2pl <- matrix(
+  rbinom(n_peserta * n_item, 1, prob_mat),
+  nrow = n_peserta,
+  dimnames = list(
+    paste0("P", 1:n_peserta),
+    paste0("Item", sprintf("%02d", 1:n_item))
+  )
+)
+
+cat("=== DATA SIMULASI 2PL ===\n")
+cat("Dimensi        :", dim(data_2pl), "\n")
+cat("Proporsi benar :", round(mean(data_2pl), 3), "\n")
+cat("Min a true     :", round(min(a_true), 3), "\n")
+cat("Max a true     :", round(max(a_true), 3), "\n\n")
+
+# ======================================================
+# ESTIMASI MODEL 2PL
+# ======================================================
+model_2pl <- mirt(
+  data     = data_2pl,
+  model    = 1,
+  itemtype = "2PL",
+  SE       = TRUE,
+  verbose  = FALSE
+)
+
+cat("=== RINGKASAN MODEL 2PL ===\n")
+print(model_2pl)
+```
+
+```{r}
+#| label: tbl-param-2pl-lengkap
+#| tbl-cap: "Parameter Item Lengkap — Model 2PL"
+
+library(kableExtra)
+
+# Ekstrak parameter dalam skala IRT (printSE bukan argumen valid — dihapus)
+params_2pl <- coef(model_2pl, IRTpars = TRUE, simplify = TRUE)$items
+
+params_tbl <- data.frame(
+  Item    = paste0("Item", sprintf("%02d", 1:n_item)),
+  a_true  = round(a_true, 3),
+  a_est   = round(params_2pl[, "a"], 3),
+  b_true  = round(b_true, 3),
+  b_est   = round(params_2pl[, "b"], 3),
+  Kat_a   = cut(params_2pl[, "a"],
+                breaks = c(0, 0.5, 0.8, 1.3, 1.7, Inf),
+                labels = c("Sangat Lemah","Lemah","Sedang","Baik","Sangat Baik")),
+  Keputusan = ifelse(params_2pl[, "a"] < 0.5, "Hapus", "Pertahankan")
+)
+
+# Buat tabel, tambah warna baris secara kondisional (hindari error jika which() kosong)
+tbl_2pl <- kable(params_tbl,
+      col.names = c("Item","a True","a Est","b True","b Est","Kategori a","Keputusan"),
+      align = "c") |>
+  kable_styling(bootstrap_options = c("striped","hover"), full_width = FALSE)
+
+idx_hapus  <- which(params_tbl$Keputusan == "Hapus")
+idx_terbaik <- which(as.character(params_tbl$Kat_a) == "Sangat Baik")
+if (length(idx_hapus)   > 0) tbl_2pl <- row_spec(tbl_2pl, idx_hapus,   background = "#fdecea")
+if (length(idx_terbaik) > 0) tbl_2pl <- row_spec(tbl_2pl, idx_terbaik, background = "#e8f5e9")
+tbl_2pl
+```
+
+### Parameter Recovery Plot
+
+```{r}
+#| label: fig-recovery-2pl
+#| fig-cap: "Parameter Recovery — Model 2PL"
+#| fig-subcap:
+#|   - "Recovery Parameter a"
+#|   - "Recovery Parameter b"
+#| layout-ncol: 2
+
+# Recovery a
+r_a <- round(cor(a_true, params_2pl[,"a"]), 3)
+ggplot(data.frame(a_true, a_est = params_2pl[,"a"]),
+       aes(x = a_true, y = a_est)) +
+  geom_point(color = "#3498db", size = 3, alpha = 0.8) +
+  geom_abline(slope=1, intercept=0, linetype="dashed", color="#e74c3c", linewidth=1) +
+  annotate("text", x=0.7, y=2.4, label=paste("r =", r_a),
+           size=5, fontface="bold", color="#1a5276") +
+  labs(title="Recovery: Parameter a",
+       subtitle="Garis merah = garis sempurna",
+       x="a True", y="a Estimasi") +
+  theme_minimal(base_size=12)
+
+# Recovery b
+r_b <- round(cor(b_true, params_2pl[,"b"]), 3)
+ggplot(data.frame(b_true, b_est = params_2pl[,"b"]),
+       aes(x = b_true, y = b_est)) +
+  geom_point(color = "#27ae60", size = 3, alpha = 0.8) +
+  geom_abline(slope=1, intercept=0, linetype="dashed", color="#e74c3c", linewidth=1) +
+  annotate("text", x=-2.5, y=3, label=paste("r =", r_b),
+           size=5, fontface="bold", color="#1a5276") +
+  labs(title="Recovery: Parameter b",
+       subtitle="Garis merah = garis sempurna",
+       x="b True", y="b Estimasi") +
+  theme_minimal(base_size=12)
+```
+
+## ICC Seluruh Item — Model 2PL
+
+```{r}
+#| label: fig-icc-all-2pl
+#| fig-cap: "ICC Seluruh Item — Model 2PL (Perbedaan Slope Terlihat Jelas)"
+
+df_all_icc <- do.call(rbind, lapply(1:n_item, function(i) {
+  data.frame(
+    theta = theta,
+    prob  = icc_2pl(theta, params_2pl[i,"a"], params_2pl[i,"b"]),
+    item  = paste0("Item", sprintf("%02d", i)),
+    daya_beda = cut(params_2pl[i,"a"],
+                    breaks=c(0,0.8,1.3,Inf),
+                    labels=c("Rendah (<0.8)","Sedang (0.8-1.3)","Tinggi (>1.3)"))
+  )
+}))
+
+ggplot(df_all_icc, aes(x=theta, y=prob, group=item, color=daya_beda)) +
+  geom_line(alpha=0.7, linewidth=0.9) +
+  geom_hline(yintercept=0.5, linetype="dashed", color="gray50") +
+  scale_color_manual(values=c("#bdc3c7","#3498db","#e74c3c")) +
+  scale_y_continuous(labels=scales::percent, limits=c(0,1)) +
+  labs(
+    title    = "ICC Semua Item — Model 2PL",
+    subtitle = "Perbedaan kemiringan kurva = perbedaan daya beda item",
+    x = "Kemampuan (θ)", y = "P(benar|θ)",
+    color = "Daya Beda (a)"
+  ) +
+  theme_minimal(base_size=12) +
+  theme(legend.position="bottom")
+```
+
+## Item Information Function — Model 2PL
+
+```{r}
+#| label: fig-iif-2pl
+#| fig-cap: "Item Information Function — Model 2PL"
+
+# IIF untuk model 2PL
+iif_2pl <- function(theta, a, b) {
+  p <- icc_2pl(theta, a, b)
+  q <- 1 - p
+  a^2 * p * q
+}
+
+# Pilih beberapa item representatif — which.min() selalu return 1 index (tidak NA)
+idx_pilih <- c(
+  which.min(params_2pl[,"a"]),                              # daya beda terendah
+  which.min(abs(params_2pl[,"a"] - median(params_2pl[,"a"]))),  # paling dekat median
+  which.max(params_2pl[,"a"])                               # daya beda tertinggi
+)
+
+df_iif_sel <- do.call(rbind, lapply(idx_pilih, function(i) {
+  data.frame(
+    theta = theta,
+    info  = iif_2pl(theta, params_2pl[i,"a"], params_2pl[i,"b"]),
+    item  = sprintf("Item%02d (a=%.2f, b=%.2f)",
+                    i, params_2pl[i,"a"], params_2pl[i,"b"])
+  )
+}))
+
+ggplot(df_iif_sel, aes(x=theta, y=info, color=item)) +
+  geom_line(linewidth=1.4) +
+  scale_color_manual(values=c("#bdc3c7","#3498db","#e74c3c")) +
+  labs(
+    title    = "Item Information Function — Model 2PL",
+    subtitle = "Item dengan a lebih tinggi menghasilkan informasi jauh lebih besar",
+    x = "Kemampuan (θ)", y = "Informasi Item I(θ)",
+    color = "Item"
+  ) +
+  theme_minimal(base_size=12) +
+  theme(legend.position="bottom",
+        legend.text = element_text(size=9))
+```
+
+## Test Information Function (TIF)
+
+```{r}
+#| label: fig-tif-2pl
+#| fig-cap: "Test Information Function dan Standard Error — Model 2PL"
+#| fig-height: 6
+
+# TIF = jumlah semua IIF
+tif_vals <- rowSums(sapply(1:n_item, function(i)
+  iif_2pl(theta, params_2pl[i,"a"], params_2pl[i,"b"])))
+
+sem_vals <- 1 / sqrt(tif_vals)
+
+df_tif <- data.frame(
+  theta = theta,
+  tif   = tif_vals,
+  sem   = sem_vals
+)
+
+p_tif <- ggplot(df_tif, aes(x=theta)) +
+  geom_line(aes(y=tif), color="#3498db", linewidth=1.5) +
+  geom_area(aes(y=tif), fill="#3498db", alpha=0.15) +
+  labs(title="Test Information Function (TIF)",
+       x="Kemampuan (θ)", y="Total Informasi") +
+  theme_minimal(base_size=12)
+
+p_sem <- ggplot(df_tif, aes(x=theta)) +
+  geom_line(aes(y=sem), color="#e74c3c", linewidth=1.5) +
+  geom_ribbon(aes(ymin=0, ymax=sem), fill="#e74c3c", alpha=0.15) +
+  geom_hline(yintercept=1/sqrt(5), linetype="dashed", color="gray40") +
+  annotate("text", x=3, y=1/sqrt(5)+0.03,
+           label="SEM = 0.45\n(Rel ≈ 0.80)", color="gray40", size=3.5) +
+  labs(title="Standard Error of Measurement (SEM)",
+       x="Kemampuan (θ)", y="SEM(θ)") +
+  theme_minimal(base_size=12)
+
+p_tif / p_sem
+```
+
+## Reliabilitas Marginal
+
+```{r}
+#| label: reliabilitas-2pl
+
+# Reliabilitas berdasarkan EAP
+# empirical_rxx() membutuhkan matriks 2 kolom: [theta, SE_theta]
+theta_eap <- fscores(model_2pl, method = "EAP", full.scores.SE = TRUE)
+rel_eap   <- empirical_rxx(theta_eap)
+
+cat("=== RELIABILITAS MODEL 2PL ===\n")
+cat(sprintf("EAP Reliability (Marginal Rxx) : %.4f\n", rel_eap))
+cat(sprintf("Interpretasi: %s\n",
+    ifelse(rel_eap >= 0.90, "Sangat Baik (≥ .90)",
+    ifelse(rel_eap >= 0.80, "Baik (.80–.89)",
+    ifelse(rel_eap >= 0.70, "Cukup (.70–.79)", "Perlu Peningkatan (< .70)")))))
+```
+
+## Item Fit — Model 2PL
+
+```{r}
+#| label: fig-itemfit-2pl
+#| fig-cap: "Item Fit S-X² — Model 2PL"
+
+fit_2pl <- itemfit(model_2pl, fit_stats="S_X2")
+
+# Clamp p-value agar -log10() tidak menghasilkan Inf
+p_raw05 <- pmax(pmin(fit_2pl$p.S_X2, 1), 1e-6)
+
+fit_tbl2 <- data.frame(
+  Item     = paste0("Item", sprintf("%02d", 1:n_item)),
+  S_X2     = round(fit_2pl$S_X2, 3),
+  df       = fit_2pl$df.S_X2,
+  p_value  = round(p_raw05, 6),
+  neglog_p = -log10(p_raw05),
+  Status   = ifelse(p_raw05 < 0.05, "Misfit \u26a0\ufe0f", "Fit \u2713")
+)
+
+batas05 <- -log10(0.05)
+
+ggplot(fit_tbl2, aes(x=reorder(Item, neglog_p), y=neglog_p, fill=Status)) +
+  geom_col(width=0.65) +
+  geom_hline(yintercept=batas05, linetype="dashed",
+             color="#c0392b", linewidth=1) +
+  coord_flip() +
+  scale_fill_manual(values=c("Fit \u2713"="#27ae60",
+                              "Misfit \u26a0\ufe0f"="#e74c3c")) +
+  geom_label(aes(x=1, y=batas05, label="p = .05"),
+             inherit.aes=FALSE,
+             fill="white", color="#c0392b", size=3.2, hjust=-0.1) +
+  labs(
+    title    = "Item Fit S-X\u00b2 \u2014 Model 2PL",
+    subtitle = "-log\u2081\u2080(p): nilai lebih tinggi = lebih bermasalah\nGaris merah = batas signifikan (p < .05)",
+    x = NULL, y = "-log\u2081\u2080(p-value)", fill=""
+  ) +
+  theme_minimal(base_size=12) +
+  theme(legend.position="bottom")
+```
+
+## Peta Item Bank 2PL
+
+```{r}
+#| label: fig-item-bank-2pl
+#| fig-cap: "Peta Item Bank: Daya Beda vs Kesulitan"
+
+library(ggrepel)
+
+df_bank <- data.frame(
+  Item    = paste0("Item", sprintf("%02d", 1:n_item)),
+  a       = params_2pl[,"a"],
+  b       = params_2pl[,"b"],
+  fit_ok  = fit_2pl$p.S_X2 >= 0.05,
+  info_max = sapply(1:n_item, function(i)
+    max(iif_2pl(theta, params_2pl[i,"a"], params_2pl[i,"b"])))
+)
+
+ggplot(df_bank, aes(x=b, y=a, color=fit_ok, size=info_max, label=Item)) +
+  geom_point(alpha=0.8) +
+  ggrepel::geom_text_repel(size=2.8, max.overlaps=20,
+                            color="gray30", show.legend=FALSE) +
+  geom_vline(xintercept=c(-2, 2), linetype="dashed", color="gray60", alpha=0.7) +
+  geom_hline(yintercept=c(0.5, 1.5), linetype="dashed", color="gray60", alpha=0.7) +
+  annotate("rect", xmin=-2, xmax=2, ymin=0.5, ymax=3.5,
+           fill="#27ae60", alpha=0.05) +
+  annotate("text", x=0, y=3.3, label="Zona Optimal",
+           color="#27ae60", size=4, fontface="bold") +
+  scale_color_manual(values=c("FALSE"="#e74c3c","TRUE"="#3498db"),
+                     labels=c("FALSE"="Misfit","TRUE"="Fit")) +
+  scale_size_continuous(range=c(2,7)) +
+  labs(
+    title = "Peta Item Bank — Model 2PL",
+    subtitle = "Warna = fit status | Ukuran = informasi maksimum item\nZona hijau = rentang parameter optimal",
+    x = "Kesulitan (b)", y = "Daya Beda (a)",
+    color = "Item Fit", size = "Info Max"
+  ) +
+  theme_minimal(base_size=12) +
+  theme(legend.position="right")
+```
+
+## Latihan Mandiri {.unnumbered}
+
+1. Dari tabel parameter yang dihasilkan, identifikasi **3 item terbaik** (a tinggi, b dalam rentang ±1.5, fit) dan **3 item yang perlu dihapus**. Buat argumen untuk keputusan tersebut.
+
+2. Buat TIF untuk subset 10 item terbaik dan bandingkan dengan TIF untuk keseluruhan 25 item. Di rentang θ mana pengurangan informasi paling signifikan?
+
+3. Ulangi estimasi dengan ukuran sampel n = 100, n = 200, dan n = 500. Bagaimana ukuran sampel mempengaruhi kualitas parameter recovery untuk model 2PL?
+

@@ -1,0 +1,178 @@
+# Item Fit Analysis
+
+## Apa Itu Item Fit?
+
+**Item Fit** mengukur seberapa baik data empiris sesuai dengan prediksi model IRT. Item yang *misfit* berarti pola responnya tidak konsisten dengan model yang diasumsikan.
+
+## Statistik Item Fit
+
+### Infit dan Outfit (Rasch)
+
+```{r}
+#| label: rasch-fit-demo
+#| fig-cap: "Item Fit Plot — Rasch Model (TAM)"
+
+library(TAM)
+library(ggplot2)
+
+set.seed(42)
+n_peserta <- 300; n_item <- 20
+b_true     <- seq(-2, 2, length.out = n_item)
+theta_true <- rnorm(n_peserta)
+
+prob_m  <- outer(theta_true, b_true, function(t, b) 1/(1+exp(-(t-b))))
+data_r  <- matrix(rbinom(n_peserta*n_item, 1, prob_m),
+                  nrow=n_peserta,
+                  dimnames=list(NULL, paste0("I",1:n_item)))
+
+# Tambahkan 2 item misfit
+data_r[,1]  <- sample(0:1, n_peserta, replace=TRUE)   # random (noisy)
+data_r[,20] <- ifelse(theta_true > 0.5, 0, 1)         # terbalik
+
+# Estimasi dengan mirt (Rasch) — hindari tam.fit() karena bug internal !continue
+library(mirt)
+model_r <- mirt(data_r, 1, itemtype = "Rasch", verbose = FALSE)
+fit_r   <- itemfit(model_r, fit_stats = "S_X2")
+
+# Clamp p-value: hindari -log10(0) = Inf
+p_raw10 <- pmax(pmin(fit_r$p.S_X2, 1), 1e-6)
+
+fit_df <- data.frame(
+  Item     = paste0("I", 1:n_item),
+  S_X2     = round(fit_r$S_X2, 3),
+  p_val    = round(p_raw10, 6),
+  neglog_p = -log10(p_raw10),
+  Status   = ifelse(p_raw10 < 0.05, "Misfit \u26a0\ufe0f", "Fit \u2713")
+)
+
+batas10 <- -log10(0.05)
+
+ggplot(fit_df, aes(x = reorder(Item, neglog_p), y = neglog_p, fill = Status)) +
+  geom_col(width = 0.65) +
+  geom_hline(yintercept = batas10,
+             linetype = "dashed", color = "#c0392b", linewidth = 0.9) +
+  coord_flip() +
+  scale_fill_manual(values = c("Fit \u2713" = "#27ae60",
+                                "Misfit \u26a0\ufe0f" = "#e74c3c")) +
+  labs(title = "Item Fit S-X\u00b2 \u2014 Rasch (1PL)",
+       subtitle = "Garis merah = p < .05 | I01 & I20 sengaja dibuat misfit",
+       x = NULL, y = "-log\u2081\u2080(p-value)", fill = "") +
+  theme_minimal(base_size = 12)
+```
+
+### S-X² (Signed Chi-Square) — Model mirt
+
+```{r}
+#| label: itemfit-mirt
+#| tbl-cap: "Item Fit Statistics — Model 2PL (mirt)"
+
+library(mirt)
+library(knitr)
+
+set.seed(2025)
+a_t <- runif(15, 0.7, 1.8); b_t <- rnorm(15); theta_t <- rnorm(400)
+pm  <- sapply(1:15, function(i) 1/(1+exp(-a_t[i]*(theta_t-b_t[i]))))
+data_m <- matrix(rbinom(400*15,1,pm), nrow=400,
+                 dimnames=list(NULL, paste0("Item",1:15)))
+
+m2pl  <- mirt(data_m, 1, "2PL", verbose=FALSE)
+fit_s <- itemfit(m2pl, fit_stats="S_X2")
+
+fit_tbl <- data.frame(
+  Item     = paste0("Item", 1:15),
+  S_X2     = round(fit_s$S_X2, 3),
+  df       = fit_s$df.S_X2,
+  p_value  = round(fit_s$p.S_X2, 4),
+  Status   = ifelse(fit_s$p.S_X2 < 0.05, "Misfit (p<.05)", "Fit")
+)
+
+kable(fit_tbl, align="c")
+```
+
+## Interpretasi Item Misfit
+
+::: {.callout-important title="Panduan Interpretasi"}
+| Kondisi | Nilai Infit/Outfit | Implikasi |
+|---------|-------------------|-----------|
+| **Underfit** | > 1.3 | Item tidak konsisten — peserta dengan θ sama punya respon bervariasi |
+| **Fit** | 0.70 – 1.30 | Item bekerja sesuai model ✓ |
+| **Overfit** | < 0.70 | Item terlalu deterministik — mungkin redundan |
+:::
+
+```{r}
+#| label: fig-misfit-diagnosa
+#| fig-cap: "Diagnosa Item Misfit: Residual Plot"
+
+# Periksa pola residual item misfit (Q3 statistic)
+residuals_m <- tryCatch(residuals(m2pl, type="Q3"), error=function(e) NULL)
+
+if (!is.null(residuals_m) && is.matrix(residuals_m)) {
+  n_show <- min(10, nrow(residuals_m))
+  sub_m  <- residuals_m[1:n_show, 1:n_show]
+
+  # Visualisasi dengan tidyr (tidak perlu corrplot atau reshape2)
+  library(tidyr)
+  df_q3 <- as.data.frame(sub_m)
+  df_q3$Item1 <- rownames(df_q3)
+  df_q3 <- pivot_longer(df_q3, -Item1, names_to="Item2", values_to="Q3")
+  df_q3 <- df_q3[df_q3$Item1 != df_q3$Item2, ]  # hapus diagonal
+
+  print(
+    ggplot(df_q3, aes(x=Item2, y=Item1, fill=Q3)) +
+      geom_tile(color="white") +
+      geom_text(aes(label=round(Q3,2)), size=3) +
+      scale_fill_gradient2(low="#3498db", mid="white", high="#e74c3c",
+                           midpoint=0, limits=c(-0.5, 0.5)) +
+      labs(title="Matriks Q3: Lokal Dependensi Item",
+           subtitle="|Q3| > 0.2 = kemungkinan lokal dependensi",
+           x=NULL, y=NULL, fill="Q3") +
+      theme_minimal(base_size=11) +
+      theme(axis.text.x=element_text(angle=45, hjust=1))
+  )
+
+  # Statistik ringkasan
+  off_diag <- residuals_m[upper.tri(residuals_m)]
+  cat("Rangkuman Q3 Statistics:\n")
+  cat("Nilai Q3 > 0.2 mengindikasikan lokal dependensi\n")
+  cat("Q3 max (off-diagonal):", round(max(abs(off_diag)), 3), "\n")
+  cat("Pasangan dengan |Q3| > 0.2:", sum(abs(off_diag) > 0.2), "\n")
+} else {
+  cat("Q3 residuals tidak tersedia untuk model ini.\n")
+}
+```
+
+## Langkah Setelah Item Misfit
+
+```{r}
+#| label: keputusan-misfit
+#| echo: false
+
+library(knitr)
+
+df_keputusan <- data.frame(
+  Penyebab = c(
+    "Ambiguitas item",
+    "Multidimensional",
+    "Lokal dependensi",
+    "Item terlalu mudah/sulit",
+    "Kesalahan skoring"
+  ),
+  Gejala = c(
+    "Outfit tinggi, Infit normal",
+    "Item cluster berbeda",
+    "Q3 > 0.2 antar item",
+    "p < 0.1 atau p > 0.9",
+    "Outfit sangat tinggi"
+  ),
+  Tindakan = c(
+    "Revisi redaksi item",
+    "Pisahkan dimensi / MIRT",
+    "Hapus salah satu item",
+    "Review konten item",
+    "Periksa answer key"
+  )
+)
+
+kable(df_keputusan, caption="Panduan Tindakan untuk Item Misfit")
+```
+

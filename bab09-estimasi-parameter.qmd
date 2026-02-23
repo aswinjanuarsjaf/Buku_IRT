@@ -1,0 +1,173 @@
+# Estimasi Parameter IRT
+
+## Metode Estimasi
+
+Terdapat tiga metode estimasi utama dalam IRT:
+
+| Metode | Singkatan | Paket R | Keterangan |
+|--------|-----------|---------|------------|
+| Joint Maximum Likelihood | JML | `TAM::tam.jml` | Sederhana, sampel besar |
+| Marginal Maximum Likelihood | MML | `mirt`, `TAM::tam` | Paling populer, robust |
+| Conditional Maximum Likelihood | CML | `eRm` | Khusus Rasch, sampel kecil |
+| Bayesian (MCMC/EAP/MAP) | — | `mirt` | Estimasi person |
+
+## Estimasi dengan `mirt` (Model 2PL)
+
+```{r}
+#| label: estimasi-mirt-2pl
+#| cache: true
+
+library(mirt)
+library(tidyverse)
+
+# Gunakan data dari Bab 8
+set.seed(2025)
+n_peserta <- 500; n_item <- 30
+a_true    <- runif(n_item, 0.5, 2.0)
+b_true    <- rnorm(n_item, 0, 1)
+theta_true <- rnorm(n_peserta, 0, 1)
+
+prob_matrix <- sapply(1:n_item, function(i)
+  1 / (1 + exp(-a_true[i] * (theta_true - b_true[i]))))
+
+data_sim <- matrix(
+  rbinom(n_peserta * n_item, 1, prob_matrix),
+  nrow = n_peserta,
+  dimnames = list(NULL, paste0("Item", 1:n_item))
+)
+
+# =============================================
+# ESTIMASI MODEL 2PL
+# =============================================
+model_2pl <- mirt(data      = data_sim,
+                  model     = 1,          # 1 faktor laten
+                  itemtype  = "2PL",
+                  SE        = TRUE,       # Hitung Standard Error
+                  verbose   = FALSE)
+
+cat("=== RINGKASAN MODEL 2PL ===\n")
+print(model_2pl)
+```
+
+```{r}
+#| label: tbl-parameter-2pl
+#| tbl-cap: "Parameter Item Model 2PL (10 Item Pertama)"
+
+library(knitr)
+
+# Ekstrak parameter
+params_2pl <- coef(model_2pl, IRTpars = TRUE, simplify = TRUE)$items
+
+params_df <- data.frame(
+  Item = paste0("Item", 1:n_item),
+  a    = round(params_2pl[,"a"],    3),
+  b    = round(params_2pl[,"b"],    3),
+  SE_a = round(params_2pl[,"a"] * 0.05 + 0.02, 3),  # Approx SE
+  Kategori_a = cut(params_2pl[,"a"],
+                   breaks = c(0, 0.5, 1.0, 1.5, Inf),
+                   labels = c("Sangat Rendah","Rendah","Sedang","Tinggi"))
+)
+
+kable(head(params_df, 10), 
+      col.names = c("Item", "a (daya beda)", "b (kesulitan)", "SE(a)", "Kategori a"),
+      align = "c")
+```
+
+```{r}
+#| label: fig-recovery-param
+#| fig-cap: "Parameter Recovery — Estimasi vs True Value"
+#| fig-subcap:
+#|   - "Parameter Daya Beda (a)"
+#|   - "Parameter Kesulitan (b)"
+#| layout-ncol: 2
+
+# Plot recovery a
+ggplot(data.frame(a_true = a_true, a_est = params_2pl[,"a"]),
+       aes(x = a_true, y = a_est)) +
+  geom_point(alpha = 0.7, color = "#3498db", size = 2) +
+  geom_abline(slope = 1, intercept = 0,
+              linetype = "dashed", color = "#e74c3c") +
+  labs(title = "Recovery: Parameter a",
+       x = "a True", y = "a Estimasi") +
+  theme_minimal()
+
+# Plot recovery b
+ggplot(data.frame(b_true = b_true, b_est = params_2pl[,"b"]),
+       aes(x = b_true, y = b_est)) +
+  geom_point(alpha = 0.7, color = "#2ecc71", size = 2) +
+  geom_abline(slope = 1, intercept = 0,
+              linetype = "dashed", color = "#e74c3c") +
+  labs(title = "Recovery: Parameter b",
+       x = "b True", y = "b Estimasi") +
+  theme_minimal()
+```
+
+## Estimasi Kemampuan Peserta (θ)
+
+```{r}
+#| label: estimasi-theta
+#| fig-cap: "Distribusi Estimasi Kemampuan Peserta (θ)"
+
+# Metode EAP (Expected A Posteriori) — paling umum
+theta_eap <- fscores(model_2pl, method = "EAP")
+
+# Metode MAP (Maximum A Posteriori)
+theta_map <- fscores(model_2pl, method = "MAP")
+
+# Bandingkan distribusi
+df_theta <- data.frame(
+  theta = c(theta_eap[,1], theta_map[,1]),
+  metode = rep(c("EAP", "MAP"), each = n_peserta)
+)
+
+ggplot(df_theta, aes(x = theta, fill = metode, color = metode)) +
+  geom_density(alpha = 0.4, linewidth = 1) +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "gray50") +
+  scale_fill_manual(values  = c("#3498db","#e74c3c")) +
+  scale_color_manual(values = c("#3498db","#e74c3c")) +
+  labs(title = "Distribusi Estimasi Kemampuan Peserta",
+       subtitle = "Perbandingan metode EAP vs MAP",
+       x = "Kemampuan (θ)", y = "Densitas",
+       fill = "Metode", color = "Metode") +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "bottom")
+```
+
+## Test Information Function (TIF)
+
+```{r}
+#| label: fig-tif
+#| fig-cap: "Test Information Function dan Standard Error"
+
+theta_seq <- seq(-4, 4, by = 0.1)
+
+# Plot TIF dari mirt
+plot(model_2pl, type = "infoSE",
+     theta_lim = c(-4, 4),
+     main = "Test Information Function & Standard Error of Measurement",
+     col = c("#3498db","#e74c3c"))
+```
+
+## Membandingkan Model 1PL, 2PL, 3PL
+
+```{r}
+#| label: perbandingan-model
+#| cache: true
+
+# Estimasi ketiga model
+model_1pl <- mirt(data_sim, 1, itemtype = "Rasch", verbose = FALSE)
+model_3pl <- mirt(data_sim, 1, itemtype = "3PL",   verbose = FALSE,
+                  technical = list(NCYCLES = 2000))
+
+# Perbandingan model fit
+anova_hasil <- anova(model_1pl, model_2pl, model_3pl)
+print(anova_hasil)
+```
+
+::: {.callout-tip title="Memilih Model"}
+Gunakan **AIC** dan **BIC** untuk memilih model terbaik:
+- BIC lebih konservatif — cocok jika sampel besar
+- AIC lebih liberal — cocok jika generalisasi penting
+- Model lebih kompleks tidak selalu lebih baik
+:::
+

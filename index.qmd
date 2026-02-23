@@ -1,0 +1,68 @@
+# Kata Pengantar {.unnumbered}
+
+::: {.callout-note appearance="simple"}
+**Tentang Modul Ini**  
+Modul ini dirancang sebagai panduan praktis penerapan *Item Response Theory* (IRT) untuk praktisi psikometri, analis SDM, dan peneliti di lingkungan instansi pemerintah maupun swasta di Indonesia.
+:::
+
+## Latar Belakang
+
+Pengujian berbasis psikometri telah menjadi fondasi utama dalam seleksi, asesmen kompetensi, dan pengembangan SDM. Selama puluhan tahun, *Classical Test Theory* (CTT) menjadi pendekatan dominan. Namun, CTT memiliki keterbatasan mendasar: **karakteristik item bergantung pada sampel** dan **kemampuan peserta bergantung pada instrumen**.
+
+*Item Response Theory* (IRT) hadir sebagai solusi dengan prinsip **parameter invariance** — kemampuan peserta dan karakteristik item dapat diestimasi secara terpisah dan tidak saling bergantung. Inilah yang membuat IRT menjadi standar emas dalam pengembangan tes modern.
+
+## Tujuan Modul
+
+Setelah mempelajari modul ini, pembaca diharapkan mampu:
+
+1. Memahami perbedaan fundamental CTT vs IRT
+2. Menguasai konsep model 1PL, 2PL, 3PL, dan Rasch Model
+3. Mengoperasikan analisis IRT menggunakan R (*mirt*, *TAM*, *eRm*)
+4. Menginterpretasikan parameter item: kesulitan (*b*), daya beda (*a*), dan tebakan (*c*)
+5. Menilai *item fit* dan *person fit*
+6. Melakukan analisis DIF (*Differential Item Functioning*)
+7. Menyusun laporan psikometri berbasis IRT secara profesional
+
+## Struktur Modul
+
+Modul ini terdiri dari empat bagian utama:
+
+| Bagian | Topik | Bab |
+|--------|-------|-----|
+| **I** | Fondasi Teori | 1–3 |
+| **II** | Model-Model IRT | 4–7 |
+| **III** | Implementasi di R | 8–12 |
+| **IV** | Aplikasi Praktis | 13–15 |
+
+## Cara Menggunakan Modul
+
+::: {.callout-tip}
+**Untuk Pemula** — Mulai dari Bab 1 secara berurutan.  
+**Untuk Praktisi** — Bisa langsung ke Bagian III (Implementasi di R).  
+**Untuk Referensi Cepat** — Gunakan sidebar kiri untuk navigasi antar bab.
+:::
+
+Setiap bab dilengkapi dengan:
+
+- **Konsep teoritis** yang dijelaskan secara sistematis
+- **Kode R** yang siap dijalankan (*copy-paste ready*)
+- **Output dan interpretasi** yang dijelaskan secara rinci
+- **Latihan mandiri** di akhir bab
+- ***Callout box*** untuk tips, catatan penting, dan peringatan
+
+## Prasyarat
+
+Pembaca diasumsikan telah familiar dengan:
+
+- Statistika dasar (mean, SD, distribusi normal)
+- Konsep reliabilitas dan validitas
+- R dan RStudio (minimal tingkat pemula)
+
+## Tentang Penulis
+
+Modul ini disusun oleh Aswin Januarsjaf dan tim psikometri Talentlytica.
+
+---
+
+*"Mengukur dengan tepat adalah langkah pertama menuju keputusan yang adil."*
+

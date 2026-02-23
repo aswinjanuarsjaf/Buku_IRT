@@ -1,0 +1,531 @@
+# Model 3 Parameter Logistik (3PL)
+
+## Konsep Dasar Model 3PL
+
+**Model 3 Parameter Logistik (3PL)** adalah model IRT paling lengkap untuk data dikotomis. Selain parameter kesulitan (*b*) dan daya beda (*a*), model ini menambahkan **parameter tebakan (*c*)** yang merepresentasikan kemungkinan menjawab benar secara kebetulan — bahkan oleh peserta yang berkemampuan sangat rendah.
+
+Model 3PL paling relevan untuk:
+- Tes pilihan ganda (multiple choice)
+- Tes dengan jawaban benar/salah yang terbatas opsi
+- Seleksi berskala besar (SBMPTN, CPNS, GRE, SAT, TOEFL)
+
+## Formula Model 3PL
+
+$$P(X_{ij} = 1 \mid \theta_j, a_i, b_i, c_i) = c_i + (1 - c_i) \cdot \frac{1}{1 + e^{-Da_i(\theta_j - b_i)}}$$
+
+Di mana:
+
+| Simbol | Nama | Rentang Umum | Interpretasi |
+|--------|------|-------------|--------------|
+| $c_i$ | *Pseudo-guessing* | 0.00 – 0.35 | Probabilitas minimum menjawab benar |
+| $a_i$ | *Discrimination* | 0.5 – 2.5 | Kemiringan kurva |
+| $b_i$ | *Difficulty* | −3 hingga +3 | Lokasi kurva (dalam logit) |
+
+::: {.callout-warning title="Pergeseran Makna Parameter b pada 3PL"}
+Dalam model 1PL dan 2PL, $b$ adalah nilai θ di mana P = 0.50.
+
+Dalam model 3PL, $b$ adalah nilai θ di mana:
+
+$$P = c + \frac{1 - c}{2} = \frac{1 + c}{2}$$
+
+Misalnya jika $c = 0.25$: maka $P$ di titik $b$ = $\frac{1+0.25}{2}$ = **0.625**, bukan 0.50.
+:::
+
+## Visualisasi Efek Parameter *c*
+
+```{r}
+#| label: fig-icc-3pl-lengkap
+#| fig-cap: "Pengaruh Parameter c terhadap ICC — Model 3PL"
+#| fig-height: 7
+
+library(ggplot2)
+library(patchwork)
+
+theta <- seq(-4, 4, by = 0.05)
+
+icc_3pl <- function(theta, a = 1, b = 0, c = 0) {
+  c + (1 - c) / (1 + exp(-a * (theta - b)))
+}
+
+# Panel 1: variasi c
+c_vals  <- c(0.00, 0.10, 0.20, 0.25, 0.33)
+lab_c   <- paste0("c = ", c_vals)
+
+df_c <- data.frame(
+  theta = rep(theta, length(c_vals)),
+  prob  = unlist(lapply(c_vals, function(c) icc_3pl(theta, 1.2, 0, c))),
+  item  = factor(rep(lab_c, each=length(theta)), levels=lab_c)
+)
+
+p1 <- ggplot(df_c, aes(x=theta, y=prob, color=item)) +
+  geom_line(linewidth=1.2) +
+  geom_hline(yintercept=0.5, linetype="dashed", color="gray50") +
+  scale_color_manual(values=c("#2c3e50","#2980b9","#27ae60","#f39c12","#e74c3c")) +
+  scale_y_continuous(labels=scales::percent, limits=c(0,1)) +
+  labs(title="Pengaruh c (a=1.2, b=0 tetap)",
+       subtitle="Kurva bergeser naik dan batas bawah meningkat",
+       x="θ", y="P(benar|θ)", color="Parameter c") +
+  theme_minimal(base_size=11) + theme(legend.position="right")
+
+# Panel 2: perbandingan 1PL, 2PL, 3PL
+df_model <- data.frame(
+  theta = rep(theta, 3),
+  prob  = c(icc_3pl(theta, 1, 0, 0),
+            icc_3pl(theta, 1.5, 0, 0),
+            icc_3pl(theta, 1.5, 0, 0.25)),
+  model = rep(c("1PL (a=1, b=0, c=0)",
+                "2PL (a=1.5, b=0, c=0)",
+                "3PL (a=1.5, b=0, c=0.25)"), each=length(theta))
+)
+
+p2 <- ggplot(df_model, aes(x=theta, y=prob, color=model, linetype=model)) +
+  geom_line(linewidth=1.3) +
+  scale_color_manual(values=c("#bdc3c7","#3498db","#e74c3c")) +
+  scale_linetype_manual(values=c("dotted","dashed","solid")) +
+  scale_y_continuous(labels=scales::percent, limits=c(0,1)) +
+  labs(title="Perbandingan ICC: 1PL vs 2PL vs 3PL",
+       subtitle="Item yang sama — efek penambahan parameter terlihat jelas",
+       x="θ", y="P(benar|θ)", color="Model", linetype="Model") +
+  theme_minimal(base_size=11) + theme(legend.position="bottom")
+
+p1 / p2
+```
+
+## Anatomi ICC Model 3PL
+
+```{r}
+#| label: fig-anatomi-3pl
+#| fig-cap: "Anatomi Lengkap ICC — Model 3PL"
+
+a_ex <- 1.5; b_ex <- 0.5; c_ex <- 0.20
+
+df_ex <- data.frame(theta=theta, prob=icc_3pl(theta, a_ex, b_ex, c_ex))
+
+# Nilai P di titik b
+P_di_b  <- c_ex + (1 - c_ex)/2
+b_star_x <- b_ex  # titik infleksi sebenarnya lebih kompleks; approx di b
+
+ggplot(df_ex, aes(x=theta, y=prob)) +
+  geom_ribbon(aes(ymin=c_ex, ymax=prob), fill="#3498db", alpha=0.15) +
+  geom_ribbon(aes(ymin=0, ymax=c_ex), fill="#f39c12", alpha=0.25) +
+  geom_line(linewidth=1.5, color="#3498db") +
+  # Batas bawah c
+  geom_hline(yintercept=c_ex, linetype="dashed", color="#f39c12", linewidth=1) +
+  # P = 1
+  geom_hline(yintercept=1, linetype="dashed", color="gray60") +
+  # Titik b
+  geom_vline(xintercept=b_ex, linetype="dashed", color="#e74c3c", linewidth=0.9) +
+  geom_point(x=b_ex, y=P_di_b, size=5, color="#e74c3c") +
+  # Anotasi
+  annotate("text", x=-3.5, y=c_ex+0.04,
+           label=sprintf("Batas bawah c = %.2f", c_ex),
+           color="#f39c12", size=3.8, fontface="bold", hjust=0) +
+  annotate("text", x=-3.5, y=0.08,
+           label="Zona 'tebakan'",
+           color="#f39c12", size=3.5, hjust=0) +
+  annotate("text", x=b_ex+0.15, y=P_di_b-0.08,
+           label=sprintf("b = %.1f\nP = (1+c)/2 = %.2f", b_ex, P_di_b),
+           color="#e74c3c", size=3.8, hjust=0) +
+  annotate("text", x=-1.5, y=0.85,
+           label=sprintf("a = %.1f (slope)", a_ex),
+           color="#2c3e50", size=3.8) +
+  scale_y_continuous(labels=scales::percent, limits=c(0,1),
+                     breaks=c(0, c_ex, 0.5, P_di_b, 0.75, 1)) +
+  labs(
+    title    = sprintf("Anatomi ICC Model 3PL (a=%.1f, b=%.1f, c=%.2f)",
+                       a_ex, b_ex, c_ex),
+    subtitle = "Area oranye = kontribusi tebakan | Area biru = kontribusi kemampuan sejati",
+    x = "Kemampuan (θ)", y = "P(benar|θ)"
+  ) +
+  theme_minimal(base_size=12)
+```
+
+## Estimasi Model 3PL di R
+
+::: {.callout-important title="Persyaratan Sampel Model 3PL"}
+Model 3PL memerlukan **sampel minimal 500–1000 peserta** untuk estimasi parameter *c* yang stabil. Dengan sampel kecil, parameter *c* sering tidak stabil dan tidak dapat diinterpretasikan dengan baik.
+:::
+
+```{r}
+#| label: estimasi-3pl
+#| cache: true
+
+library(mirt)
+library(tidyverse)
+
+# ======================================================
+# SIMULASI DATA 3PL
+# ======================================================
+set.seed(2025)
+
+n_peserta <- 800   # Sampel lebih besar untuk 3PL
+n_item    <- 20
+
+a_true  <- runif(n_item, 0.7, 2.0)
+b_true  <- rnorm(n_item, 0, 1)
+c_true  <- runif(n_item, 0.05, 0.30)   # Parameter tebakan
+theta_true <- rnorm(n_peserta, 0, 1)
+
+# Generate data
+prob_mat <- sapply(1:n_item, function(i)
+  c_true[i] + (1 - c_true[i]) / (1 + exp(-a_true[i] * (theta_true - b_true[i]))))
+
+data_3pl <- matrix(
+  rbinom(n_peserta * n_item, 1, prob_mat),
+  nrow = n_peserta,
+  dimnames = list(
+    paste0("P", 1:n_peserta),
+    paste0("Item", sprintf("%02d", 1:n_item))
+  )
+)
+
+cat("=== DATA SIMULASI 3PL ===\n")
+cat("Dimensi          :", dim(data_3pl), "\n")
+cat("Proporsi benar   :", round(mean(data_3pl), 3), "\n")
+cat("Range a true     :", round(range(a_true), 2), "\n")
+cat("Range b true     :", round(range(b_true), 2), "\n")
+cat("Range c true     :", round(range(c_true), 2), "\n\n")
+
+# ======================================================
+# ESTIMASI MODEL 3PL
+# ======================================================
+model_3pl <- mirt(
+  data      = data_3pl,
+  model     = 1,
+  itemtype  = "3PL",
+  SE        = TRUE,
+  verbose   = FALSE,
+  technical = list(NCYCLES = 3000)
+)
+
+cat("=== RINGKASAN MODEL 3PL ===\n")
+print(model_3pl)
+```
+
+```{r}
+#| label: tbl-param-3pl
+#| tbl-cap: "Parameter Item Lengkap — Model 3PL"
+
+library(kableExtra)
+
+params_3pl <- coef(model_3pl, IRTpars=TRUE, simplify=TRUE)$items
+
+params_tbl3 <- data.frame(
+  Item   = paste0("Item", sprintf("%02d", 1:n_item)),
+  a_true = round(a_true, 3),
+  a_est  = round(params_3pl[,"a"], 3),
+  b_true = round(b_true, 3),
+  b_est  = round(params_3pl[,"b"], 3),
+  c_true = round(c_true, 3),
+  c_est  = round(params_3pl[,"g"], 3),
+  Flag   = ifelse(params_3pl[,"g"] > 0.35, "⚠ c tinggi",
+           ifelse(params_3pl[,"a"] < 0.5, "⚠ a lemah", "✓"))
+)
+
+kable(params_tbl3,
+      col.names=c("Item","a True","a Est","b True","b Est","c True","c Est","Status"),
+      align="c") |>
+  kable_styling(bootstrap_options=c("striped","hover"), full_width=FALSE) -> tbl_3pl
+
+idx_flag <- which(params_tbl3$Flag != "✓")
+if (length(idx_flag) > 0) tbl_3pl <- row_spec(tbl_3pl, idx_flag, background="#fff3cd")
+tbl_3pl
+```
+
+### Parameter Recovery — Model 3PL
+
+```{r}
+#| label: fig-recovery-3pl
+#| fig-cap: "Parameter Recovery — Model 3PL (a, b, c)"
+#| fig-height: 8
+
+library(patchwork)
+
+mk_plot <- function(true_val, est_val, xlab, ylab, titl, warna) {
+  r <- round(cor(true_val, est_val, use="complete.obs"), 3)
+  ggplot(data.frame(x=true_val, y=est_val), aes(x,y)) +
+    geom_point(color=warna, size=2.5, alpha=0.8) +
+    geom_abline(slope=1, intercept=0, linetype="dashed",
+                color="#c0392b", linewidth=1) +
+    annotate("text", x=min(true_val, na.rm=T)*0.8,
+             y=max(est_val, na.rm=T)*0.9,
+             label=paste("r =", r), size=5, fontface="bold",
+             color="#1a5276") +
+    labs(title=titl, x=xlab, y=ylab) +
+    theme_minimal(base_size=11)
+}
+
+pa <- mk_plot(a_true, params_3pl[,"a"], "a True","a Est","Recovery: Parameter a","#3498db")
+pb <- mk_plot(b_true, params_3pl[,"b"], "b True","b Est","Recovery: Parameter b","#27ae60")
+pc <- mk_plot(c_true, params_3pl[,"g"], "c True","c Est","Recovery: Parameter c\n(paling tidak stabil)","#e74c3c")
+
+(pa + pb) / pc
+```
+
+::: {.callout-note title="Mengapa Recovery c Lebih Rendah?"}
+Parameter *c* paling sulit diestimasi karena:
+1. Informasi tentang *c* hanya dari peserta berkemampuan **sangat rendah**
+2. Distribusi respon di ujung bawah sangat tipis
+3. *c* sangat sensitif terhadap ukuran sampel
+
+Untuk meningkatkan stabilitas estimasi *c*, gunakan **prior Bayesian** atau **fixed c** berdasarkan jumlah alternatif jawaban.
+:::
+
+## Menetapkan Prior untuk Parameter *c*
+
+```{r}
+#| label: prior-c-3pl
+#| cache: true
+
+# ======================================================
+# ESTIMASI 3PL DENGAN PRIOR BAYESIAN PADA c
+# ======================================================
+
+# Prior Beta(5, 17): mean ≈ 0.25 (sesuai 4 pilihan)
+prior_c <- c("g", 0, 1, "norm", -1.4, 0.5)  # logit scale
+
+model_3pl_prior <- mirt(
+  data      = data_3pl,
+  model     = 1,
+  itemtype  = "3PL",
+  SE        = FALSE,
+  verbose   = FALSE,
+  technical = list(NCYCLES = 3000),
+  prior     = prior_c
+)
+
+params_prior <- coef(model_3pl_prior, IRTpars=TRUE, simplify=TRUE)$items
+
+cat("=== PERBANDINGAN c: TANPA vs DENGAN PRIOR ===\n")
+df_comp_c <- data.frame(
+  Item    = paste0("Item", sprintf("%02d", 1:n_item)),
+  c_true  = round(c_true, 3),
+  c_free  = round(params_3pl[,"g"], 3),
+  c_prior = round(params_prior[,"g"], 3)
+)
+
+cat("RMSE c tanpa prior :", round(sqrt(mean((df_comp_c$c_free - c_true)^2)), 4), "\n")
+cat("RMSE c dengan prior:", round(sqrt(mean((df_comp_c$c_prior - c_true)^2)), 4), "\n\n")
+
+print(head(df_comp_c, 10))
+```
+
+## Item Information Function — Model 3PL
+
+```{r}
+#| label: fig-iif-3pl
+#| fig-cap: "Perbandingan IIF: 2PL vs 3PL untuk Item yang Sama"
+
+iif_3pl <- function(theta, a, b, c) {
+  p <- c + (1-c)/(1 + exp(-a*(theta-b)))
+  q <- 1 - p
+  p0 <- (p - c) / (1 - c)  # P tanpa guessing
+  a^2 * (p0^2) * q / p
+}
+
+# Bandingkan IIF item yang sama dengan dan tanpa parameter c
+a_ex2 <- 1.5; b_ex2 <- 0; c_ex2 <- 0.25
+
+df_iif_cmp <- data.frame(
+  theta  = rep(theta, 3),
+  info   = c(iif_3pl(theta, a_ex2, b_ex2, 0.00),
+             iif_3pl(theta, a_ex2, b_ex2, 0.15),
+             iif_3pl(theta, a_ex2, b_ex2, c_ex2)),
+  model  = rep(c("c = 0.00 (2PL)","c = 0.15","c = 0.25 (3PL)"),
+               each=length(theta))
+)
+
+ggplot(df_iif_cmp, aes(x=theta, y=info, color=model)) +
+  geom_line(linewidth=1.3) +
+  scale_color_manual(values=c("#bdc3c7","#3498db","#e74c3c")) +
+  labs(
+    title    = "Pengaruh Parameter c terhadap IIF",
+    subtitle = "Penambahan c mengurangi informasi, terutama di ujung bawah skala",
+    x = "Kemampuan (θ)", y = "Informasi Item I(θ)",
+    color = "Model"
+  ) +
+  theme_minimal(base_size=12) +
+  theme(legend.position="bottom")
+```
+
+## Perbandingan AIC/BIC: 1PL vs 2PL vs 3PL
+
+```{r}
+#| label: model-comparison-3pl
+#| cache: true
+#| tbl-cap: "Perbandingan Fit Model: 1PL, 2PL, 3PL"
+
+# Estimasi ketiga model pada data yang sama
+m1 <- mirt(data_3pl, 1, "Rasch", verbose=FALSE)
+m2 <- mirt(data_3pl, 1, "2PL",   verbose=FALSE)
+m3 <- model_3pl
+
+# Ekstrak indeks fit
+fit_idx <- data.frame(
+  Model = c("1PL (Rasch)", "2PL", "3PL"),
+  n_par = c(extract.mirt(m1, "nest"),
+            extract.mirt(m2, "nest"),
+            extract.mirt(m3, "nest")),
+  log_L = round(c(extract.mirt(m1, "logLik"),
+                   extract.mirt(m2, "logLik"),
+                   extract.mirt(m3, "logLik")), 2),
+  AIC   = round(c(extract.mirt(m1, "AIC"),
+                   extract.mirt(m2, "AIC"),
+                   extract.mirt(m3, "AIC")), 2),
+  BIC   = round(c(extract.mirt(m1, "BIC"),
+                   extract.mirt(m2, "BIC"),
+                   extract.mirt(m3, "BIC")), 2)
+)
+
+# Tandai model terbaik
+fit_idx$Best_AIC <- ifelse(fit_idx$AIC == min(fit_idx$AIC), "★", "")
+fit_idx$Best_BIC <- ifelse(fit_idx$BIC == min(fit_idx$BIC), "★", "")
+
+kable(fit_idx,
+      col.names=c("Model","Param","Log-Likelihood","AIC","BIC","Min AIC","Min BIC"),
+      align="c") |>
+  kable_styling(bootstrap_options=c("striped","hover"), full_width=FALSE) -> tbl_fit
+
+idx_best <- which(fit_idx$Best_AIC == "★")
+if (length(idx_best) > 0) tbl_fit <- row_spec(tbl_fit, idx_best, background="#e8f5e9", bold=TRUE)
+tbl_fit
+```
+
+::: {.callout-tip title="Memilih antara 2PL dan 3PL"}
+Gunakan uji likelihood ratio (LRT) untuk memilih model secara formal:
+
+```r
+anova(m2, m3)
+```
+
+Jika p-value < .05, model 3PL secara signifikan lebih baik. Namun pertimbangkan juga:
+
+- Apakah tes berbentuk pilihan ganda? → 3PL lebih masuk akal
+- Apakah sampel cukup besar (n ≥ 500)? → 3PL layak diestimasi
+- Apakah ada nilai c > 0.35? → Tanda masalah serius
+:::
+
+## Deteksi Item Bermasalah
+
+```{r}
+#| label: fig-deteksi-3pl
+#| fig-cap: "Deteksi Item Bermasalah — Model 3PL"
+
+library(ggrepel)
+library(dplyr)
+
+item_fit3 <- itemfit(m3, fit_stats="S_X2")
+
+df_flag <- data.frame(
+  Item     = paste0("Item", sprintf("%02d", 1:n_item)),
+  a        = round(params_3pl[,"a"], 3),
+  b        = round(params_3pl[,"b"], 3),
+  c        = round(params_3pl[,"g"], 3),
+  fit_p    = round(item_fit3$p.S_X2, 3),
+  Masalah  = case_when(
+    params_3pl[,"g"] > 0.35        ~ "c terlalu tinggi",
+    params_3pl[,"a"] < 0.5         ~ "a terlalu rendah",
+    item_fit3$p.S_X2 < 0.05        ~ "Item misfit",
+    abs(params_3pl[,"b"]) > 3      ~ "b ekstrem",
+    TRUE                            ~ "Tidak ada masalah"
+  )
+)
+
+ggplot(df_flag, aes(x=b, y=a, color=Masalah, shape=Masalah, size=c)) +
+  geom_point(alpha=0.85) +
+  ggrepel::geom_text_repel(aes(label=Item), size=2.8,
+                             color="gray30", show.legend=FALSE) +
+  geom_vline(xintercept=c(-2.5,2.5), linetype="dashed", color="gray70") +
+  geom_hline(yintercept=0.5, linetype="dashed", color="gray70") +
+  scale_color_manual(values=c(
+    "Tidak ada masalah" = "#27ae60",
+    "c terlalu tinggi"  = "#e74c3c",
+    "a terlalu rendah"  = "#f39c12",
+    "Item misfit"       = "#8e44ad",
+    "b ekstrem"         = "#2980b9"
+  )) +
+  scale_size_continuous(range=c(2,8), name="Parameter c") +
+  labs(
+    title    = "Peta Diagnostik Item — Model 3PL",
+    subtitle = "Ukuran titik = nilai c | Warna = jenis masalah",
+    x = "Kesulitan (b)", y = "Daya Beda (a)",
+    color = "Masalah", shape = "Masalah"
+  ) +
+  theme_minimal(base_size=12) +
+  theme(legend.position="right")
+```
+
+## Ringkasan: Perbandingan Tiga Model
+
+```{r}
+#| echo: false
+#| tbl-cap: "Perbandingan Lengkap: 1PL vs 2PL vs 3PL"
+
+df_akhir <- data.frame(
+  Aspek = c(
+    "Jumlah parameter per item",
+    "Parameter yang diestimasi",
+    "Ukuran sampel minimum",
+    "Waktu komputasi",
+    "Stabilitas estimasi",
+    "Fleksibilitas model",
+    "Asumsi daya beda",
+    "Efek tebakan",
+    "Cocok untuk",
+    "Package R"
+  ),
+  `1PL` = c(
+    "1",
+    "b saja",
+    "~100–200",
+    "Cepat",
+    "Sangat stabil",
+    "Rendah",
+    "Semua sama (a = 1)",
+    "Tidak diperhitungkan",
+    "Skala sikap, asesmen kompetensi",
+    "mirt, TAM, eRm"
+  ),
+  `2PL` = c(
+    "2",
+    "a, b",
+    "~200–500",
+    "Sedang",
+    "Stabil",
+    "Sedang",
+    "Berbeda per item",
+    "Tidak diperhitungkan",
+    "Tes prestasi, seleksi umum",
+    "mirt, ltm"
+  ),
+  `3PL` = c(
+    "3",
+    "a, b, c",
+    "~500–1000+",
+    "Lambat",
+    "Kurang stabil (terutama c)",
+    "Tinggi",
+    "Berbeda per item",
+    "Diperhitungkan",
+    "Tes pilihan ganda berskala besar",
+    "mirt"
+  )
+)
+
+kable(df_akhir,
+      col.names=c("Aspek","1PL (Rasch)","2PL","3PL"),
+      align=c("l","c","c","c")) |>
+  kable_styling(bootstrap_options=c("striped","hover")) |>
+  column_spec(2, background="#fff8dc") |>
+  column_spec(3, background="#e8f4f8") |>
+  column_spec(4, background="#fde8e8")
+```
+
+## Latihan Mandiri {.unnumbered}
+
+1. Dari data `data_3pl` yang telah dibuat, lakukan perbandingan formal 2PL vs 3PL menggunakan `anova(m2, m3)`. Apakah penambahan parameter *c* secara signifikan meningkatkan fit model?
+
+2. Identifikasi item-item dengan nilai *c* > 0.25. Apa implikasinya bila item tersebut digunakan dalam tes dengan 4 pilihan jawaban (dimana *c* teoritis = 0.25)?
+
+3. Buat TIF untuk model 1PL, 2PL, dan 3PL pada data yang sama. Bagaimana profil informasi berbeda antar model? Di rentang θ mana perbedaan paling besar?
+

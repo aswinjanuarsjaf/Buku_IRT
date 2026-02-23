@@ -1,0 +1,175 @@
+# Rasch Model
+
+## Filosofi Rasch
+
+**Rasch Model** dikembangkan oleh Georg Rasch (1960) dengan filosofi berbeda dari pendekatan IRT lainnya. Jika model 2PL dan 3PL *mengikuti data*, Rasch Model justru *menetapkan standar* — data harus **memenuhi** model Rasch, bukan sebaliknya.
+
+::: {.callout-note title="Filosofi Rasch vs IRT"}
+| Aspek | IRT (2PL/3PL) | Rasch Model |
+|-------|---------------|-------------|
+| Orientasi | Fit model ke data | Fit data ke model |
+| Jumlah parameter item | 2–3 | 1 (hanya *b*) |
+| Daya beda | Berbeda per item | Sama (diasumsikan =1) |
+| Tebakan | Ada (3PL) atau tidak | Tidak ada |
+| Penggunaan utama | Tes akademik skala besar | Skala sikap, asesmen kualitas |
+:::
+
+## Formula Rasch Model
+
+$$P(X_{ij} = 1 \mid \theta_j, b_i) = \frac{e^{(\theta_j - b_i)}}{1 + e^{(\theta_j - b_i)}}$$
+
+Perbedaan utama: **tidak ada parameter *a*** (daya beda diasumsikan = 1 untuk semua item).
+
+## Rasch Model untuk Data Politomus
+
+### Partial Credit Model (PCM)
+
+Untuk item dengan beberapa kategori respon bertahap (misalnya skala Likert):
+
+$$P(X_{ij} = k \mid \theta_j) = \frac{\exp\sum_{h=0}^{k}(\theta_j - \delta_{ih})}{\sum_{c=0}^{m}\exp\sum_{h=0}^{c}(\theta_j - \delta_{ih})}$$
+
+### Rating Scale Model (RSM)
+
+Varian PCM dengan **jarak kategori sama** untuk semua item — cocok untuk skala Likert seragam.
+
+## Implementasi Rasch Model di R
+
+```{r}
+#| label: rasch-implementasi
+
+library(eRm)
+library(ggplot2)
+
+# Simulasi data dikotomis Rasch
+set.seed(42)
+n_peserta  <- 300
+n_item     <- 20
+b_true     <- seq(-2, 2, length.out = n_item)
+theta_true <- rnorm(n_peserta)
+
+# Generate data Rasch
+prob_matrix <- outer(theta_true, b_true,
+                     function(theta, b) 1 / (1 + exp(-(theta - b))))
+data_rasch <- matrix(
+  rbinom(n_peserta * n_item, 1, prob_matrix),
+  nrow = n_peserta,
+  dimnames = list(NULL, paste0("I", 1:n_item))
+)
+
+cat("Dimensi data:", dim(data_rasch), "\n")
+cat("Proporsi benar per item (5 pertama):\n")
+print(round(colMeans(data_rasch)[1:5], 3))
+```
+
+```{r}
+#| label: rasch-estimasi
+#| fig-cap: "Item Parameter Estimates — Rasch Model"
+
+# eRm (CML): betapar = -b, se.beta = SE(b)
+model_erm <- RM(data_rasch)
+
+b_erm  <- -model_erm$betapar
+se_erm <-  model_erm$se.beta
+
+item_params <- data.frame(
+  Item       = paste0("I", 1:n_item),
+  b_estimasi = round(b_erm, 3),
+  b_true     = round(b_true, 3),
+  SE         = round(se_erm, 3)
+)
+
+ggplot(item_params, aes(x = b_true, y = b_estimasi)) +
+  geom_errorbar(aes(ymin = b_estimasi - 1.96 * SE,
+                    ymax = b_estimasi + 1.96 * SE),
+                width = 0.08, alpha = 0.4, color = "#3498db") +
+  geom_point(size = 3, color = "#3498db") +
+  geom_abline(intercept = 0, slope = 1,
+              linetype = "dashed", color = "#e74c3c", linewidth = 1) +
+  annotate("text", x = -2.2, y = 1.8,
+           label = paste("r =", round(cor(b_true, b_erm), 3)),
+           color = "#1a5276", size = 5, fontface = "bold") +
+  labs(title = "Estimasi Parameter Kesulitan vs Nilai Sebenarnya",
+       subtitle = "Rasch Model - eRm (CML) | Error bar = +/-95% CI",
+       x = "b True", y = "b Estimasi +/- 95% CI") +
+  theme_minimal(base_size = 12)
+```
+
+## Partial Credit Model (PCM) untuk Skala Likert
+
+```{r}
+#| label: pcm-implementasi
+
+# Simulasi data politomus (4 kategori: 0-3)
+set.seed(99)
+n_item_pcm    <- 5
+n_peserta_pcm <- 200
+
+theta_sim <- rnorm(n_peserta_pcm)
+data_pcm  <- matrix(NA, nrow = n_peserta_pcm, ncol = n_item_pcm)
+
+for (i in 1:n_item_pcm) {
+  delta <- seq(-1.5, 1.5, length.out = 3)
+  for (j in 1:n_peserta_pcm) {
+    probs <- c(1,
+               exp(theta_sim[j] - delta[1]),
+               exp(2*theta_sim[j] - sum(delta[1:2])),
+               exp(3*theta_sim[j] - sum(delta)))
+    probs <- probs / sum(probs)
+    data_pcm[j, i] <- sample(0:3, 1, prob = probs)
+  }
+}
+colnames(data_pcm) <- paste0("Item", 1:n_item_pcm)
+
+# eRm::PCM lebih stabil untuk demo
+model_pcm <- PCM(data_pcm)
+cat("PCM berhasil diestimasi\n")
+cat("Jumlah item    :", n_item_pcm, "\n")
+cat("Jumlah peserta :", n_peserta_pcm, "\n")
+cat("Threshold parameters (5 pertama):\n")
+print(round(model_pcm$betapar[1:5], 3))
+```
+
+## Kriteria Rasch Fit
+
+Rasch fit dinilai melalui dua statistik utama:
+
+| Statistik | Formula | Rentang Ideal | Interpretasi |
+|-----------|---------|---------------|--------------|
+| **Infit MnSq** | Weighted fit | 0.70 - 1.30 | Sensitif item tengah |
+| **Outfit MnSq** | Unweighted fit | 0.70 - 1.30 | Sensitif item ekstrem |
+| **Infit ZSTD** | Standardized | -2.0 - +2.0 | Uji signifikansi |
+| **Outfit ZSTD** | Standardized | -2.0 - +2.0 | Uji signifikansi |
+
+```{r}
+#| label: rasch-fit
+#| fig-cap: "Item Fit Statistics — Rasch Model"
+
+library(mirt)
+
+# Nama variabel unik agar tidak konflik dengan chunk lain
+model_fit_rasch <- mirt(data_rasch, 1, itemtype = "Rasch", verbose = FALSE)
+fit_rasch_out   <- itemfit(model_fit_rasch, fit_stats = "S_X2")
+
+# Clamp p agar -log10(0) tidak menghasilkan Inf
+p_fit <- pmax(pmin(fit_rasch_out$p.S_X2, 1), 1e-6)
+
+fit_df <- data.frame(
+  Item     = paste0("I", 1:n_item),
+  S_X2     = round(fit_rasch_out$S_X2, 3),
+  neglog_p = -log10(p_fit),
+  Status   = ifelse(p_fit < 0.05, "Misfit", "Fit")
+)
+
+batas_fit <- -log10(0.05)
+
+ggplot(fit_df, aes(x = reorder(Item, neglog_p), y = neglog_p, fill = Status)) +
+  geom_col(width = 0.6) +
+  geom_hline(yintercept = batas_fit,
+             linetype = "dashed", color = "#e74c3c", linewidth = 0.8) +
+  coord_flip() +
+  scale_fill_manual(values = c("Fit" = "#2ecc71", "Misfit" = "#e74c3c")) +
+  labs(title = "Item Fit S-X2 - Rasch Model",
+       subtitle = "Garis merah = batas p < .05 | Misfit = item tidak sesuai model",
+       x = NULL, y = "-log10(p-value)") +
+  theme_minimal(base_size = 12)
+```

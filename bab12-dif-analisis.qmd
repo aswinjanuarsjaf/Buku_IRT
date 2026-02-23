@@ -1,0 +1,160 @@
+# Differential Item Functioning (DIF)
+
+## Konsep DIF
+
+**DIF** (*Differential Item Functioning*) terjadi ketika item berperilaku berbeda untuk kelompok yang berbeda (misalnya laki-laki vs perempuan, daerah A vs daerah B) **setelah kemampuan dikontrol**.
+
+::: {.callout-note title="DIF vs Bias Item"}
+- **DIF** = perbedaan statistik dalam performa item antar kelompok (dengan θ dikontrol)
+- **Bias** = DIF yang memiliki alasan substantif yang tidak adil
+- Tidak semua DIF adalah bias, tapi semua bias adalah DIF
+:::
+
+## Jenis DIF
+
+| Tipe | Karakteristik | ICC |
+|------|--------------|-----|
+| **Uniform DIF** | Item lebih menguntungkan satu kelompok di semua level θ | ICC tidak bersilangan |
+| **Non-Uniform DIF** | Keuntungan bergantung pada level θ | ICC bersilangan |
+
+```{r}
+#| label: fig-dif-ilustrasi
+#| fig-cap: "Ilustrasi DIF: Uniform vs Non-Uniform"
+#| fig-subcap:
+#|   - "Uniform DIF"
+#|   - "Non-Uniform DIF"
+#| layout-ncol: 2
+
+library(ggplot2)
+
+theta <- seq(-3, 3, 0.05)
+icc   <- function(t, a, b) 1 / (1 + exp(-a*(t-b)))
+
+# Uniform DIF
+df_u <- data.frame(
+  theta  = rep(theta, 2),
+  prob   = c(icc(theta, 1.0, -0.5), icc(theta, 1.0, 0.5)),
+  Kelompok = rep(c("Referensi (b=-0.5)", "Fokal (b=+0.5)"), each=length(theta))
+)
+ggplot(df_u, aes(theta, prob, color=Kelompok)) +
+  geom_line(linewidth=1.2) +
+  scale_y_continuous(labels=scales::percent, limits=c(0,1)) +
+  scale_color_manual(values=c("#3498db","#e74c3c")) +
+  labs(title="Uniform DIF", x="θ", y="P(benar|θ)", color="") +
+  theme_minimal(base_size=11) +
+  theme(legend.position="bottom")
+
+# Non-Uniform DIF
+df_nu <- data.frame(
+  theta  = rep(theta, 2),
+  prob   = c(icc(theta, 0.6, 0), icc(theta, 1.8, 0)),
+  Kelompok = rep(c("Referensi (a=0.6)", "Fokal (a=1.8)"), each=length(theta))
+)
+ggplot(df_nu, aes(theta, prob, color=Kelompok)) +
+  geom_line(linewidth=1.2) +
+  scale_y_continuous(labels=scales::percent, limits=c(0,1)) +
+  scale_color_manual(values=c("#3498db","#e74c3c")) +
+  labs(title="Non-Uniform DIF", x="θ", y="P(benar|θ)", color="") +
+  theme_minimal(base_size=11) +
+  theme(legend.position="bottom")
+```
+
+## Metode Deteksi DIF
+
+### 1. Mantel-Haenszel (MH)
+
+Metode klasik, tidak memerlukan estimasi IRT. Cocok untuk sampel menengah (n ≥ 200 per kelompok).
+
+```{r}
+#| label: dif-mh
+#| tbl-cap: "Hasil DIF — Metode Mantel-Haenszel"
+
+library(difR)
+library(knitr)
+
+set.seed(123)
+n_ref   <- 300; n_fok <- 300; n_item_dif <- 20
+
+# Simulasi data dengan 3 item DIF
+theta_ref <- rnorm(n_ref, 0, 1)
+theta_fok <- rnorm(n_fok, 0, 1)
+
+b_item <- rnorm(n_item_dif, 0, 1)
+
+gen_resp <- function(theta, b_vec) {
+  matrix(rbinom(length(theta) * length(b_vec), 1,
+                outer(theta, b_vec, function(t,b) 1/(1+exp(-(t-b))))),
+         nrow=length(theta))
+}
+
+data_ref <- gen_resp(theta_ref, b_item)
+data_fok <- gen_resp(theta_fok, b_item + c(0.8, 0, 0, 0.7, 0, 0, 0, 0, 0, 0,
+                                             0, 0, 0, 0, 0, 0, 0, 0.6, 0, 0))
+
+data_dif <- rbind(data_ref, data_fok)
+colnames(data_dif) <- paste0("Item", 1:n_item_dif)
+grup     <- c(rep(0, n_ref), rep(1, n_fok))  # 0=referensi, 1=fokal
+
+# Analisis MH
+dif_mh <- difMH(Data=data_dif, group=grup, focal.name=1, correct=TRUE)
+
+# Ekstrak hasil
+mh_tbl <- data.frame(
+  Item     = paste0("Item", 1:n_item_dif),
+  MH_chi2  = round(dif_mh$MH, 3),
+  p_value  = round(dif_mh$p.value, 4),
+  Delta_MH = round(dif_mh$alphaMH, 3),
+  DIF      = ifelse(dif_mh$DIFitems %in% 1:n_item_dif, "DIF ⚠️", "Non-DIF")
+)
+
+# Tandai item DIF
+mh_tbl$DIF <- "Non-DIF"
+mh_tbl$DIF[dif_mh$DIFitems] <- "DIF ⚠️"
+
+kable(mh_tbl, align="c")
+```
+
+### 2. Logistic Regression DIF
+
+```{r}
+#| label: dif-lr
+#| fig-cap: "DIF — Logistic Regression: Magnitude Plot"
+
+library(dplyr)
+
+# Analisis LR DIF
+dif_lr <- difLogistic(Data=data_dif, group=grup, focal.name=1,
+                       type="both", criterion="LRT")
+
+# Plot — DIFitems berisi indeks item yang DIF
+dif_items_lr <- if (!is.null(dif_lr$DIFitems)) dif_lr$DIFitems else integer(0)
+
+lr_df <- data.frame(
+  Item     = paste0("Item", 1:n_item_dif),
+  Zumbo    = abs(round(dif_lr$logitPar[, 2], 3)),
+  DIF_type = ifelse(1:n_item_dif %in% dif_items_lr, "Uniform DIF", "Non-DIF")
+)
+
+ggplot(lr_df, aes(x=reorder(Item, Zumbo), y=Zumbo, fill=DIF_type)) +
+  geom_col(width=0.65) +
+  coord_flip() +
+  geom_hline(yintercept=0.426, linetype="dashed", color="#c0392b") +
+  scale_fill_manual(values=c("Non-DIF"="#27ae60","Uniform DIF"="#e74c3c")) +
+  labs(title="DIF Magnitude — Logistic Regression",
+       subtitle="Garis merah = batas DIF (|B| = 0.426)",
+       x=NULL, y="|Koefisien B|", fill="") +
+  theme_minimal(base_size=12)
+```
+
+## Kriteria Klasifikasi DIF (ETS)
+
+| Kategori | Kriteria MH Δ | Interpretasi |
+|----------|--------------|--------------|
+| **A** | |Δ| < 1.0 | DIF tidak signifikan atau kecil |
+| **B** | 1.0 ≤ |Δ| < 1.5 | DIF sedang — perlu review |
+| **C** | |Δ| ≥ 1.5 | DIF besar — item perlu direvisi/dihapus |
+
+::: {.callout-important title="Implikasi DIF dalam Asesmen ASN"}
+Dalam konteks **seleksi ASN dan asesmen kompetensi** di lingkungan DJP/BKN, analisis DIF sangat penting untuk memastikan keadilan antar kelompok (gender, unit, wilayah). Item dengan DIF kategori C sebaiknya tidak digunakan dalam tes berstandar tinggi.
+:::
+

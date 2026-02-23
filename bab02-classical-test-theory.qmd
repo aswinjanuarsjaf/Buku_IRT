@@ -1,0 +1,147 @@
+# Classical Test Theory: Tinjauan & Keterbatasan
+
+## Formula Dasar CTT
+
+Dalam CTT, skor observasi (*X*) merupakan jumlah dari skor sejati (*T*) dan error pengukuran (*E*):
+
+$$X = T + E$$
+
+dengan asumsi: - $E(E) = 0$ (rata-rata error = 0) - $\text{Cov}(T, E) = 0$ (true score dan error tidak berkorelasi) - $\text{Cov}(E_i, E_j) = 0$ (error antar tes tidak berkorelasi)
+
+## Reliabilitas dalam CTT
+
+Reliabilitas didefinisikan sebagai rasio varians true score terhadap varians observasi:
+
+$$\rho_{XX'} = \frac{\sigma^2_T}{\sigma^2_X} = \frac{\sigma^2_T}{\sigma^2_T + \sigma^2_E}$$
+
+```{r}
+#| label: fig-reliabilitas
+#| fig-cap: "Visualisasi Komponen Varians dalam CTT"
+
+library(ggplot2)
+library(scales)
+
+df_rel <- data.frame(
+  komponen = c("True Score Variance", "Error Variance"),
+  nilai    = c(0.75, 0.25),
+  warna    = c("#3498db", "#e74c3c")
+)
+
+ggplot(df_rel, aes(x = "", y = nilai, fill = komponen)) +
+  geom_col(width = 0.5) +
+  geom_text(aes(label = paste0(nilai * 100, "%")),
+            position = position_stack(vjust = 0.5),
+            color = "white", size = 5, fontface = "bold") +
+  scale_fill_manual(values = c("#3498db", "#e74c3c")) +
+  coord_flip() +
+  labs(title = "Dekomposisi Varians Skor Observasi",
+       subtitle = "Reliabilitas = 0.75",
+       x = NULL, y = "Proporsi Varians", fill = "") +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "bottom")
+```
+
+## Statistik Item dalam CTT
+
+```{r}
+#| label: tbl-statistik-ctt
+#| tbl-cap: "Statistik Item CTT: Contoh Perhitungan"
+
+library(dplyr)
+library(knitr)
+
+set.seed(42)
+n_item <- 10
+n_peserta <- 200
+
+# Simulasi data dikotomis
+data_sim <- matrix(
+  rbinom(n_peserta * n_item, 1, 
+         rep(seq(0.3, 0.8, length.out = n_item), each = n_peserta)),
+  nrow = n_peserta,
+  ncol = n_item
+)
+colnames(data_sim) <- paste0("Item_", 1:n_item)
+total_score <- rowSums(data_sim)
+
+# Hitung statistik CTT
+stats_ctt <- data.frame(
+  Item = paste0("Item ", 1:n_item),
+  `Tingkat Kesulitan (p)` = round(colMeans(data_sim), 3),
+  `Daya Beda (r_pbis)` = round(apply(data_sim, 2, function(x) 
+    cor(x, total_score - x)), 3)
+) %>%
+  mutate(
+    Kategori_p = case_when(
+      `Tingkat.Kesulitan..p.` < 0.30 ~ "Sulit",
+      `Tingkat.Kesulitan..p.` > 0.70 ~ "Mudah",
+      TRUE ~ "Sedang"
+    ),
+    Kategori_r = case_when(
+      `Daya.Beda..r_pbis.` < 0.20 ~ "Buruk",
+      `Daya.Beda..r_pbis.` < 0.30 ~ "Cukup",
+      `Daya.Beda..r_pbis.` < 0.40 ~ "Baik",
+      TRUE ~ "Sangat Baik"
+    )
+  )
+
+kable(stats_ctt, align = "c")
+```
+
+## Keterbatasan CTT: Demonstrasi
+
+### Sample-Dependency
+
+```{r}
+#| label: fig-sample-dependency
+#| fig-cap: "Demonstrasi Sample-Dependency pada CTT"
+
+set.seed(123)
+
+# Simulasi dua kelompok berbeda kemampuan
+kelompok_tinggi <- rbinom(100, 1, 0.85)
+kelompok_rendah <- rbinom(100, 1, 0.35)
+kelompok_campur <- c(kelompok_tinggi, kelompok_rendah)
+
+p_values <- c(
+  mean(kelompok_tinggi),
+  mean(kelompok_rendah),
+  mean(kelompok_campur)
+)
+
+df_sd <- data.frame(
+  Kelompok = c("Kemampuan Tinggi\n(n=100)", 
+               "Kemampuan Rendah\n(n=100)", 
+               "Gabungan\n(n=200)"),
+  p_value = p_values
+)
+
+ggplot(df_sd, aes(x = Kelompok, y = p_value, fill = Kelompok)) +
+  geom_col(width = 0.5, show.legend = FALSE) +
+  geom_text(aes(label = round(p_value, 3)), vjust = -0.5, size = 4, fontface = "bold") +
+  scale_fill_manual(values = c("#2ecc71", "#e74c3c", "#3498db")) +
+  scale_y_continuous(limits = c(0, 1.1), labels = percent) +
+  labs(
+    title = "Tingkat Kesulitan Item yang Sama pada Sampel Berbeda",
+    subtitle = "Item CTT yang 'sama' memiliki p-value berbeda tergantung sampel",
+    x = NULL, y = "Tingkat Kesulitan (p)"
+  ) +
+  theme_minimal(base_size = 12)
+```
+
+::: {.callout-important title="Implikasi Sample-Dependency"}
+Item yang tampak "sedang" di kelompok kemampuan tinggi akan tampak "sulit" di kelompok kemampuan rendah. Ini menyulitkan **ekuivalensi tes** dan **norma lintas kelompok**.
+:::
+
+## Perbandingan CTT vs IRT
+
+| Aspek | CTT | IRT |
+|-----------------------------|---------------------|---------------------|
+| **Unit analisis** | Skor total | Parameter item & person |
+| **Estimasi kemampuan** | Skor mentah / skor standar | Logit (θ) |
+| **Ketergantungan sampel** | Ya — item statistics berubah | Tidak — parameter invariant |
+| **Error pengukuran** | Konstan untuk semua peserta | Bervariasi per level θ |
+| **Kompleksitas komputasi** | Rendah | Tinggi |
+| **Ukuran sampel** | Minimal 100–200 | Minimal 200–500+ |
+| **Equating** | Terbatas | Lebih kuat |
+| **Aplikasi CAT** | Tidak memungkinkan | Optimal |

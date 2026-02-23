@@ -1,0 +1,394 @@
+# Wright Map & Person-Item Map
+
+## Apa Itu Wright Map?
+
+**Wright Map** (atau *Person-Item Map*) adalah visualisasi khas Rasch Model yang menampilkan **distribusi kemampuan peserta (θ) dan kesulitan item (b) pada skala yang sama**.
+
+Output ini langsung menunjukkan:
+
+- Apakah instrumen cocok dengan kemampuan peserta (*targeting*)
+- Item mana yang terlalu mudah atau terlalu sulit
+- Rentang kemampuan yang tidak tercakup instrumen
+
+## Setup Data dan Estimasi
+
+```{r}
+#| label: setup-wrightmap
+
+library(mirt)
+library(ggplot2)
+library(dplyr)
+
+set.seed(42)
+n_peserta <- 300
+n_item    <- 25
+b_true    <- seq(-2.5, 2.5, length.out = n_item)
+theta_true <- rnorm(n_peserta, 0, 1)
+
+# Generate data Rasch
+prob_m <- outer(theta_true, b_true,
+                function(t, b) 1 / (1 + exp(-(t - b))))
+data_wm <- matrix(
+  rbinom(n_peserta * n_item, 1, prob_m),
+  nrow = n_peserta,
+  dimnames = list(NULL, paste0("I", sprintf("%02d", 1:n_item)))
+)
+
+# Estimasi Rasch dengan mirt
+model_wm  <- mirt(data_wm, 1, itemtype = "Rasch", verbose = FALSE)
+
+# Kemampuan peserta (EAP)
+theta_est <- fscores(model_wm, method = "EAP")[, 1]
+
+# Kesulitan item (b = -d karena mirt pakai intercept)
+params_wm <- coef(model_wm, IRTpars = TRUE, simplify = TRUE)$items
+b_est     <- params_wm[, "b"]
+
+cat("=== DATA SIAP ===\n")
+cat("Peserta  :", length(theta_est), "| Mean θ =", round(mean(theta_est), 3), "\n")
+cat("Item     :", length(b_est),     "| Mean b =", round(mean(b_est), 3), "\n")
+```
+
+## Wright Map dengan ggplot2
+
+```{r}
+#| label: fig-wright-map-basic
+#| fig-cap: "Wright Map — Rasch Model"
+#| fig-height: 8
+#| fig-width: 7
+
+# ── Fungsi Wright Map ggplot2 ──────────────────────────────────────────
+wright_map <- function(theta, b, item_labels = NULL,
+                        titl = "Wright Map",
+                        warna_theta = "#3498db",
+                        warna_b     = "#e74c3c") {
+
+  if (is.null(item_labels))
+    item_labels <- paste0("I", sprintf("%02d", seq_along(b)))
+
+  # Batas sumbu y bersama
+  y_min <- floor(min(c(theta, b))) - 0.5
+  y_max <- ceiling(max(c(theta, b))) + 0.5
+
+  # Panel kiri: histogram peserta
+  df_theta <- data.frame(theta = theta)
+
+  p_kiri <- ggplot(df_theta, aes(x = theta)) +
+    geom_histogram(aes(y = after_stat(count)),
+                   binwidth = 0.25, fill = warna_theta,
+                   color = "white", alpha = 0.85) +
+    scale_x_continuous(limits = c(y_min, y_max)) +
+    coord_flip() +
+    labs(x = "Kemampuan Peserta (\u03b8)", y = "Frekuensi",
+         title = "Peserta") +
+    theme_minimal(base_size = 11) +
+    theme(axis.title.y = element_text(size = 9),
+          plot.title = element_text(hjust = 0.5, face = "bold",
+                                     color = warna_theta))
+
+  # Panel kanan: titik item
+  df_b <- data.frame(b = b, label = item_labels,
+                      x = rep(0.5, length(b)))
+
+  p_kanan <- ggplot(df_b, aes(y = b, x = x)) +
+    geom_point(size = 3, color = warna_b) +
+    geom_text(aes(label = label, x = 0.55),
+              hjust = 0, size = 3, color = "gray20") +
+    geom_hline(yintercept = 0, linetype = "dashed",
+               color = "gray60", linewidth = 0.7) +
+    scale_y_continuous(limits = c(y_min, y_max)) +
+    scale_x_continuous(limits = c(0, 1.5)) +
+    labs(y = "Kesulitan Item (b)", x = NULL, title = "Item") +
+    theme_minimal(base_size = 11) +
+    theme(axis.text.x  = element_blank(),
+          axis.ticks.x = element_blank(),
+          plot.title = element_text(hjust = 0.5, face = "bold",
+                                     color = warna_b))
+
+  # Gabungkan dua panel
+  library(patchwork)
+  (p_kiri | p_kanan) +
+    plot_annotation(
+      title   = titl,
+      caption = "Kiri: distribusi kemampuan peserta | Kanan: lokasi item pada skala yang sama",
+      theme   = theme(
+        plot.title   = element_text(size = 14, face = "bold",
+                                     hjust = 0.5, color = "#2c3e50"),
+        plot.caption = element_text(size = 9, color = "gray50")
+      )
+    ) +
+    plot_layout(widths = c(1, 1.4))
+}
+
+# Tampilkan Wright Map dasar
+wright_map(
+  theta       = theta_est,
+  b           = b_est,
+  item_labels = paste0("I", sprintf("%02d", 1:n_item)),
+  titl        = "Wright Map — Asesmen Kompetensi (Rasch)"
+)
+```
+
+## Interpretasi Wright Map
+
+::: {.callout-note title="Panduan Membaca Wright Map"}
+| Area di Wright Map | Maknanya |
+|-------------------|---------|
+| **Peserta di atas item tertinggi** | Tes terlalu mudah — perlu item lebih sulit |
+| **Item di atas peserta tertinggi** | Item terlalu sulit untuk kelompok ini |
+| **Kluster peserta vs kluster item** | Kesenjangan pengukuran — SEM besar di area itu |
+| **Keselarasan sebaran** | Instrumen sesuai dengan kemampuan peserta |
+:::
+
+```{r}
+#| label: fig-wright-interpretasi
+#| fig-cap: "Wright Map dengan Anotasi Zona Targeting"
+#| fig-height: 8
+#| fig-width: 7
+
+# Versi dengan zona targeting diwarnai
+y_min2 <- floor(min(c(theta_est, b_est))) - 0.3
+y_max2 <- ceiling(max(c(theta_est, b_est))) + 0.3
+
+# Histogram peserta
+p_left2 <- ggplot(data.frame(theta = theta_est), aes(x = theta)) +
+  annotate("rect", xmin = quantile(b_est, 0.25),
+           xmax = quantile(b_est, 0.75),
+           ymin = -Inf, ymax = Inf,
+           fill = "#27ae60", alpha = 0.08) +
+  geom_histogram(binwidth = 0.25, fill = "#3498db",
+                 color = "white", alpha = 0.85) +
+  geom_vline(xintercept = mean(theta_est),
+             linetype = "dashed", color = "#1a5276", linewidth = 1) +
+  scale_x_continuous(limits = c(y_min2, y_max2)) +
+  coord_flip() +
+  annotate("text", x = mean(theta_est) + 0.15, y = 35,
+           label = paste("Mean =", round(mean(theta_est), 2)),
+           color = "#1a5276", size = 3.2, hjust = 0) +
+  labs(x = "\u03b8", y = "Frekuensi", title = "Peserta") +
+  theme_minimal(base_size = 11) +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold",
+                                   color = "#3498db"))
+
+# Titik item dengan warna zona
+df_b2 <- data.frame(
+  b     = b_est,
+  label = paste0("I", sprintf("%02d", 1:n_item)),
+  Zona  = cut(b_est,
+              breaks = c(-Inf, -1.5, -0.5, 0.5, 1.5, Inf),
+              labels = c("Sangat Mudah","Mudah","Sedang","Sulit","Sangat Sulit"))
+)
+
+p_right2 <- ggplot(df_b2, aes(y = b, x = 0.5, color = Zona)) +
+  geom_hline(yintercept = mean(b_est),
+             linetype = "dashed", color = "#c0392b", linewidth = 1) +
+  geom_point(size = 3.5) +
+  geom_text(aes(label = label, x = 0.56),
+            hjust = 0, size = 2.8, color = "gray25") +
+  scale_color_manual(values = c(
+    "Sangat Mudah" = "#27ae60",
+    "Mudah"        = "#2ecc71",
+    "Sedang"       = "#f39c12",
+    "Sulit"        = "#e67e22",
+    "Sangat Sulit" = "#e74c3c"
+  )) +
+  scale_y_continuous(limits = c(y_min2, y_max2)) +
+  scale_x_continuous(limits = c(0, 1.5)) +
+  annotate("text", y = mean(b_est) + 0.1, x = 1.3,
+           label = paste("Mean b =", round(mean(b_est), 2)),
+           color = "#c0392b", size = 3.2) +
+  labs(y = "b (logit)", x = NULL, title = "Item",
+       color = "Kategori Kesulitan") +
+  theme_minimal(base_size = 11) +
+  theme(axis.text.x  = element_blank(),
+        axis.ticks.x = element_blank(),
+        legend.position = "bottom",
+        legend.text = element_text(size = 8),
+        plot.title = element_text(hjust = 0.5, face = "bold",
+                                   color = "#e74c3c"))
+
+library(patchwork)
+(p_left2 | p_right2) +
+  plot_annotation(
+    title = "Wright Map dengan Zona Kesulitan Item",
+    theme = theme(plot.title = element_text(size = 13, face = "bold",
+                                             hjust = 0.5))
+  ) +
+  plot_layout(widths = c(1, 1.5), guides = "collect") &
+  theme(legend.position = "bottom")
+```
+
+## Analisis Targeting
+
+```{r}
+#| label: fig-targeting
+#| fig-cap: "Analisis Targeting: Distribusi θ vs b"
+
+mean_theta <- mean(theta_est)
+mean_b     <- mean(b_est)
+sd_theta   <- sd(theta_est)
+sd_b       <- sd(b_est)
+gap        <- mean_theta - mean_b
+
+cat("=== ANALISIS TARGETING ===\n")
+cat(sprintf("Mean theta peserta : %.3f  (SD = %.3f)\n", mean_theta, sd_theta))
+cat(sprintf("Mean b item        : %.3f  (SD = %.3f)\n", mean_b, sd_b))
+cat(sprintf("Selisih (gap)      : %.3f logit\n", gap))
+cat(sprintf("Kualitas targeting : %s\n",
+    ifelse(abs(gap) < 0.3, "Sangat Baik",
+    ifelse(abs(gap) < 0.5, "Baik",
+    ifelse(mean_theta > mean_b, "Instrumen terlalu mudah",
+           "Instrumen terlalu sulit")))))
+
+# Visualisasi distribusi tumpang-tindih
+df_both <- data.frame(
+  nilai = c(theta_est, b_est),
+  jenis = c(rep("Kemampuan Peserta (\u03b8)", n_peserta),
+             rep("Kesulitan Item (b)",    n_item))
+)
+
+ggplot(df_both, aes(x = nilai, fill = jenis)) +
+  geom_density(alpha = 0.5, linewidth = 0.9) +
+  geom_vline(xintercept = mean_theta, color = "#3498db",
+             linetype = "dashed", linewidth = 1.2) +
+  geom_vline(xintercept = mean_b, color = "#e74c3c",
+             linetype = "dashed", linewidth = 1.2) +
+  annotate("label", x = mean_theta, y = 0.55,
+           label = paste("Mean\u03b8 =", round(mean_theta, 2)),
+           fill = "#eaf4fb", color = "#1a5276", size = 3.5) +
+  annotate("label", x = mean_b - 0.05, y = 0.45,
+           label = paste("Mean b =", round(mean_b, 2)),
+           fill = "#fef9e7", color = "#c0392b", size = 3.5) +
+  scale_fill_manual(values = c("#3498db", "#e74c3c")) +
+  labs(
+    title    = "Distribusi Kemampuan Peserta vs Kesulitan Item",
+    subtitle = "Tumpang-tindih tinggi = targeting baik | Gap kecil = instrumen seimbang",
+    x = "Skala Logit", y = "Densitas", fill = ""
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "bottom")
+```
+
+## Wright Map untuk Skala Politomus (PCM)
+
+```{r}
+#| label: fig-wright-pcm
+#| fig-cap: "Wright Map — Partial Credit Model (Skala Likert 4 Kategori)"
+#| fig-height: 8
+#| fig-width: 8
+
+# Simulasi data Likert 4 kategori (0-3) menggunakan mirt
+set.seed(99)
+n_item_pcm  <- 8
+n_peserta_p <- 250
+
+# Generate data politomus Rasch (PCM)
+delta_all <- lapply(1:n_item_pcm, function(i)
+  sort(rnorm(3, mean = (i - 4.5) * 0.5, sd = 0.4)))
+
+theta_p <- rnorm(n_peserta_p, 0, 1)
+
+# Fungsi generate respon PCM
+gen_pcm <- function(theta, deltas) {
+  m <- length(deltas)
+  num <- c(0, cumsum(theta - deltas))
+  probs <- exp(num) / sum(exp(num))
+  sample(0:m, 1, prob = probs)
+}
+
+data_pcm <- matrix(
+  sapply(1:n_peserta_p, function(j)
+    sapply(1:n_item_pcm, function(i)
+      gen_pcm(theta_p[j], delta_all[[i]]))),
+  nrow = n_peserta_p, byrow = TRUE,
+  dimnames = list(NULL, paste0("Kompetensi", 1:n_item_pcm))
+)
+
+# Estimasi PCM dengan mirt
+model_pcm <- mirt(data_pcm, 1, itemtype = "gpcm", verbose = FALSE)
+
+# Theta peserta
+theta_pcm <- fscores(model_pcm, method = "EAP")[, 1]
+
+# Ekstrak threshold (delta) per item
+coef_pcm <- coef(model_pcm, IRTpars = TRUE, simplify = FALSE)
+thresh_list <- lapply(seq_len(n_item_pcm), function(i) {
+  co <- coef_pcm[[i]]
+  # kolom cb1, cb2, cb3 = threshold
+  th_cols <- grep("^cb|^b", colnames(co), value = TRUE)
+  if (length(th_cols) == 0) return(rep(NA, 3))
+  as.numeric(co[1, th_cols[1:min(3, length(th_cols))]])
+})
+
+# Wright Map PCM dengan ggplot2
+df_thresh <- do.call(rbind, lapply(seq_len(n_item_pcm), function(i) {
+  data.frame(
+    item      = paste0("Komp", i),
+    threshold = thresh_list[[i]],
+    kategori  = paste0("Kat", 1:3),
+    x         = 0.5
+  )
+}))
+df_thresh <- df_thresh[!is.na(df_thresh$threshold), ]
+
+y_pcm_min <- floor(min(c(theta_pcm, df_thresh$threshold), na.rm=TRUE)) - 0.3
+y_pcm_max <- ceiling(max(c(theta_pcm, df_thresh$threshold), na.rm=TRUE)) + 0.3
+
+# Panel kiri: histogram peserta
+p_pcm_kiri <- ggplot(data.frame(theta = theta_pcm), aes(x = theta)) +
+  geom_histogram(binwidth = 0.25, fill = "#3498db",
+                 color = "white", alpha = 0.85) +
+  scale_x_continuous(limits = c(y_pcm_min, y_pcm_max)) +
+  coord_flip() +
+  labs(x = "Kemampuan Pegawai (\u03b8)", y = "Frekuensi",
+       title = "Peserta") +
+  theme_minimal(base_size = 11) +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold",
+                                   color = "#3498db"))
+
+# Panel kanan: threshold per item
+pal_kat <- c("Kat1" = "#2ecc71", "Kat2" = "#f39c12", "Kat3" = "#e74c3c")
+
+p_pcm_kanan <- ggplot(df_thresh,
+                       aes(y = threshold, x = x, color = kategori)) +
+  geom_point(size = 3.5, alpha = 0.85) +
+  geom_text(aes(label = item, x = 0.56),
+            hjust = 0, size = 2.8, color = "gray25") +
+  geom_hline(yintercept = 0, linetype = "dashed",
+             color = "gray60", linewidth = 0.7) +
+  scale_color_manual(values = pal_kat,
+                     labels = c("Kat1" = "Threshold 1\u21922",
+                                "Kat2" = "Threshold 2\u21923",
+                                "Kat3" = "Threshold 3\u21924")) +
+  scale_y_continuous(limits = c(y_pcm_min, y_pcm_max)) +
+  scale_x_continuous(limits = c(0, 1.5)) +
+  labs(y = "Threshold (logit)", x = NULL,
+       title = "Item (PCM)", color = "Transisi Kategori") +
+  theme_minimal(base_size = 11) +
+  theme(axis.text.x  = element_blank(),
+        axis.ticks.x = element_blank(),
+        legend.position = "bottom",
+        legend.text = element_text(size = 8),
+        plot.title = element_text(hjust = 0.5, face = "bold",
+                                   color = "#e74c3c"))
+
+(p_pcm_kiri | p_pcm_kanan) +
+  plot_annotation(
+    title   = "Wright Map \u2014 PCM (Skala Kompetensi Likert 4 Kategori)",
+    caption = "Setiap item memiliki 3 threshold (transisi antar kategori 0\u21921, 1\u21922, 2\u21923)",
+    theme   = theme(
+      plot.title   = element_text(size = 13, face = "bold", hjust = 0.5),
+      plot.caption = element_text(size = 9, color = "gray50")
+    )
+  ) +
+  plot_layout(widths = c(1, 1.5), guides = "collect") &
+  theme(legend.position = "bottom")
+```
+
+## Latihan Mandiri {.unnumbered}
+
+1. Modifikasi fungsi `wright_map()` untuk menambahkan **garis referensi** pada nilai θ = −1, 0, dan +1 di panel peserta. Apa makna setiap garis referensi tersebut?
+
+2. Dari Wright Map analisis targeting, hitung **proporsi peserta** yang berada dalam rentang item (antara item termudah dan tersulit). Item termudah dan tersulit dapat diperoleh dari `range(b_est)`.
+
+3. Buat Wright Map untuk subkelompok peserta berbeda (misalnya kelompok dengan θ > 0 dan θ ≤ 0). Bagaimana perbedaan profil targeting antar kelompok?

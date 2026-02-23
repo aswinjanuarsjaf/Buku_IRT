@@ -1,0 +1,182 @@
+# Setup R untuk Analisis IRT
+
+## Package yang Dibutuhkan
+
+Terdapat beberapa package R utama untuk analisis IRT, masing-masing dengan kelebihan tersendiri:
+
+| Package | Model | Kelebihan |
+|---------|-------|-----------|
+| **`mirt`** | 1PL, 2PL, 3PL, GRM, GPCM | Paling lengkap, aktif dikembangkan |
+| **`TAM`** | Rasch, PCM, RSM, MIRT | Khusus Rasch family, output detail |
+| **`eRm`** | Rasch, PCM, RSM, LRSM | Conditional MLE, cocok sampel kecil |
+| **`ltm`** | 1PL, 2PL, 3PL, GRM | Sederhana, cepat |
+| **`irtoys`** | 1PL, 2PL, 3PL | Visualisasi bagus |
+| **`sirt`** | Rasch, MIRT | Pelengkap TAM |
+
+## Instalasi Package
+
+```{r}
+#| eval: false
+
+# Install semua package sekaligus
+packages <- c("mirt", "TAM", "eRm", "ltm", 
+               "irtoys", "sirt", "WrightMap",
+               "tidyverse", "psych", "mokken",
+               "lordif", "difR", "lavaan")
+
+install.packages(packages)
+
+# Load setelah instalasi
+lapply(packages, library, character.only = TRUE)
+```
+
+## Struktur Data untuk IRT
+
+::: {.callout-important title="Format Data yang Diperlukan"}
+Data IRT harus dalam format **matriks/data frame** di mana:
+- **Baris** = peserta (responden)
+- **Kolom** = item (soal)
+- **Nilai** = respon (0/1 untuk dikotomis; 0,1,2,... untuk politomus)
+:::
+
+```{r}
+#| label: setup-data
+
+library(mirt)
+library(TAM)
+library(tidyverse)
+
+# =============================================
+# SIMULASI DATA DIKOTOMIS
+# =============================================
+set.seed(2025)
+
+n_peserta <- 500
+n_item    <- 30
+
+# Parameter 2PL
+a_true <- runif(n_item, 0.5, 2.0)   # Daya beda
+b_true <- rnorm(n_item, 0, 1)        # Kesulitan
+theta_true <- rnorm(n_peserta, 0, 1) # Kemampuan peserta
+
+# Generate respon
+prob_matrix <- sapply(1:n_item, function(i) {
+  1 / (1 + exp(-a_true[i] * (theta_true - b_true[i])))
+})
+
+data_dikotomis <- matrix(
+  rbinom(n_peserta * n_item, 1, prob_matrix),
+  nrow = n_peserta,
+  ncol = n_item,
+  dimnames = list(
+    paste0("P", 1:n_peserta),
+    paste0("Item", 1:n_item)
+  )
+)
+
+cat("=== STRUKTUR DATA DIKOTOMIS ===\n")
+cat("Dimensi:", dim(data_dikotomis), "\n")
+cat("Nilai unik:", sort(unique(c(data_dikotomis))), "\n")
+cat("Proporsi benar (5 item pertama):\n")
+print(round(colMeans(data_dikotomis[, 1:5]), 3))
+```
+
+```{r}
+#| label: cek-asumsi
+#| fig-cap: "Scree Plot untuk Uji Unidimensionalitas"
+
+library(psych)
+
+# Uji unidimensionalitas dengan analisis faktor
+fa_hasil <- fa.parallel(data_dikotomis, 
+                         fa = "fa", 
+                         fm = "ml",
+                         n.iter = 50,
+                         main = "Parallel Analysis — Uji Unidimensionalitas")
+```
+
+```{r}
+#| label: tbl-fa
+#| tbl-cap: "Eigenvalue dari Matriks Korelasi Tetrachoric"
+
+library(knitr)
+
+# Hitung eigenvalue
+eigenvalues <- fa_hasil$fa.values
+
+df_eigen <- data.frame(
+  Faktor = paste0("F", 1:min(10, length(eigenvalues))),
+  Eigenvalue = round(eigenvalues[1:min(10, length(eigenvalues))], 3),
+  Kumulatif_Var = round(cumsum(eigenvalues[1:min(10, length(eigenvalues))]) / 
+                          sum(eigenvalues[eigenvalues > 0]) * 100, 1)
+)
+
+kable(df_eigen, col.names = c("Faktor", "Eigenvalue", "Kumulatif Varians (%)"),
+      align = "c")
+```
+
+::: {.callout-tip title="Interpretasi Scree Plot"}
+Jika **faktor pertama** jauh lebih besar dari faktor kedua (rasio F1/F2 > 3 atau 4), asumsi **unidimensionalitas** terpenuhi. Ini syarat utama sebelum melanjutkan analisis IRT.
+:::
+
+## Fungsi Helper Berguna
+
+```{r}
+#| label: helper-functions
+
+# =============================================
+# FUNGSI-FUNGSI HELPER IRT
+# =============================================
+
+# 1. Hitung ICC secara manual
+icc <- function(theta, a = 1, b = 0, c = 0, D = 1.702) {
+  c + (1 - c) / (1 + exp(-D * a * (theta - b)))
+}
+
+# 2. Hitung IIF secara manual
+iif <- function(theta, a = 1, b = 0, c = 0, D = 1.702) {
+  p <- icc(theta, a, b, c, D)
+  q <- 1 - p
+  D^2 * a^2 * (p - c)^2 * q / ((1 - c)^2 * p)
+}
+
+# 3. Plot ICC interaktif
+plot_icc <- function(a_vec, b_vec, c_vec = NULL, judul = "ICC Plot") {
+  theta  <- seq(-4, 4, by = 0.05)
+  n_item <- length(a_vec)
+  if (is.null(c_vec)) c_vec <- rep(0, n_item)
+
+  df_icc <- data.frame(
+    theta = rep(theta, n_item),
+    prob  = unlist(lapply(1:n_item, function(i)
+      icc(theta, a_vec[i], b_vec[i], c_vec[i]))),
+    item  = factor(rep(paste0("Item ", 1:n_item), each = length(theta)))
+  )
+
+  ggplot(df_icc, aes(x = theta, y = prob, color = item)) +
+    geom_line(linewidth = 1) +
+    scale_y_continuous(labels = scales::percent, limits = c(0, 1)) +
+    labs(title = judul, x = "θ", y = "P(benar|θ)", color = "Item") +
+    theme_minimal(base_size = 12) +
+    theme(legend.position = "right")
+}
+
+# Demonstrasi
+plot_icc(
+  a_vec = c(0.8, 1.2, 1.8),
+  b_vec = c(-1,  0,   1),
+  judul = "Demo: ICC untuk 3 Item"
+)
+```
+
+## Checklist Pra-Analisis
+
+Sebelum menjalankan analisis IRT, pastikan:
+
+- [ ] Data dalam format matriks (peserta × item)
+- [ ] Tidak ada kolom identitas (nama, NIP) yang ikut masuk
+- [ ] Respon dikoding benar: 0 = salah, 1 = benar (dikotomis)
+- [ ] Missing data ditangani (imputasi atau listwise deletion)
+- [ ] Unidimensionalitas diperiksa (scree plot, EFA)
+- [ ] Ukuran sampel memadai (min 200 untuk 2PL, 500+ untuk 3PL)
+

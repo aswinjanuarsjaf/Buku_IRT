@@ -1,0 +1,62 @@
+{
+  "index.qmd": {
+    "index.html": "aa98ae73"
+  },
+  "intro.qmd": {
+    "intro.html": "07a7cf32"
+  },
+  "summary.qmd": {
+    "summary.html": "9c8a6955"
+  },
+  "references.qmd": {
+    "references.html": "355ea728"
+  },
+  "bab02-classical-test-theory.qmd": {
+    "bab02-classical-test-theory.html": "6bf0aa35"
+  },
+  "bab01-pengantar.qmd": {
+    "bab01-pengantar.html": "28645e6f"
+  },
+  "bab03-teori-irt.qmd": {
+    "bab03-teori-irt.html": "3923359b"
+  },
+  "bab04-model-1pl.qmd": {
+    "bab04-model-1pl.html": "76b6a7da"
+  },
+  "referensi.qmd": {
+    "referensi.html": "82669bf0"
+  },
+  "bab05-model-2pl.qmd": {
+    "bab05-model-2pl.html": "d2f5c27d"
+  },
+  "bab06-model-3pl.qmd": {
+    "bab06-model-3pl.html": "863c5646"
+  },
+  "bab07-rasch-model.qmd": {
+    "bab07-rasch-model.html": "ce0c3535"
+  },
+  "bab08-setup-r.qmd": {
+    "bab08-setup-r.html": "49feba2c"
+  },
+  "bab09-estimasi-parameter.qmd": {
+    "bab09-estimasi-parameter.html": "8d8bd1dc"
+  },
+  "bab10-item-fit.qmd": {
+    "bab10-item-fit.html": "ab263029"
+  },
+  "bab11-person-fit.qmd": {
+    "bab11-person-fit.html": "e7bbf5ae"
+  },
+  "bab12-dif-analisis.qmd": {
+    "bab12-dif-analisis.html": "baf68825"
+  },
+  "bab13-wright-map.qmd": {
+    "bab13-wright-map.html": "44fba4d9"
+  },
+  "bab14-computer-adaptive.qmd": {
+    "bab14-computer-adaptive.html": "8deec28a"
+  },
+  "bab15-pelaporan.qmd": {
+    "bab15-pelaporan.html": "71cdafed"
+  }
+}
