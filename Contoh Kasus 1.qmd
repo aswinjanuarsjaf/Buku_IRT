@@ -1,0 +1,55 @@
+# Contoh Kasus 1
+
+---
+title: "Menyelami Psikometri Modern: IRT untuk Pemula"
+author: "Aswin Januarsjaf"
+date: "`r Sys.Date()`"
+format: 
+  html:
+    toc: true
+    toc-depth: 3
+    code-fold: false
+    theme: cosmo
+---
+
+## Selamat Datang di Dunia IRT!
+
+Pernahkah kalian merasa tidak adil saat ujian? [cite_start]Di sistem nilai biasa (Classical Test Theory), jika si A dan si B sama-sama benar 10 soal, nilai mereka dianggap sama[cite: 4, 9]. Padahal, bisa jadi soal yang dijawab si A jauh lebih sulit daripada si B. 
+
+[cite_start]**Item Response Theory (IRT)** hadir sebagai "kacamata super" yang tidak hanya melihat berapa banyak soal yang benar, tapi **soal mana** yang berhasil dijawab[cite: 6, 8].
+
+## 1. Konsep Dasar: Apa itu IRT?
+
+[cite_start]IRT adalah pendekatan modern yang memodelkan probabilitas (kemungkinan) seseorang menjawab benar berdasarkan dua hal utama[cite: 6]:
+1. [cite_start]**Latent Trait ($\theta$):** Kemampuan tersembunyi dalam diri (seperti kecerdasan atau kepribadian)[cite: 2, 7].
+2. [cite_start]**Karakteristik Soal:** Tingkat kesulitan, daya beda, dan faktor keberuntungan[cite: 6].
+
+---
+
+## 2. Mengenal Jenis Item: Dikotomus vs. Politomus
+
+[cite_start]Dalam pembuatan tes, kita harus memilih jenis item yang tepat sesuai kebutuhan[cite: 10, 11]:
+
+### A. Item Dikotomus (Si Hitam-Putih)
+* [cite_start]**Definisi:** Jawaban hanya punya dua kemungkinan: Benar (1) atau Salah (0)[cite: 6].
+* **Analogi:** Seperti *Boss Battle* di game. Kamu hanya punya dua pilihan: Menang atau Kalah.
+* [cite_start]**Kapan digunakan?** Tes prestasi (Matematika, Bahasa) atau ujian SIM[cite: 7].
+
+### B. Item Politomus (Si Spektrum Pelangi)
+* [cite_start]**Definisi:** Jawaban memiliki tingkatan skor (skor parsial)[cite: 7].
+* **Analogi:** Seperti *Side Quest* di game. Jika kamu menyelesaikan misi dengan sempurna dapat 100 poin, jika setengah jalan dapat 50 poin.
+* [cite_start]**Kapan digunakan?** Skala Likert (Sangat Setuju ke Sangat Tidak Setuju) atau soal esai dengan rubrik bertingkat[cite: 7].
+
+---
+
+## 3. Laboratorium R: Visualisasi Parameter a, b, dan c
+
+[cite_start]Sekarang, mari kita jalankan simulasi menggunakan model **3PL (Three-Parameter Logistic)** untuk melihat karakteristik soal secara mendalam[cite: 6].
+
+```{r setup_peralatan, message=FALSE, warning=FALSE}
+# Memanggil library utama
+library(mirt)
+library(tidyverse)
+```
+
+

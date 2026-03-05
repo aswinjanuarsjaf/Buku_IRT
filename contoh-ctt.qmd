@@ -1,0 +1,331 @@
+---
+title: "Analisis Soal Classical Test Theory (CTT)"
+author: "Aswin Januarsjaf"
+date: today
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    theme: cosmo
+    code-fold: true
+    code-tools: true
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+## Pendahuluan
+
+**Classical Test Theory (CTT)** mengevaluasi kualitas soal melalui tiga indeks utama:
+
+| Indeks | Simbol | Rentang | Kriteria Baik |
+|--------|--------|---------|---------------|
+| Tingkat Kesulitan | $p$ | 0 – 1 | 0.30 – 0.70 |
+| Daya Beda | $D$ / $r_{pbis}$ | −1 – +1 | ≥ 0.30 |
+| Reliabilitas (Alpha) | $\alpha$ | 0 – 1 | ≥ 0.70 |
+
+---
+
+## Data Simulasi
+
+Kita gunakan data simulasi **30 peserta × 10 soal** pilihan ganda (skor 0/1).
+
+```{r}
+#| label: setup
+
+library(dplyr)
+library(ggplot2)
+library(knitr)
+library(kableExtra)
+
+set.seed(42)
+
+n_peserta <- 30
+n_soal    <- 10
+
+# Simulasi kemampuan peserta (bervariasi)
+theta <- rnorm(n_peserta, mean = 0, sd = 1)
+
+# Tingkat kesulitan soal (bervariasi sengaja ada yg mudah, sedang, sulit)
+p_true <- c(0.85, 0.75, 0.65, 0.55, 0.50, 0.45, 0.35, 0.25, 0.15, 0.10)
+
+# Generate respon (soal lebih mudah = peluang benar lebih tinggi)
+data_soal <- sapply(p_true, function(p) {
+  # Simulasi dengan variasi kemampuan peserta
+  p_adj <- plogis(qlogis(p) + theta * 0.8)
+  rbinom(n_peserta, 1, p_adj)
+})
+
+colnames(data_soal) <- paste0("Soal_", sprintf("%02d", 1:n_soal))
+rownames(data_soal) <- paste0("Peserta_", sprintf("%02d", 1:n_peserta))
+
+# Tampilkan 6 baris pertama
+kable(data_soal[1:6, ],
+      caption = "Contoh Data Respon (6 peserta pertama)",
+      align = "c") |>
+  kable_styling(bootstrap_options = c("striped", "hover"),
+                full_width = FALSE)
+```
+
+---
+
+## Statistik Deskriptif
+
+```{r}
+#| label: fig-skor-total
+#| fig-cap: "Distribusi Skor Total Peserta"
+
+skor_total <- rowSums(data_soal)
+
+cat("=== STATISTIK SKOR TOTAL ===\n")
+cat(sprintf("Jumlah peserta : %d\n", n_peserta))
+cat(sprintf("Jumlah soal    : %d\n", n_soal))
+cat(sprintf("Mean skor      : %.2f  (%.0f%%)\n",
+            mean(skor_total), mean(skor_total)/n_soal*100))
+cat(sprintf("SD skor        : %.2f\n", sd(skor_total)))
+cat(sprintf("Min – Maks     : %d – %d\n", min(skor_total), max(skor_total)))
+
+ggplot(data.frame(skor = skor_total), aes(x = skor)) +
+  geom_histogram(binwidth = 1, fill = "#3498db",
+                 color = "white", alpha = 0.85) +
+  geom_vline(xintercept = mean(skor_total),
+             linetype = "dashed", color = "#e74c3c", linewidth = 1.2) +
+  annotate("label", x = mean(skor_total) + 0.3, y = 5,
+           label = sprintf("Mean = %.1f", mean(skor_total)),
+           fill = "white", color = "#e74c3c", size = 3.5) +
+  scale_x_continuous(breaks = 0:n_soal) +
+  labs(title = "Distribusi Skor Total",
+       x = "Skor Total", y = "Jumlah Peserta") +
+  theme_minimal(base_size = 13)
+```
+
+---
+
+## Analisis Per Soal
+
+### Tingkat Kesulitan (p)
+
+$$p_i = \frac{\sum X_i}{N}$$
+
+Proporsi peserta yang menjawab benar soal $i$.
+
+```{r}
+#| label: tingkat-kesulitan
+
+p_empiris <- colMeans(data_soal)
+
+kategori_p <- cut(p_empiris,
+  breaks = c(0, 0.30, 0.70, 1),
+  labels = c("Sulit (p < .30)", "Sedang (.30–.70)", "Mudah (p > .70)"),
+  include.lowest = TRUE
+)
+
+df_tk <- data.frame(
+  Soal      = names(p_empiris),
+  p         = round(p_empiris, 3),
+  Kategori  = kategori_p
+)
+
+kable(df_tk,
+      col.names = c("Soal", "Tingkat Kesulitan (p)", "Kategori"),
+      align = "c",
+      caption = "Tingkat Kesulitan per Soal") |>
+  kable_styling(bootstrap_options = c("striped", "hover"),
+                full_width = FALSE) |>
+  row_spec(which(df_tk$Kategori == "Sulit (p < .30)"),
+           background = "#fdecea") |>
+  row_spec(which(df_tk$Kategori == "Sedang (.30–.70)"),
+           background = "#e8f5e9") |>
+  row_spec(which(df_tk$Kategori == "Mudah (p > .70)"),
+           background = "#ebf5fb")
+```
+
+### Daya Beda (Point-Biserial)
+
+$$r_{pbis} = \frac{\bar{X}_B - \bar{X}_S}{s_X} \sqrt{\frac{p \cdot q}{1}}$$
+
+Korelasi antara skor soal dengan skor total. Soal yang baik membedakan peserta berkemampuan tinggi dari rendah.
+
+```{r}
+#| label: daya-beda
+
+r_pbis <- sapply(1:n_soal, function(i) {
+  cor(data_soal[, i], skor_total)
+})
+names(r_pbis) <- colnames(data_soal)
+
+kategori_db <- cut(r_pbis,
+  breaks = c(-Inf, 0.10, 0.20, 0.30, Inf),
+  labels = c("Buang (< .10)", "Revisi (.10–.19)",
+             "Pertimbangkan (.20–.29)", "Baik (>= .30)")
+)
+
+df_db <- data.frame(
+  Soal     = names(r_pbis),
+  r_pbis   = round(r_pbis, 3),
+  Kategori = kategori_db
+)
+
+kable(df_db,
+      col.names = c("Soal", "r Point-Biserial", "Kategori Daya Beda"),
+      align = "c",
+      caption = "Daya Beda per Soal") |>
+  kable_styling(bootstrap_options = c("striped", "hover"),
+                full_width = FALSE) |>
+  row_spec(which(df_db$Kategori == "Buang (< .10)"),
+           background = "#fdecea", bold = TRUE) |>
+  row_spec(which(df_db$Kategori == "Revisi (.10–.19)"),
+           background = "#fef9e7") |>
+  row_spec(which(df_db$Kategori == "Baik (>= .30)"),
+           background = "#e8f5e9")
+```
+
+### Visualisasi: Peta Item CTT
+
+```{r}
+#| label: fig-peta-item
+#| fig-cap: "Peta Item: Tingkat Kesulitan vs Daya Beda"
+#| fig-height: 5
+
+df_peta <- data.frame(
+  Soal     = colnames(data_soal),
+  p        = p_empiris,
+  r_pbis   = r_pbis,
+  Keputusan = case_when(
+    r_pbis < 0.10                        ~ "Buang",
+    r_pbis < 0.20                        ~ "Revisi",
+    p_empiris < 0.30 | p_empiris > 0.70 ~ "Perhatikan Kesulitan",
+    TRUE                                  ~ "Pertahankan"
+  )
+)
+
+ggplot(df_peta, aes(x = p, y = r_pbis,
+                     color = Keputusan, label = Soal)) +
+  # Zona optimal
+  annotate("rect", xmin = 0.30, xmax = 0.70,
+           ymin = 0.30, ymax = Inf,
+           fill = "#27ae60", alpha = 0.07) +
+  annotate("text", x = 0.50, y = 0.85,
+           label = "Zona Optimal", color = "#27ae60",
+           fontface = "bold", size = 4) +
+  geom_vline(xintercept = c(0.30, 0.70),
+             linetype = "dashed", color = "gray60") +
+  geom_hline(yintercept = 0.30,
+             linetype = "dashed", color = "gray60") +
+  geom_point(size = 5, alpha = 0.85) +
+  geom_text(vjust = -0.8, size = 3.2, fontface = "bold") +
+  scale_color_manual(values = c(
+    "Pertahankan"           = "#27ae60",
+    "Perhatikan Kesulitan"  = "#f39c12",
+    "Revisi"                = "#e67e22",
+    "Buang"                 = "#e74c3c"
+  )) +
+  scale_x_continuous(limits = c(0, 1),
+                     labels = scales::percent_format()) +
+  labs(
+    title    = "Peta Item — Analisis CTT",
+    subtitle = "Zona hijau = soal ideal (p: .30–.70, r >= .30)",
+    x        = "Tingkat Kesulitan (p)",
+    y        = "Daya Beda (r point-biserial)",
+    color    = "Keputusan"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(legend.position = "bottom")
+```
+
+---
+
+## Reliabilitas
+
+### Cronbach Alpha
+
+$$\alpha = \frac{k}{k-1} \left(1 - \frac{\sum \sigma^2_i}{\sigma^2_X}\right)$$
+
+```{r}
+#| label: reliabilitas
+
+# Hitung alpha secara manual
+k          <- n_soal
+var_item   <- apply(data_soal, 2, var)
+var_total  <- var(skor_total)
+alpha      <- (k / (k - 1)) * (1 - sum(var_item) / var_total)
+
+# Alpha jika item dihapus
+alpha_jika_hapus <- sapply(1:k, function(i) {
+  skor_tanpa_i <- rowSums(data_soal[, -i])
+  var_item_i   <- apply(data_soal[, -i], 2, var)
+  var_tot_i    <- var(skor_tanpa_i)
+  ((k-1) / (k-2)) * (1 - sum(var_item_i) / var_tot_i)
+})
+
+cat(sprintf("Cronbach Alpha  : %.3f\n", alpha))
+cat(sprintf("Interpretasi    : %s\n",
+    ifelse(alpha >= 0.90, "Sangat Baik (>= .90)",
+    ifelse(alpha >= 0.80, "Baik (.80–.89)",
+    ifelse(alpha >= 0.70, "Cukup (.70–.79)",
+           "Perlu perbaikan (< .70)")))))
+
+df_alpha <- data.frame(
+  Soal              = colnames(data_soal),
+  Alpha_jika_hapus  = round(alpha_jika_hapus, 3),
+  Sinyal            = ifelse(alpha_jika_hapus > alpha,
+                             "Naik jika dihapus", "Turun jika dihapus")
+)
+
+kable(df_alpha,
+      col.names = c("Soal", "Alpha Jika Dihapus", "Sinyal"),
+      align = "c",
+      caption = sprintf("Alpha Cronbach = %.3f | Alpha Jika Item Dihapus", alpha)) |>
+  kable_styling(bootstrap_options = c("striped", "hover"),
+                full_width = FALSE) |>
+  row_spec(which(df_alpha$Sinyal == "Naik jika dihapus"),
+           background = "#fdecea")
+```
+
+---
+
+## Rekomendasi Final
+
+```{r}
+#| label: tbl-rekomendasi
+#| echo: false
+
+df_final <- data.frame(
+  Soal      = colnames(data_soal),
+  p         = round(p_empiris, 3),
+  r_pbis    = round(r_pbis, 3),
+  alpha_del = round(alpha_jika_hapus, 3),
+  Keputusan = case_when(
+    r_pbis < 0.10                        ~ "Hapus",
+    alpha_jika_hapus > alpha + 0.02      ~ "Hapus (menurunkan alpha)",
+    r_pbis < 0.20                        ~ "Revisi",
+    p_empiris < 0.20 | p_empiris > 0.85 ~ "Revisi (terlalu ekstrem)",
+    TRUE                                  ~ "Pertahankan"
+  )
+)
+
+n_pertahankan <- sum(df_final$Keputusan == "Pertahankan")
+n_revisi      <- sum(grepl("Revisi", df_final$Keputusan))
+n_hapus       <- sum(grepl("Hapus", df_final$Keputusan))
+
+cat(sprintf("Alpha keseluruhan : %.3f\n", alpha))
+cat(sprintf("Pertahankan       : %d soal\n", n_pertahankan))
+cat(sprintf("Revisi            : %d soal\n", n_revisi))
+cat(sprintf("Hapus             : %d soal\n", n_hapus))
+
+kable(df_final,
+      col.names = c("Soal", "p", "r-pbis",
+                    "Alpha Jika Hapus", "Keputusan"),
+      align = "c",
+      caption = "Rekomendasi Final Analisis CTT") |>
+  kable_styling(bootstrap_options = c("striped", "hover"),
+                full_width = FALSE) |>
+  row_spec(which(grepl("Hapus", df_final$Keputusan)),
+           background = "#fdecea", bold = TRUE) |>
+  row_spec(which(grepl("Revisi", df_final$Keputusan)),
+           background = "#fef9e7") |>
+  row_spec(which(df_final$Keputusan == "Pertahankan"),
+           background = "#e8f5e9")
+```

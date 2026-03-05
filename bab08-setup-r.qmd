@@ -17,6 +17,12 @@ Terdapat beberapa package R utama untuk analisis IRT, masing-masing dengan keleb
 
 ```{r}
 #| eval: false
+# Pastikan selalu pakai library versi R yang aktif
+.libPaths(
+  file.path(Sys.getenv("LOCALAPPDATA"), "R", "win-library",
+            paste0(R.version$major, ".",
+                   substr(R.version$minor, 1, 1)))
+)
 
 # Install semua package sekaligus
 packages <- c("mirt", "TAM", "eRm", "ltm", 

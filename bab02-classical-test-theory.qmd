@@ -41,6 +41,23 @@ ggplot(df_rel, aes(x = "", y = nilai, fill = komponen)) +
   theme(legend.position = "bottom")
 ```
 
+::: {.callout-important title="Apa yang Ditunjukkan Grafik Ini?"}
+Grafik ini memperlihatkan dari mana asal varians (variasi) skor peserta — berapa persen yang "nyata" dan berapa persen yang "*noise*".
+
+| Warna | Makna | Proporsi |
+|-------------------|----------------------------------|-------------------|
+| 🔴 Merah (True Score Variance) | Variasi yang benar-benar mencerminkan perbedaan kemampuan antar peserta | **75%** |
+| 🔵 Biru (Error Variance) | Variasi yang disebabkan faktor kebetulan/gangguan | **25%** |
+
+***Apa itu Reliabilitas 0.75?***
+
+Angka 0.75 itu persis adalah proporsi merahnya, artinya:
+
+"**75% dari perbedaan skor antar peserta mencerminkan perbedaan kemampuan yang nyata. Sisanya, 25%, hanyalah kebetulan/error**."
+
+Analoginya seperti timbangan. Reliabilitas 0.75 berarti timbanganmu cukup akurat tapi masih ada sedikit goyang. Kalau reliabilitasnya 1.0, berarti semua merah timbangan sempurna, nol error.
+:::
+
 ## Statistik Item dalam CTT
 
 ```{r}
@@ -129,14 +146,56 @@ ggplot(df_sd, aes(x = Kelompok, y = p_value, fill = Kelompok)) +
   theme_minimal(base_size = 12)
 ```
 
-::: {.callout-important title="Implikasi Sample-Dependency"}
-Item yang tampak "sedang" di kelompok kemampuan tinggi akan tampak "sulit" di kelompok kemampuan rendah. Ini menyulitkan **ekuivalensi tes** dan **norma lintas kelompok**.
+::: {.callout-important title="Apa yang Ditunjukkan Grafik Ini?"}
+Satu soal yang **sama persis** diujikan ke tiga kelompok berbeda, dan hasilnya:
+
+| Kelompok            | n         | Tingkat Kesulitan (p) |
+|---------------------|-----------|-----------------------|
+| 🟢 Gabungan         | 200 orang | p = 0.58              |
+| 🔴 Kemampuan Rendah | 100 orang | p = 0.31              |
+| 🔵 Kemampuan Tinggi | 100 orang | p = 0.85              |
+
+> Soalnya **tidak berubah** — yang berubah hanya **siapa yang mengerjakan**.
+
+**Memahami Angka p dalam CTT**
+
+Dalam CTT, tingkat kesulitan (*p*) dihitung sederhana:
+
+$$p = \frac{\text{jumlah yang menjawab benar}}{\text{total peserta}}$$
+
+-   **p mendekati 1.0** : soal mudah (hampir semua benar)
+
+-   **p mendekati 0.0** : soal sulit (hampir semua salah)
+
+-   **p = 0.5** : soal sedang
+
+**Masalahnya: Soal Sama, Angka Berbeda!**
+
+-   **Kelompok Kemampuan Rendah (merah, p = 0.31)** Hanya 31 dari 100 orang yang benar → soal terlihat **sulit**
+
+-   **Kelompok Kemampuan Tinggi (biru, p = 0.85)** 85 dari 100 orang yang benar → soal terlihat **mudah**
+
+-   **Gabungan (hijau, p = 0.58)** Rata-rata keduanya → soal terlihat **sedang**
+
+Padahal sekali lagi — **soalnya sama persis!**
+
+**Analogi: Soal Matematika di Sekolah Berbeda**
+
+Bayangkan soal cerita matematika yang sama diberikan ke:
+
+-   Siswa SD kelas 6 → susah, nilai rata-rata 31
+
+-   Siswa SMA kelas 10 → gampang, nilai rata-rata 85
+
+Apakah soalnya berubah? **Tidak**. Yang berubah adalah kemampuan pesertanya.
+
+Tapi dalam CTT, kita akan menyimpulkan soal itu "sulit" atau "mudah" tergantung ke sekolah mana kita memberikannya — ini jelas **tidak adil dan tidak akurat**. 
 :::
 
 ## Perbandingan CTT vs IRT
 
 | Aspek | CTT | IRT |
-|-----------------------------|---------------------|---------------------|
+|------------------------|------------------------|------------------------|
 | **Unit analisis** | Skor total | Parameter item & person |
 | **Estimasi kemampuan** | Skor mentah / skor standar | Logit (θ) |
 | **Ketergantungan sampel** | Ya — item statistics berubah | Tidak — parameter invariant |
@@ -145,3 +204,4 @@ Item yang tampak "sedang" di kelompok kemampuan tinggi akan tampak "sulit" di ke
 | **Ukuran sampel** | Minimal 100–200 | Minimal 200–500+ |
 | **Equating** | Terbatas | Lebih kuat |
 | **Aplikasi CAT** | Tidak memungkinkan | Optimal |
+:::

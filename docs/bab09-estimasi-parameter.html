@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>9&nbsp; Estimasi Parameter IRT – Modul Psikometri: Item Response Theory (IRT)</title>
+<title>11&nbsp; Estimasi Parameter IRT – Modul Psikometri: Item Response Theory (IRT)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -285,7 +285,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./bab08-setup-r.html">Bagian III: Implementasi di R</a></li><li class="breadcrumb-item"><a href="./bab09-estimasi-parameter.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Estimasi Parameter IRT</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./bab08-setup-r.html">Bagian IV: Implementasi di R</a></li><li class="breadcrumb-item"><a href="./bab09-estimasi-parameter.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Estimasi Parameter IRT</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -388,7 +388,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
- <span class="menu-text">Bagian III: Implementasi di R</span></a>
+ <span class="menu-text">Bagian III: Contoh dan Studi Kasus 1</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -396,26 +396,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./bab08-setup-r.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Setup R untuk Analisis IRT</span></span></a>
+  <a href="./contoh-ctt.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Analisis Soal — Classical Test Theory (CTT)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./bab09-estimasi-parameter.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Estimasi Parameter IRT</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./bab10-item-fit.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Item Fit Analysis</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./bab11-person-fit.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Bab 11: Person Fit</span></span></a>
+  <a href="./contoh-irt.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Analisis Soal Item Response Theory (IRT)</span></span></a>
   </div>
 </li>
       </ul>
@@ -423,7 +411,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
- <span class="menu-text">Bagian IV: Aplikasi Praktis</span></a>
+ <span class="menu-text">Bagian IV: Implementasi di R</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -431,20 +419,55 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./bab08-setup-r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Setup R untuk Analisis IRT</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./bab09-estimasi-parameter.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Estimasi Parameter IRT</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./bab10-item-fit.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Item Fit Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./bab11-person-fit.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Bab 11: Person Fit</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Bagian V: Aplikasi Praktis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./bab13-wright-map.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Wright Map &amp; Person-Item Map</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Wright Map &amp; Person-Item Map</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./bab14-computer-adaptive.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Bab 14: Computer Adaptive</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Bab 14: Computer Adaptive</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./bab15-pelaporan.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Pelaporan Psikometri Berbasis IRT</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Pelaporan Psikometri Berbasis IRT</span></span></a>
   </div>
 </li>
       </ul>
@@ -465,11 +488,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Daftar Isi Bab</h2>
    
   <ul>
-  <li><a href="#metode-estimasi" id="toc-metode-estimasi" class="nav-link active" data-scroll-target="#metode-estimasi"><span class="header-section-number">9.1</span> Metode Estimasi</a></li>
-  <li><a href="#estimasi-dengan-mirt-model-2pl" id="toc-estimasi-dengan-mirt-model-2pl" class="nav-link" data-scroll-target="#estimasi-dengan-mirt-model-2pl"><span class="header-section-number">9.2</span> Estimasi dengan <code>mirt</code> (Model 2PL)</a></li>
-  <li><a href="#estimasi-kemampuan-peserta-θ" id="toc-estimasi-kemampuan-peserta-θ" class="nav-link" data-scroll-target="#estimasi-kemampuan-peserta-θ"><span class="header-section-number">9.3</span> Estimasi Kemampuan Peserta (θ)</a></li>
-  <li><a href="#test-information-function-tif" id="toc-test-information-function-tif" class="nav-link" data-scroll-target="#test-information-function-tif"><span class="header-section-number">9.4</span> Test Information Function (TIF)</a></li>
-  <li><a href="#membandingkan-model-1pl-2pl-3pl" id="toc-membandingkan-model-1pl-2pl-3pl" class="nav-link" data-scroll-target="#membandingkan-model-1pl-2pl-3pl"><span class="header-section-number">9.5</span> Membandingkan Model 1PL, 2PL, 3PL</a></li>
+  <li><a href="#metode-estimasi" id="toc-metode-estimasi" class="nav-link active" data-scroll-target="#metode-estimasi"><span class="header-section-number">11.1</span> Metode Estimasi</a></li>
+  <li><a href="#estimasi-dengan-mirt-model-2pl" id="toc-estimasi-dengan-mirt-model-2pl" class="nav-link" data-scroll-target="#estimasi-dengan-mirt-model-2pl"><span class="header-section-number">11.2</span> Estimasi dengan <code>mirt</code> (Model 2PL)</a></li>
+  <li><a href="#estimasi-kemampuan-peserta-θ" id="toc-estimasi-kemampuan-peserta-θ" class="nav-link" data-scroll-target="#estimasi-kemampuan-peserta-θ"><span class="header-section-number">11.3</span> Estimasi Kemampuan Peserta (θ)</a></li>
+  <li><a href="#test-information-function-tif" id="toc-test-information-function-tif" class="nav-link" data-scroll-target="#test-information-function-tif"><span class="header-section-number">11.4</span> Test Information Function (TIF)</a></li>
+  <li><a href="#membandingkan-model-1pl-2pl-3pl" id="toc-membandingkan-model-1pl-2pl-3pl" class="nav-link" data-scroll-target="#membandingkan-model-1pl-2pl-3pl"><span class="header-section-number">11.5</span> Membandingkan Model 1PL, 2PL, 3PL</a></li>
   </ul>
 </nav>
     </div>
@@ -477,9 +500,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <main class="content" id="quarto-document-content">
 
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./bab08-setup-r.html">Bagian III: Implementasi di R</a></li><li class="breadcrumb-item"><a href="./bab09-estimasi-parameter.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Estimasi Parameter IRT</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./bab08-setup-r.html">Bagian IV: Implementasi di R</a></li><li class="breadcrumb-item"><a href="./bab09-estimasi-parameter.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Estimasi Parameter IRT</span></a></li></ol></nav>
 <div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Estimasi Parameter IRT</span></h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Estimasi Parameter IRT</span></h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
 </div>
 
 
@@ -496,8 +519,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="metode-estimasi" class="level2" data-number="9.1">
-<h2 data-number="9.1" class="anchored" data-anchor-id="metode-estimasi"><span class="header-section-number">9.1</span> Metode Estimasi</h2>
+<section id="metode-estimasi" class="level2" data-number="11.1">
+<h2 data-number="11.1" class="anchored" data-anchor-id="metode-estimasi"><span class="header-section-number">11.1</span> Metode Estimasi</h2>
 <p>Terdapat tiga metode estimasi utama dalam IRT:</p>
 <table class="caption-top table">
 <colgroup>
@@ -542,8 +565,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 </section>
-<section id="estimasi-dengan-mirt-model-2pl" class="level2" data-number="9.2">
-<h2 data-number="9.2" class="anchored" data-anchor-id="estimasi-dengan-mirt-model-2pl"><span class="header-section-number">9.2</span> Estimasi dengan <code>mirt</code> (Model 2PL)</h2>
+<section id="estimasi-dengan-mirt-model-2pl" class="level2" data-number="11.2">
+<h2 data-number="11.2" class="anchored" data-anchor-id="estimasi-dengan-mirt-model-2pl"><span class="header-section-number">11.2</span> Estimasi dengan <code>mirt</code> (Model 2PL)</h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -635,7 +658,7 @@ RMSEA = 0, CFI = NaN, TLI = NaN</code></pre>
 <div id="tbl-parameter-2pl" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-parameter-2pl-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;9.1: Parameter Item Model 2PL (10 Item Pertama)
+Table&nbsp;11.1: Parameter Item Model 2PL (10 Item Pertama)
 </figcaption>
 <div aria-describedby="tbl-parameter-2pl-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -791,13 +814,13 @@ Table&nbsp;9.1: Parameter Item Model 2PL (10 Item Pertama)
 </div>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-recovery-param-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;9.1: Parameter Recovery — Estimasi vs True Value
+Figure&nbsp;11.1: Parameter Recovery — Estimasi vs True Value
 </figcaption>
 </figure>
 </div>
 </section>
-<section id="estimasi-kemampuan-peserta-θ" class="level2" data-number="9.3">
-<h2 data-number="9.3" class="anchored" data-anchor-id="estimasi-kemampuan-peserta-θ"><span class="header-section-number">9.3</span> Estimasi Kemampuan Peserta (θ)</h2>
+<section id="estimasi-kemampuan-peserta-θ" class="level2" data-number="11.3">
+<h2 data-number="11.3" class="anchored" data-anchor-id="estimasi-kemampuan-peserta-θ"><span class="header-section-number">11.3</span> Estimasi Kemampuan Peserta (θ)</h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -835,8 +858,8 @@ Figure&nbsp;9.1: Parameter Recovery — Estimasi vs True Value
 </div>
 </div>
 </section>
-<section id="test-information-function-tif" class="level2" data-number="9.4">
-<h2 data-number="9.4" class="anchored" data-anchor-id="test-information-function-tif"><span class="header-section-number">9.4</span> Test Information Function (TIF)</h2>
+<section id="test-information-function-tif" class="level2" data-number="11.4">
+<h2 data-number="11.4" class="anchored" data-anchor-id="test-information-function-tif"><span class="header-section-number">11.4</span> Test Information Function (TIF)</h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -855,15 +878,15 @@ Figure&nbsp;9.1: Parameter Recovery — Estimasi vs True Value
 <img src="bab09-estimasi-parameter_files/figure-html/fig-tif-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-tif-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;9.2: Test Information Function dan Standard Error
+Figure&nbsp;11.2: Test Information Function dan Standard Error
 </figcaption>
 </figure>
 </div>
 </div>
 </div>
 </section>
-<section id="membandingkan-model-1pl-2pl-3pl" class="level2" data-number="9.5">
-<h2 data-number="9.5" class="anchored" data-anchor-id="membandingkan-model-1pl-2pl-3pl"><span class="header-section-number">9.5</span> Membandingkan Model 1PL, 2PL, 3PL</h2>
+<section id="membandingkan-model-1pl-2pl-3pl" class="level2" data-number="11.5">
+<h2 data-number="11.5" class="anchored" data-anchor-id="membandingkan-model-1pl-2pl-3pl"><span class="header-section-number">11.5</span> Membandingkan Model 1PL, 2PL, 3PL</h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -1370,12 +1393,12 @@ model_3pl 15554.84 15648.49 15703.68 15934.15 -7687.418   6.406 30 1</code></pre
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="./bab08-setup-r.html" class="pagination-link" aria-label="Setup R untuk Analisis IRT">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Setup R untuk Analisis IRT</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Setup R untuk Analisis IRT</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="./bab10-item-fit.html" class="pagination-link" aria-label="Item Fit Analysis">
-        <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Item Fit Analysis</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Item Fit Analysis</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">

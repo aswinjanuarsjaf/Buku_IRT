@@ -1,0 +1,430 @@
+---
+title: "Analisis Soal Item Response Theory (IRT)"
+author: "Aswin Januarsjaf"
+date: today
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    theme: cosmo
+    code-fold: true
+    code-tools: true
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+## Pendahuluan
+
+**Item Response Theory (IRT)** mengevaluasi soal melalui hubungan probabilistik antara kemampuan peserta (θ) dan peluang menjawab benar. Dibandingkan CTT, IRT memberikan:
+
+| Aspek | CTT | IRT |
+|-------|-----|-----|
+| Parameter item | Tergantung sampel | Invariant (bebas sampel) |
+| Parameter peserta | Skor total mentah | Kemampuan θ pada skala logit |
+| Informasi pengukuran | Satu nilai (α) | Kurva — berbeda di tiap level θ |
+| Model utama | — | 1PL, 2PL, 3PL |
+
+Pada contoh ini kita gunakan **Model 2PL** dengan dua parameter per soal:
+
+- **a** = daya beda (*discrimination*) — kemiringan kurva ICC
+- **b** = kesulitan (*difficulty*) — posisi kurva pada skala θ
+
+$$P(X=1 \mid \theta, a, b) = \frac{1}{1 + e^{-a(\theta - b)}}$$
+
+---
+
+## Data Simulasi
+
+```{r}
+#| label: setup
+
+library(mirt)
+library(ggplot2)
+library(dplyr)
+library(knitr)
+library(kableExtra)
+library(patchwork)
+
+set.seed(2025)
+
+n_peserta <- 350
+n_soal    <- 15
+
+# True parameters per soal
+a_true <- c(0.8, 1.2, 1.5, 0.9, 1.8, 1.1, 0.4, 1.6, 1.3, 0.7,
+            1.9, 1.0, 1.4, 0.6, 1.7)
+b_true <- c(-1.5, -0.8, -0.3,  0.0,  0.5,  1.0,  1.5,
+            -1.0,  0.3,  0.8, -0.5,  1.2, -1.2,  0.6, -0.1)
+
+theta_true <- rnorm(n_peserta, mean = 0, sd = 1)
+
+# Generate respon 2PL
+prob_mat <- sapply(1:n_soal, function(i)
+  1 / (1 + exp(-a_true[i] * (theta_true - b_true[i]))))
+
+data_irt <- matrix(
+  rbinom(n_peserta * n_soal, 1, prob_mat),
+  nrow = n_peserta,
+  dimnames = list(
+    paste0("P", sprintf("%03d", 1:n_peserta)),
+    paste0("Soal_", sprintf("%02d", 1:n_soal))
+  )
+)
+
+cat("=== DATA SIMULASI ===\n")
+cat(sprintf("Peserta  : %d\n", n_peserta))
+cat(sprintf("Soal     : %d\n", n_soal))
+cat(sprintf("%% benar : %.1f%%\n", mean(data_irt) * 100))
+
+# Tampilkan 5 baris pertama
+kable(data_irt[1:5, 1:10],
+      caption = "Contoh Matriks Respon (5 peserta, 10 soal pertama)",
+      align = "c") |>
+  kable_styling(bootstrap_options = c("striped", "hover"),
+                full_width = FALSE)
+```
+
+---
+
+## Estimasi Model IRT
+
+```{r}
+#| label: estimasi-model
+#| cache: true
+
+# Estimasi Model 2PL dengan mirt
+model <- mirt(data_irt, model = 1, itemtype = "2PL", verbose = FALSE)
+
+# Ekstrak parameter dalam skala IRT (a dan b)
+par_irt <- mirt::coef(model, IRTpars = TRUE, simplify = TRUE)$items
+a_est   <- par_irt[, "a"]
+b_est   <- par_irt[, "b"]
+
+cat("=== ESTIMASI MODEL 2PL BERHASIL ===\n\n")
+cat("Parameter 5 soal pertama:\n")
+print(round(par_irt[1:5, c("a","b")], 3))
+```
+
+---
+
+## Item Characteristic Curves (ICC)
+
+ICC menunjukkan hubungan antara kemampuan θ dan probabilitas menjawab benar.
+
+```{r}
+#| label: fig-icc
+#| fig-cap: "Item Characteristic Curves — Model 2PL (15 soal)"
+#| fig-height: 7
+#| fig-width: 11
+
+theta_seq <- seq(-4, 4, by = 0.05)
+
+# Buat data ICC
+df_icc <- do.call(rbind, lapply(1:n_soal, function(i) {
+  data.frame(
+    theta = theta_seq,
+    prob  = 1 / (1 + exp(-a_est[i] * (theta_seq - b_est[i]))),
+    soal  = paste0("Soal_", sprintf("%02d", i)),
+    a     = round(a_est[i], 2),
+    b     = round(b_est[i], 2)
+  )
+}))
+
+# Label legend per soal: "Soal_01  a=0.80  b=-1.50"
+soal_ids <- paste0("Soal_", sprintf("%02d", 1:n_soal))
+
+label_legend <- sapply(soal_ids, function(s) {
+  r <- df_icc[df_icc$soal == s, ][1, ]
+  sprintf("%-9s  a=%4.2f  b=%+5.2f", s, r$a, r$b)
+})
+
+df_icc$soal_f <- factor(df_icc$soal,
+                         levels = soal_ids,
+                         labels = label_legend)
+
+# 15 warna kontras
+pal_15 <- c(
+  "#e74c3c", "#c0392b", "#e67e22", "#f39c12", "#d4ac0d",
+  "#27ae60", "#1e8449", "#1abc9c", "#148f77", "#2980b9",
+  "#1a5276", "#8e44ad", "#6c3483", "#2c3e50", "#717d7e"
+)
+names(pal_15) <- label_legend
+
+ggplot(df_icc, aes(x = theta, y = prob,
+                    color = soal_f, group = soal_f)) +
+  geom_line(linewidth = 1.0, alpha = 0.85) +
+  geom_hline(yintercept = 0.5, linetype = "dashed",
+             color = "gray50", linewidth = 0.7) +
+  scale_color_manual(values = pal_15) +
+  scale_y_continuous(labels = scales::percent, limits = c(0, 1)) +
+  guides(color = guide_legend(
+    title    = "Soal            a       b",
+    ncol     = 1,
+    override.aes = list(linewidth = 2)
+  )) +
+  labs(
+    title    = "Item Characteristic Curves \u2014 Model 2PL",
+    subtitle = "Setiap garis = satu soal | a = daya beda | b = kesulitan",
+    x = "Kemampuan Peserta (\u03b8)",
+    y = "P(benar | \u03b8)"
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    legend.position  = "right",
+    legend.key.width = unit(1.5, "cm"),
+    legend.key.height = unit(0.55, "cm"),
+    legend.text  = element_text(size = 8.5, family = "mono"),
+    legend.title = element_text(size = 8.5, face = "bold", family = "mono"),
+    legend.background = element_rect(fill = "gray97", color = "gray85",
+                                      linewidth = 0.3)
+  )
+```
+
+---
+
+## Tabel Parameter Item
+
+```{r}
+#| label: tbl-parameter
+#| tbl-cap: "Parameter Item — Model 2PL"
+
+# Item fit
+fit_out <- mirt::itemfit(model)
+p_fit   <- pmax(pmin(fit_out$p.S_X2, 1), 1e-6)
+
+df_par <- data.frame(
+  Soal       = paste0("Soal_", sprintf("%02d", 1:n_soal)),
+  a_est      = round(a_est, 3),
+  b_est      = round(b_est, 3),
+  p_sx2      = round(p_fit, 4),
+  Kat_a      = cut(a_est,
+                   breaks = c(0, 0.5, 1.0, 1.5, Inf),
+                   labels = c("Lemah","Sedang","Baik","Sangat Baik")),
+  Kat_b      = cut(b_est,
+                   breaks = c(-Inf, -1, 0, 1, Inf),
+                   labels = c("Sangat Mudah","Mudah","Sulit","Sangat Sulit")),
+  Fit        = ifelse(p_fit < 0.05, "Misfit", "Fit"),
+  Keputusan  = case_when(
+    a_est < 0.5    ~ "Hapus",
+    p_fit < 0.05   ~ "Revisi",
+    TRUE           ~ "Pertahankan"
+  )
+)
+
+tbl <- kable(df_par,
+      col.names = c("Soal","a","b","p S-X\u00b2",
+                    "Kat. a","Kat. b","Fit","Keputusan"),
+      align = "c") |>
+  kable_styling(bootstrap_options = c("striped","hover"),
+                full_width = FALSE)
+
+idx_hapus <- which(df_par$Keputusan == "Hapus")
+idx_revisi <- which(df_par$Keputusan == "Revisi")
+idx_ok <- which(df_par$Keputusan == "Pertahankan")
+if (length(idx_hapus)  > 0) tbl <- row_spec(tbl, idx_hapus,  background = "#fdecea")
+if (length(idx_revisi) > 0) tbl <- row_spec(tbl, idx_revisi, background = "#fef9e7")
+if (length(idx_ok)     > 0) tbl <- row_spec(tbl, idx_ok,     background = "#e8f5e9")
+tbl
+```
+
+---
+
+## Item Fit
+
+Item fit menguji apakah pola respon setiap soal sesuai dengan prediksi model.
+
+```{r}
+#| label: fig-itemfit
+#| fig-cap: "Item Fit S-X\u00b2 — Model 2PL"
+#| fig-height: 5
+
+batas <- -log10(0.05)
+
+df_fit <- data.frame(
+  Soal     = paste0("Soal_", sprintf("%02d", 1:n_soal)),
+  neglog_p = -log10(p_fit),
+  Status   = ifelse(p_fit < 0.05, "Misfit", "Fit")
+)
+
+ggplot(df_fit, aes(x = reorder(Soal, neglog_p),
+                    y = neglog_p, fill = Status)) +
+  geom_col(width = 0.65) +
+  geom_hline(yintercept = batas, linetype = "dashed",
+             color = "#c0392b", linewidth = 0.9) +
+  geom_label(aes(x = 1, y = batas, label = "p = .05"),
+             inherit.aes = FALSE, fill = "white",
+             color = "#c0392b", size = 3.2, hjust = -0.1) +
+  coord_flip() +
+  scale_fill_manual(values = c("Fit" = "#27ae60", "Misfit" = "#e74c3c")) +
+  labs(
+    title    = "Item Fit S-X\u00b2 \u2014 Model 2PL",
+    subtitle = "Batang melewati garis merah = soal tidak cocok dengan model",
+    x = NULL, y = "-log\u2081\u2080(p-value)", fill = "Status"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "bottom")
+```
+
+---
+
+## Test Information Function (TIF)
+
+TIF menunjukkan di rentang θ mana tes paling akurat mengukur.
+
+```{r}
+#| label: fig-tif
+#| fig-cap: "Test Information Function & Standard Error of Measurement"
+#| fig-height: 5
+
+# Hitung IIF per soal lalu jumlahkan
+iif <- function(theta, a, b) {
+  p <- 1 / (1 + exp(-a * (theta - b)))
+  a^2 * p * (1 - p)
+}
+
+tif_vals <- rowSums(sapply(1:n_soal, function(i)
+  iif(theta_seq, a_est[i], b_est[i])))
+sem_vals <- 1 / sqrt(tif_vals)
+
+df_tif <- data.frame(
+  theta = theta_seq,
+  TIF   = tif_vals,
+  SEM   = pmin(sem_vals, 3)   # cap SEM agar tidak meledak di ujung
+)
+
+p_tif <- ggplot(df_tif, aes(x = theta, y = TIF)) +
+  geom_area(fill = "#3498db", alpha = 0.3) +
+  geom_line(color = "#2980b9", linewidth = 1.2) +
+  geom_vline(xintercept = theta_seq[which.max(tif_vals)],
+             linetype = "dashed", color = "#e74c3c") +
+  labs(title = "Test Information Function",
+       subtitle = sprintf("Informasi maksimum pada \u03b8 = %.2f",
+                          theta_seq[which.max(tif_vals)]),
+       x = "\u03b8", y = "Informasi I(\u03b8)") +
+  theme_minimal(base_size = 12)
+
+p_sem <- ggplot(df_tif, aes(x = theta, y = SEM)) +
+  geom_area(fill = "#e74c3c", alpha = 0.25) +
+  geom_line(color = "#c0392b", linewidth = 1.2) +
+  geom_hline(yintercept = 0.45, linetype = "dashed", color = "gray50") +
+  annotate("label", x = 3, y = 0.45,
+           label = "SEM = 0.45", fill = "white",
+           color = "gray40", size = 3) +
+  labs(title = "Standard Error of Measurement",
+       subtitle = "SEM rendah = pengukuran lebih presisi",
+       x = "\u03b8", y = "SEM(\u03b8)") +
+  theme_minimal(base_size = 12)
+
+p_tif / p_sem
+```
+
+---
+
+## Estimasi Kemampuan Peserta (θ)
+
+```{r}
+#| label: fig-theta
+#| fig-cap: "Distribusi Kemampuan Peserta (EAP) & Parameter Recovery"
+#| fig-height: 5
+
+theta_eap <- mirt::fscores(model, method = "EAP")[, 1]
+
+p_dist <- ggplot(data.frame(theta = theta_eap), aes(x = theta)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 25,
+                 fill = "#3498db", color = "white", alpha = 0.8) +
+  geom_density(linewidth = 1.2, color = "#1a5276") +
+  geom_vline(xintercept = mean(theta_eap),
+             linetype = "dashed", color = "#e74c3c", linewidth = 1) +
+  annotate("label", x = mean(theta_eap) + 0.15, y = 0.55,
+           label = sprintf("Mean = %.2f\nSD = %.2f",
+                           mean(theta_eap), sd(theta_eap)),
+           fill = "white", color = "#e74c3c", size = 3.2) +
+  labs(title = "Distribusi \u03b8 Estimasi (EAP)",
+       x = "\u03b8", y = "Densitas") +
+  theme_minimal(base_size = 12)
+
+p_rec <- ggplot(data.frame(true = theta_true, est = theta_eap),
+                aes(x = true, y = est)) +
+  geom_point(alpha = 0.35, size = 1.8, color = "#3498db") +
+  geom_abline(slope = 1, intercept = 0,
+              linetype = "dashed", color = "#e74c3c", linewidth = 1) +
+  annotate("label", x = -3, y = 2.5,
+           label = sprintf("r = %.3f", cor(theta_true, theta_eap)),
+           fill = "white", color = "#1a5276",
+           size = 4, fontface = "bold") +
+  labs(title = "Parameter Recovery: \u03b8 True vs \u03b8 EAP",
+       x = "\u03b8 True", y = "\u03b8 Estimasi (EAP)") +
+  theme_minimal(base_size = 12)
+
+p_dist | p_rec
+```
+
+---
+
+## Peta Item Bank
+
+```{r}
+#| label: fig-item-bank
+#| fig-cap: "Peta Item Bank: Daya Beda (a) vs Kesulitan (b)"
+#| fig-height: 5
+
+ggplot(df_par, aes(x = b_est, y = a_est,
+                    color = Keputusan, label = Soal)) +
+  annotate("rect", xmin = -2, xmax = 2, ymin = 0.5, ymax = Inf,
+           fill = "#27ae60", alpha = 0.06) +
+  geom_vline(xintercept = c(-2, 2),
+             linetype = "dashed", color = "gray60") +
+  geom_hline(yintercept = 0.5,
+             linetype = "dashed", color = "gray60") +
+  geom_point(size = 5, alpha = 0.85) +
+  geom_text(vjust = -0.9, size = 2.8, fontface = "bold") +
+  annotate("text", x = 0, y = 2.2,
+           label = "Zona Optimal", color = "#27ae60",
+           fontface = "bold", size = 3.5) +
+  scale_color_manual(values = c(
+    "Pertahankan" = "#27ae60",
+    "Revisi"      = "#f39c12",
+    "Hapus"       = "#e74c3c"
+  )) +
+  labs(
+    title    = "Peta Item Bank IRT (2PL)",
+    subtitle = "Zona optimal: b \u2208 [-2, 2] dan a \u2265 0.5",
+    x = "Kesulitan (b)", y = "Daya Beda (a)",
+    color = "Keputusan"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "bottom")
+```
+
+---
+
+## Rekomendasi Final
+
+```{r}
+#| label: rekomendasi
+#| echo: false
+
+n_ok  <- sum(df_par$Keputusan == "Pertahankan")
+n_rev <- sum(df_par$Keputusan == "Revisi")
+n_hap <- sum(df_par$Keputusan == "Hapus")
+
+cat(sprintf(paste0(
+  "RINGKASAN ANALISIS IRT (2PL)\n",
+  "==============================\n",
+  "Total soal     : %d\n",
+  "Pertahankan    : %d soal (%.0f%%)\n",
+  "Revisi         : %d soal (%.0f%%)\n",
+  "Hapus          : %d soal (%.0f%%)\n",
+  "------------------------------\n",
+  "Bank soal final: %d soal\n"
+),
+  n_soal,
+  n_ok,  n_ok  / n_soal * 100,
+  n_rev, n_rev / n_soal * 100,
+  n_hap, n_hap / n_soal * 100,
+  n_ok
+))
+```

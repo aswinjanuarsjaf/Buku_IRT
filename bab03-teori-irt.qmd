@@ -1,6 +1,343 @@
 # Teori Dasar IRT
 
-## Model Logistik IRT
+## Tiga Asumsi Utama IRT
+
+IRT memiliki tiga asumsi utama yang harus dipenuhi sebelum model dapat diaplikasikan dengan valid:
+
+1.  **Unidimensionalitas** (*Unidimensionality*)
+2.  **Local Independence** (*Local Independence*)
+3.  **Kesesuaian Model** (*Model-Data Fit*)
+
+Kegagalan memenuhi asumsi ini dapat mengakibatkan estimasi parameter yang bias dan kesimpulan yang keliru.
+
+## Asumsi 1: Unidimensionalitas
+
+Unidimensionalitas berarti semua item dalam tes mengukur **satu konstruk laten yang sama**. Meskipun IRT dalam konteks tertentu dapat diperluas ke multidimensi (MIRT), model standar mensyaratkan dominansi satu dimensi.
+
+### Pengujian dengan Analisis Faktor
+
+```{r}
+#| label: uji-unidimensi
+#| fig-cap: "Scree plot untuk evaluasi unidimensionalitas"
+#| fig-width: 8
+#| fig-height: 5
+
+library(mirt)
+library(ggplot2)
+library(psych)
+
+# Simulasi data unidimensional
+set.seed(100)
+n <- 600
+n_item <- 12
+
+data_uni <- simdata(
+  a = matrix(runif(n_item, 0.8, 2.0)),
+  d = matrix(
+    cbind(runif(n_item,  1.5,  2.5),   # d1 terbesar (threshold termudah)
+          runif(n_item,  0.3,  0.8),
+          runif(n_item, -0.8, -0.3),
+          runif(n_item, -2.5, -1.5)),  # d4 terkecil (threshold tersulit)
+    nrow = n_item
+  ),
+  N = n,
+  itemtype = "graded"
+)
+
+# Pastikan tidak ada kolom konstan sebelum cor()
+data_uni_clean <- data_uni[, apply(data_uni, 2, var) > 0]
+n_item_clean   <- ncol(data_uni_clean)
+
+# Scree plot
+ev <- eigen(cor(data_uni_clean, use = "pairwise.complete.obs"))$values
+df_scree <- data.frame(
+  faktor = 1:n_item_clean,
+  eigenvalue = ev
+)
+
+ggplot(df_scree, aes(x = faktor, y = eigenvalue)) +
+  geom_line(color = "#2c7be5", linewidth = 1) +
+  geom_point(color = "#2c7be5", size = 3) +
+  geom_hline(yintercept = 1, linetype = "dashed", color = "red", alpha = 0.7) +
+  annotate("text", x = n_item_clean - 2, y = 1.1, label = "Kaiser Criterion (λ = 1)", 
+           color = "red", size = 3.5) +
+  scale_x_continuous(breaks = 1:n_item_clean) +
+  labs(title = "Scree Plot — Evaluasi Unidimensionalitas",
+       subtitle = "Faktor ke-1 mendominasi: indikasi unidimensional",
+       x = "Faktor ke-",
+       y = "Eigenvalue") +
+  theme_minimal(base_size = 12)
+```
+
+::: {.callout-important title="Apa yang Ditunjukkan Grafik Ini?"}
+**Baca Grafik Ini Seperti Ini**
+
+**Elemen-Elemen Grafik**
+
+**Sumbu X** = urutan faktor (faktor ke-1, ke-2, ke-3, dst.)
+
+**Sumbu Y** = Eigenvalue — ukuran seberapa besar "kekuatan" tiap faktor menjelaskan variasi data
+
+**Garis merah putus-putus** = Kaiser Criterion (λ = 1) — garis batas standar
+
+**Baca Langkah per Langkah**
+
+**① Lihat Faktor ke-1 Dulu**
+
+```         
+Faktor ke-1  →  Eigenvalue ≈ 4.9 
+Faktor ke-2  →  Eigenvalue ≈ 0.85
+```
+
+Faktor pertama **jauh lebih besar** dari faktor kedua. Ini disebut **"dominant first factor"** — tanda kuat bahwa data unidimensional.
+
+**② Perhatikan "Siku" (Elbow)\
+**"Siku" atau patahan tajam terjadi **antara faktor 1 dan faktor 2**. Faktor yang berada **sebelum siku** itulah yang bermakna. Di sini hanya **1 faktor** yang bermakna → unidimensional.\
+\
+**③ Bandingkan dengan Garis Kaiser (λ = 1)**
+
+Aturan Kaiser: faktor yang eigenvalue-nya **di atas 1** dianggap bermakna.\
+
+```         
+Faktor ke-1  →  ≈ 4.9  →  DI ATAS 1  ✅ bermakna 
+Faktor ke-2  →  ≈ 0.85 →  DI BAWAH 1 ❌ tidak bermakna 
+Faktor 3-12  →  semua < 1            ❌ tidak bermakna
+```
+
+Hanya **1 faktor** yang melewati garis merah → mendukung unidimensionalitas.\
+\
+Kesimpulan Grafik Ini
+
+| Indikator             | Hasil                            | Status |
+|-----------------------|----------------------------------|--------|
+| Dominant first factor | Eigenvalue 1 = 4.9, jauh dominan | ✅     |
+| Siku tajam            | Terjadi antara faktor 1 dan 2    | ✅     |
+| Kaiser Criterion      | Hanya faktor 1 yang λ \> 1       | ✅     |
+| Faktor 2–12           | Datar dan mepet satu sama lain   | ✅     |
+
+>  **Kesimpulan: Data menunjukkan bukti kuat unidimensionalitas — asumsi IRT terpenuhi, analisis dapat dilanjutkan.**
+
+**Catatan Penting**
+
+Scree Plot saja **tidak cukup** — idealnya dikombinasikan dengan:
+
+-    **Rasio eigenvalue** faktor 1 vs faktor 2 (idealnya \> 3.0, di sini ≈ 4.9/0.85 = **5.76** ✅ sangat kuat)
+
+-    **Parallel Analysis** untuk konfirmasi lebih ketat
+
+-    **RMSEA/CFI** dari Confirmatory Factor Analysis (CFA)
+:::
+
+### Rasio Eigenvalue dan Indeks ECV
+
+Kriteria unidimensionalitas yang umum digunakan:
+
+```{r}
+#| label: tbl-indeks-unidimensi
+#| tbl-cap: "Indeks evaluasi unidimensionalitas"
+
+library(knitr)
+library(kableExtra)
+
+# Hitung rasio dan ECV
+ev_ratio <- ev[1] / ev[2]
+var_explained <- ev / sum(ev) * 100
+
+# Essential Unidimensionality dengan MIRT
+model_1f <- mirt(data_uni_clean, 1, itemtype = "graded", verbose = FALSE)
+model_2f <- mirt(data_uni_clean, 2, itemtype = "graded", verbose = FALSE)
+
+# Perbandingan fit
+fit_anova <- anova(model_1f, model_2f)
+chi2_diff  <- tryCatch(fit_anova[2, "X2"], error = function(e) NA)
+
+indeks <- data.frame(
+  Indeks = c(
+    "Eigenvalue Faktor 1",
+    "Eigenvalue Faktor 2",
+    "Rasio EV1/EV2",
+    "Varians dijelaskan F1",
+    "Varians dijelaskan F2",
+    "χ² perbedaan (1F vs 2F)"
+  ),
+  Nilai = c(
+    round(ev[1], 3),
+    round(ev[2], 3),
+    round(ev_ratio, 3),
+    paste0(round(var_explained[1], 1), "%"),
+    paste0(round(var_explained[2], 1), "%"),
+    ifelse(is.na(chi2_diff), "N/A", round(chi2_diff, 3))
+  ),
+  Kriteria = c(
+    "> 3 (dominan)",
+    "< 1.5 (minor)",
+    "> 3 (baik), > 5 (sangat baik)",
+    "> 30% (unidimensional)",
+    "< 10% (minor)",
+    "p > .05 (model 1F tidak lebih buruk)"
+  ),
+  Interpretasi = c(
+    ifelse(ev[1] > 3, "✓ Terpenuhi", "✗ Perlu perhatian"),
+    ifelse(ev[2] < 1.5, "✓ Terpenuhi", "✗ Perlu perhatian"),
+    ifelse(ev_ratio > 3, "✓ Terpenuhi", "✗ Perlu perhatian"),
+    ifelse(var_explained[1] > 30, "✓ Terpenuhi", "✗ Perlu perhatian"),
+    ifelse(var_explained[2] < 10, "✓ Terpenuhi", "✗ Perlu perhatian"),
+    "Lihat nilai p"
+  )
+)
+
+kable(indeks, booktabs = TRUE) |>
+  kable_styling(bootstrap_options = c("striped", "hover"),
+                full_width = TRUE) |>
+  column_spec(1, bold = TRUE) |>
+  column_spec(4, color = ifelse(grepl("✓", indeks$Interpretasi), "green", "red")) |>
+  row_spec(0, bold = TRUE, background = "#2c7be5", color = "white")
+```
+
+## Asumsi 2: Local Independence
+
+**Local Independence** berarti, setelah mengontrol kemampuan laten (θ), respons terhadap satu item tidak berkorelasi dengan respons terhadap item lain.
+
+Secara matematis: $$P(X_1 = x_1, X_2 = x_2, \ldots, X_n = x_n | \theta) = \prod_{j=1}^{n} P(X_j = x_j | \theta)$$
+
+### Pengujian Local Independence dengan Q3
+
+Statistik **Q3** dari Yen (1984) adalah ukuran korelasi residual antar item setelah mengontrol θ:
+
+```{r}
+#| label: uji-local-independence
+#| fig-cap: "Heatmap Q3 statistic untuk deteksi local dependence"
+#| fig-width: 8
+#| fig-height: 7
+
+library(mirt)
+
+# Hitung Q3 statistics
+residuals_q3 <- residuals(model_1f, type = "Q3", verbose = FALSE)
+
+# Konversi ke matrix
+q3_mat <- as.matrix(residuals_q3)
+
+# Visualisasi heatmap
+library(ggplot2)
+library(reshape2)
+
+q3_df <- melt(q3_mat)
+colnames(q3_df) <- c("Item_i", "Item_j", "Q3")
+
+ggplot(q3_df, aes(x = Item_i, y = Item_j, fill = Q3)) +
+  geom_tile(color = "white") +
+  geom_text(aes(label = round(Q3, 2)), size = 3, color = "black") +
+  scale_fill_gradient2(
+    low = "#2ecc71", mid = "white", high = "#e74c3c",
+    midpoint = -0.05, limits = c(-0.5, 0.5),
+    name = "Q3\nStatistic"
+  ) +
+  labs(title = "Q3 Statistic — Deteksi Local Dependence",
+       subtitle = "Nilai |Q3| > 0.20 mengindikasikan local dependence bermasalah",
+       x = "Item", y = "Item") +
+  theme_minimal(base_size = 11) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+::: callout-warning
+## Panduan Interpretasi Q3
+
+-   **\|Q3\| \< 0.10**: Tidak ada masalah local dependence
+-   **\|Q3\| 0.10 – 0.20**: Perlu perhatian, interpretasi dengan hati-hati
+-   **\|Q3\| \> 0.20**: Indikasi local dependence, pertimbangkan revisi item atau model alternatif
+:::
+
+## Asumsi 3: Kesesuaian Model (Model-Data Fit)
+
+Model yang dipilih harus sesuai dengan data. Ini diuji melalui berbagai statistik fit yang akan dibahas lebih detail di @sec-analisis-fit.
+
+### Ringkasan Pengujian Asumsi
+
+```{r}
+#| label: fungsi-uji-asumsi
+#| eval: false
+
+# Fungsi komprehensif untuk uji asumsi IRT
+uji_asumsi_irt <- function(data, model_fit) {
+  cat("=== LAPORAN PENGUJIAN ASUMSI IRT ===\n\n")
+  
+  # 1. Unidimensionalitas
+  cat("1. UNIDIMENSIONALITAS\n")
+  ev <- eigen(cor(data))$values
+  cat("   Eigenvalue F1:", round(ev[1], 3), "\n")
+  cat("   Eigenvalue F2:", round(ev[2], 3), "\n")
+  cat("   Rasio EV1/EV2:", round(ev[1]/ev[2], 3), "\n")
+  cat("   Varians F1:", round(ev[1]/sum(ev)*100, 1), "%\n\n")
+  
+  # 2. Local Independence
+  cat("2. LOCAL INDEPENDENCE (Q3)\n")
+  q3 <- residuals(model_fit, type = "Q3", verbose = FALSE)
+  max_q3 <- max(abs(q3[upper.tri(q3)]))
+  cat("   Q3 maksimum:", round(max_q3, 3), "\n")
+  n_problematic <- sum(abs(q3[upper.tri(q3)]) > 0.20)
+  cat("   Pasang item dengan |Q3| > 0.20:", n_problematic, "\n\n")
+  
+  # 3. Model Fit
+  cat("3. MODEL FIT\n")
+  m2 <- M2(model_fit, na.rm = TRUE)
+  cat("   M2:", round(m2$M2, 3), "\n")
+  cat("   df:", m2$df, "\n")
+  cat("   p-value:", round(m2$p, 4), "\n")
+  cat("   RMSEA:", round(m2$RMSEA, 4), "\n")
+  cat("   CFI:", round(m2$CFI, 4), "\n")
+  cat("   TLI:", round(m2$TLI, 4), "\n")
+}
+
+# Penggunaan
+uji_asumsi_irt(data_uni, model_1f)
+```
+
+## Solusi Ketika Asumsi Tidak Terpenuhi
+
+```{r}
+#| label: tbl-solusi-asumsi
+#| tbl-cap: "Strategi mengatasi pelanggaran asumsi IRT"
+
+solusi <- data.frame(
+  Masalah = c(
+    "Multidimensional",
+    "Multidimensional",
+    "Local Dependence",
+    "Local Dependence",
+    "Model Fit Buruk"
+  ),
+  Solusi = c(
+    "Gunakan MIRT (Multidimensional IRT)",
+    "Pisahkan menjadi subtes unidimensional",
+    "Hapus salah satu item yang berkorelasi",
+    "Bundling item menjadi testlet",
+    "Ganti model (misal: GRM → GPCM)"
+  ),
+  Package_R = c(
+    "mirt (model=2 atau lebih)",
+    "mirt (analisis per subdimensi)",
+    "Revisi instrumen",
+    "mirt (testlet model)",
+    "mirt dengan itemtype berbeda"
+  )
+)
+
+kable(solusi, booktabs = TRUE,
+      col.names = c("Masalah", "Solusi", "Implementasi R")) |>
+  kable_styling(bootstrap_options = c("striped", "hover")) |>
+  column_spec(1, bold = TRUE) |>
+  collapse_rows(columns = 1, valign = "top") |>
+  row_spec(0, bold = TRUE, background = "#2c7be5", color = "white")
+```
+
+## Rangkuman
+
+Pengujian asumsi IRT adalah langkah kritis sebelum estimasi parameter. Ingat urutan pengujian:
+
+1.  **Unidimensionalitas** → Scree plot + rasio eigenvalue + perbandingan model 1F vs 2F
+2.  **Local Independence** → Q3 statistics, pastikan tidak ada \|Q3\| \> 0.20 yang bermasalah
+3.  **Model Fit** → M2, RMSEA, CFI (dibahas lebih lanjut di @sec-analisis-fit) \## Model Logistik IRT
 
 Semua model IRT dikembangkan dari **model logistik**. Probabilitas menjawab benar diformulasikan sebagai:
 
@@ -10,13 +347,13 @@ $$P(X_{ij} = 1 \mid \theta_j) = c_i + (1 - c_i) \cdot \frac{e^{Da_i(\theta_j - b
 
 Di mana:
 
-| Parameter | Simbol | Nama | Rentang |
-|-----------|--------|------|---------|
-| Kemampuan | θ | *Theta* / Ability | −∞ hingga +∞ (praktis: −3 s/d +3) |
-| Kesulitan | *b* | *Difficulty / Location* | −3 hingga +3 |
-| Daya beda | *a* | *Discrimination* | 0 hingga +3 (umumnya 0.5–2.0) |
-| Tebakan | *c* | *Pseudo-guessing* | 0 hingga 1 (umumnya < 0.35) |
-| Konstanta | *D* | Scaling factor | 1.0 atau 1.702 |
+| Parameter | Simbol | Nama                    | Rentang                           |
+|------------------|------------------|------------------|--------------------|
+| Kemampuan | θ      | *Theta* / Ability       | −∞ hingga +∞ (praktis: −3 s/d +3) |
+| Kesulitan | *b*    | *Difficulty / Location* | −3 hingga +3                      |
+| Daya beda | *a*    | *Discrimination*        | 0 hingga +3 (umumnya 0.5–2.0)     |
+| Tebakan   | *c*    | *Pseudo-guessing*       | 0 hingga 1 (umumnya \< 0.35)      |
+| Konstanta | *D*    | Scaling factor          | 1.0 atau 1.702                    |
 
 ## Parameter Kesulitan (b)
 
@@ -54,6 +391,60 @@ ggplot(df_b, aes(x = theta, y = prob, color = b_val)) +
   theme(legend.position = "right")
 ```
 
+::: {.callout-important title="Apa yang Ditunjukkan Grafik Ini?"}
+**Baca Grafik Ini Seperti Ini**
+
+**Sumbu X (horizontal)** = Kemampuan peserta (θ/theta)
+
+-   Makin ke kanan → peserta makin pintar/mampu
+
+-   Skala -4 sampai +4, rata-rata orang berada di sekitar 0
+
+**Sumbu Y (vertikal)** = Peluang menjawab BENAR
+
+-   Makin ke atas → makin besar kemungkinan benar
+
+**Setiap kurva** = Satu soal dengan tingkat kesulitan berbeda
+
+**Kunci Membaca: Perhatikan Garis Putus-Putus 50%**
+
+Garis horizontal putus-putus di angka 50% adalah titik kunci yaitu titik di mana seorang peserta punya peluang 50:50 untuk menjawab benar.
+
+**Titik ini persis berada di nilai b soal tersebut.**
+
+| Kurva | Nilai b | Artinya | Siapa yang bisa jawab? |
+|------------------|------------------|------------------|------------------|
+| 🔵 Biru tua | b = -2 | Sangat mudah | Bahkan orang berkemampuan rendah pun bisa |
+| 🩵 Biru muda | b = -1 | Mudah | Orang rata-rata ke bawah pun berpeluang besar |
+| 🟡 Kuning | b = 0 | Sedang | Orang berkemampuan rata-rata punya peluang 50% |
+| 🟠 Oranye | b = +1 | Sulit | Baru orang di atas rata-rata yang bisa |
+| 🔴 Merah | b = +2 | Sangat sulit | Hanya orang berkemampuan sangat tinggi yang bisa |
+
+**Analogi Supaya Gampang**
+
+Bayangkan kamu punya **5 anak tangga** dengan ketinggian berbeda:
+
+-   Anak tangga biru (b = -2) = **Tangga pendek** → anak kecil pun bisa lompati
+
+-   Anak tangga merah (b = +2) = **Tangga tinggi** → hanya atlet yang bisa lompati
+
+Kurva bergeser ke **kanan** = soal makin sulit = butuh kemampuan lebih tinggi untuk punya peluang 50% menjawab benar.
+
+**Pesan Penting dari Grafik Ini**
+
+**Parameter b tidak mengubah bentuk kurva, hanya menggeser posisinya.**
+
+Semua kurva bentuknya sama persis (karena a = 1.0 tetap), hanya lokasinya yang berbeda. Ini berarti:
+
+-   Soal mudah (b negatif) → cocok untuk membedakan peserta berkemampuan rendah
+
+-   Soal sulit (b positif) → cocok untuk membedakan peserta berkemampuan tinggi
+
+-   Soal dengan b = 0 → paling informatif untuk peserta rata-rata
+
+Inilah keunggulan IRT dibanding CTT: **kita bisa tahu untuk siapa setiap soal paling berguna!**
+:::
+
 ## Parameter Daya Beda (a)
 
 Parameter **a** menentukan **kemiringan (slope)** ICC. Semakin besar nilai *a*, semakin curam ICC, dan semakin baik item membedakan peserta.
@@ -84,6 +475,53 @@ ggplot(df_a, aes(x = theta, y = prob, color = a_val)) +
   theme_minimal(base_size = 12) +
   theme(legend.position = "right")
 ```
+
+::: {.callout-important title="Apa yang Ditunjukkan Grafik Ini?"}
+**Perbedaan Utama dari Grafik Sebelumnya**
+
+Kalau grafik parameter **b** tadi soal "**seberapa sulit soalnya**" (kurva bergeser kanan-kiri), maka grafik parameter **a** ini soal "**seberapa tajam soal membedakan orang**" yang terlihat dari kemiringan kurva.
+
+Perhatikan: semua kurva **bertemu di titik yang sama (θ = 0, peluang 50%)** karena b = 0 tetap untuk semua. Yang berbeda hanya **kecuramannya**.
+
+**Baca Setiap Kurva**
+
+| Kurva      | Nilai a | Kemiringan    | Artinya                                  |
+|-----------------|-----------------|-----------------|---------------------|
+| ⬜ Abu-abu | a = 0.5 | Landai sekali | Soal **tidak bisa membedakan** peserta   |
+| 🔵 Biru    | a = 1.0 | Sedang        | Soal **cukup bisa membedakan**           |
+| 🟢 Hijau   | a = 1.5 | Curam         | Soal **baik dalam membedakan**           |
+| 🔴 Merah   | a = 2.5 | Sangat curam  | Soal **sangat tajam membedakan** peserta |
+
+**Analogi: Soal Seperti Lampu Sorot**
+
+Bayangkan soal sebagai lampu sorot yang menerangi peserta di sekitar titik kemampuan tertentu:
+
+-   **a rendah (abu-abu)** = Lampu sorot yang **menyebar lebar** → menerangi semua orang hampir sama → tidak bisa membedakan siapa pintar siapa tidak
+
+-   **a tinggi (merah)** = Lampu sorot yang **sangat fokus dan tajam** → hanya menerangi orang di sekitar θ = 0 → bisa dengan tepat memisahkan "yang mampu" dan "yang tidak mampu"
+
+**Implikasi Praktis untuk Asesmen**
+
+> **Soal yang bagus bukan cuma yang bisa dijawab, tapi yang bisa MEMISAHKAN peserta secara tepat.**
+
+-   **a \< 0.5** → Soal bermasalah, perlu direvisi atau dibuang
+
+-   **a 0.5–1.0** → Daya beda lemah–sedang
+
+-   **a \> 1.5** → Daya beda baik, ideal untuk seleksi
+
+-   **a \> 3.0** → Hati-hati! Terlalu curam bisa jadi soal bergantung pada satu "trik" tertentu
+
+**Ringkasan Perbedaan Parameter a vs b**
+
+|   | Parameter b | Parameter a |
+|------------------------|------------------------|------------------------|
+| **Mengubah** | Posisi kurva (kiri-kanan) | Kemiringan kurva (landai-curam) |
+| **Pertanyaannya** | "Seberapa sulit soal ini?" | "Seberapa tajam soal ini memilah peserta?" |
+| **Analogi** | Ketinggian anak tangga | Ketajaman pisau |
+
+Dua parameter ini bekerja **bersama-sama** untuk menentukan kualitas sebuah item dalam IRT!
+:::
 
 ## Parameter Tebakan (c)
 
@@ -156,13 +594,56 @@ ggplot(df_iif, aes(x = theta, y = info, color = item)) +
   theme(legend.position = "bottom")
 ```
 
-## Test Information Function (TIF)
+::: {.callout-important title="Apa yang Ditunjukkan Grafik Ini?"}
+**Penjelasan Grafik: Item Information Function (IIF)**
 
-TIF adalah penjumlahan IIF semua item dalam tes:
+**Konsep Baru: "Informasi" Itu Apa?**
 
-$$I(\theta) = \sum_{i=1}^{n} I_i(\theta)$$
+Setelah kita paham parameter **b** (kesulitan) dan **a** (daya beda), sekarang muncul pertanyaan yang lebih dalam:
 
-Hubungan TIF dengan Standard Error of Measurement (SEM):
+> **"Di titik kemampuan mana sebuah soal paling berguna?"**
 
-$$SEM(\theta) = \frac{1}{\sqrt{I(\theta)}}$$
+Itulah yang diukur oleh **Item Information Function (IIF)**: seberapa banyak "informasi" atau **kegunaan diagnostik** yang diberikan sebuah soal untuk mengukur peserta di level kemampuan tertentu.
 
+**Cara membaca Grafik Ini**
+
+**Sumbu X** = Kemampuan peserta (θ), dari sangat rendah (-4) hingga sangat tinggi (+4)
+
+**Sumbu Y** = Jumlah informasi yang diberikan soal — **makin tinggi = soal makin berguna** di titik kemampuan itu
+
+Semua kurva **puncaknya di θ = 0** karena b = 0 untuk semua soal.
+
+**Perbandingan Tiga Soal**
+
+| Kurva | Daya Beda (a) | Bentuk Kurva | Artinya |
+|------------------|------------------|------------------|------------------|
+| ⬜ Abu-abu | a = 0.5 (rendah) | Sangat landai & datar | Soal hampir tidak berguna di mana pun |
+| 🔵 Biru | a = 1.0 (sedang) | Agak menonjol di tengah | Soal cukup berguna, tapi menyebar luas |
+| 🔴 Merah | a = 2.0 (tinggi) | Sangat tinggi & lancip | Soal sangat berguna, tapi hanya di sekitar θ = 0 |
+
+**Analogi: Soal Seperti Dokter Spesialis**
+
+Bayangkan setiap soal adalah seorang **dokter** yang bertugas "mendiagnosis" kemampuan peserta:
+
+-   **Abu-abu (a = 0.5)** = Dokter umum yang **tidak terlalu ahli** di bidang apapun. Semua pasien ditangani dengan kemampuan yang sama-sama biasa.
+
+-   **Biru (a = 1.0)** = Dokter spesialis dengan keahlian **cukup**, bisa mendiagnosis lebih banyak jenis pasien meski tidak sempurna.
+
+-   **Merah (a = 2.0)** = Dokter **super spesialis** yang sangat ahli — diagnosisnya sangat akurat, tapi **hanya untuk pasien dengan kondisi tertentu** (di sekitar θ = 0). Untuk pasien yang terlalu ekstrem (θ = -3 atau +3), dia hampir tidak berguna.
+
+**Dua Pelajaran Penting dari Grafik Ini**
+
+**1. Makin tinggi a, makin tinggi puncak informasi**
+
+> Soal merah (a=2.0) puncaknya mencapai **1.00**, jauh di atas soal biru (0.25) dan abu-abu (\~0.06). Artinya soal dengan daya beda tinggi memberikan informasi yang **jauh lebih banyak** di titik optimalnya.
+
+**2. Tapi ada trade-off: makin tinggi a, makin sempit jangkauannya**
+
+> Soal merah sangat tajam di θ = 0, tapi di θ = ±2 informasinya sudah mendekati nol. Sementara soal biru, walaupun puncaknya lebih rendah, **menyebar lebih luas** — masih berguna untuk rentang kemampuan yang lebih beragam.
+
+**Implikasi untuk Merancang Tes**
+
+> Inilah mengapa dalam IRT kita tidak cukup hanya punya satu soal bagus — kita butuh **bank soal yang beragam**!
+
+> Tujuan tes seleksi ketat → butuh soal a tinggi, b tinggi Tujuan tes diagnostik luas → butuh soal dengan b beragam Tujuan adaptive testing → pilih soal yang IIF-nya puncak tepat di estimasi θ peserta saat itu
+:::

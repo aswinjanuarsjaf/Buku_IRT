@@ -1,0 +1,55 @@
+# Selamat Datang {.unnumbered}
+
+Buku ini ditulis untuk praktisi **HR, Assessment, dan Psikometri** yang ingin memahami **Model IRT Politomus** — bukan sekadar menjalankan kode, tapi benar-benar *mengerti apa yang sedang terjadi*.
+
+## Untuk Siapa Buku Ini?
+
+Buku ini cocok untuk Anda jika:
+
+- Sudah tahu bahwa ada yang namanya "IRT" tapi masih bingung bedanya dengan CTT
+- Pernah mendengar istilah GRM, PCM, GPCM tapi belum paham kapan menggunakannya
+- Bekerja dengan skala kompetensi (misalnya skala 0–5 BKN), rating scale, atau rubrik penilaian
+- Ingin menggunakan R untuk analisis psikometri tapi butuh panduan yang bertahap
+
+## Apa yang Akan Dipelajari?
+
+::: {.callout-note}
+## Peta Perjalanan Belajar
+
+**Bagian 1 — Fondasi** (Bab 1–4):  
+Mengapa politomus? Apa itu CRF? Apa artinya parameter a dan b?
+
+**Bagian 2 — Model Utama** (Bab 5–6):  
+GRM dan PCM dijelaskan langkah demi langkah, dari intuisi sampai output R.
+
+**Bagian 3 — Pengambilan Keputusan** (Bab 7–9):  
+Memilih model, membaca output, dan menerapkan di konteks ASN Indonesia.
+:::
+
+## Prinsip Penulisan
+
+Setiap konsep diperkenalkan dengan urutan:
+
+1. 🧭 **Analogi** — bayangkan situasi sehari-hari dulu
+2. 📐 **Konsep** — baru masuk ke definisi teknis
+3. 📊 **Visualisasi** — lihat seperti apa bentuknya
+4. 💻 **Kode R** — bisa langsung dicoba
+5. 🎯 **Interpretasi** — apa artinya untuk pekerjaan kita
+
+## Paket R yang Dibutuhkan
+
+```r
+install.packages(c(
+  "mirt",       # Model utama GRM, GPCM, RSM
+  "TAM",        # Rasch family (PCM, RSM)
+  "ggplot2",    # Visualisasi
+  "gridExtra",  # Tata letak plot
+  "knitr",      # Tabel
+  "kableExtra", # Format tabel
+  "psych"       # Statistik deskriptif
+))
+```
+
+---
+
+*Mulai dari Bab 1 →*

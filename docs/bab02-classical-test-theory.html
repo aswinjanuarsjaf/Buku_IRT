@@ -417,7 +417,7 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
- <span class="menu-text">Bagian III: Implementasi di R</span></a>
+ <span class="menu-text">Bagian III: Contoh dan Studi Kasus 1</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -425,26 +425,14 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./bab08-setup-r.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Setup R untuk Analisis IRT</span></span></a>
+  <a href="./contoh-ctt.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Analisis Soal — Classical Test Theory (CTT)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./bab09-estimasi-parameter.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Estimasi Parameter IRT</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./bab10-item-fit.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Item Fit Analysis</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./bab11-person-fit.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Bab 11: Person Fit</span></span></a>
+  <a href="./contoh-irt.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Analisis Soal Item Response Theory (IRT)</span></span></a>
   </div>
 </li>
       </ul>
@@ -452,7 +440,7 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
- <span class="menu-text">Bagian IV: Aplikasi Praktis</span></a>
+ <span class="menu-text">Bagian IV: Implementasi di R</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -460,20 +448,32 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./bab13-wright-map.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Wright Map &amp; Person-Item Map</span></span></a>
+  <a href="./bab08-setup-r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Setup R untuk Analisis IRT</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./bab14-computer-adaptive.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Bab 14: Computer Adaptive</span></span></a>
+  <a href="./bab09-estimasi-parameter.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Estimasi Parameter IRT</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./bab15-pelaporan.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Pelaporan Psikometri Berbasis IRT</span></span></a>
+  <a href="./bab10-item-fit.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Item Fit Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./bab11-person-fit.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Bab 11: Person Fit</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./bab12-wright-map.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Wright Map &amp; Person-Item Map</span></span></a>
   </div>
 </li>
       </ul>
@@ -574,6 +574,49 @@ Figure&nbsp;2.1: Visualisasi Komponen Varians dalam CTT
 </figcaption>
 </figure>
 </div>
+</div>
+</div>
+<div class="callout callout-style-simple callout-important no-icon callout-titled" title="Apa yang Ditunjukkan Grafik Ini?">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Apa yang Ditunjukkan Grafik Ini?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Grafik ini memperlihatkan dari mana asal varians (variasi) skor peserta — berapa persen yang “nyata” dan berapa persen yang “<em>noise</em>”.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 26%">
+<col style="width: 47%">
+<col style="width: 26%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Warna</th>
+<th>Makna</th>
+<th>Proporsi</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>🔴 Merah (True Score Variance)</td>
+<td>Variasi yang benar-benar mencerminkan perbedaan kemampuan antar peserta</td>
+<td><strong>75%</strong></td>
+</tr>
+<tr class="even">
+<td>🔵 Biru (Error Variance)</td>
+<td>Variasi yang disebabkan faktor kebetulan/gangguan</td>
+<td><strong>25%</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>Apa itu Reliabilitas 0.75?</em></strong></p>
+<p>Angka 0.75 itu persis adalah proporsi merahnya, artinya:</p>
+<p>“<strong>75% dari perbedaan skor antar peserta mencerminkan perbedaan kemampuan yang nyata. Sisanya, 25%, hanyalah kebetulan/error</strong>.”</p>
+<p>Analoginya seperti timbangan. Reliabilitas 0.75 berarti timbanganmu cukup akurat tapi masih ada sedikit goyang. Kalau reliabilitasnya 1.0, berarti semua merah timbangan sempurna, nol error.</p>
 </div>
 </div>
 </section>
@@ -789,17 +832,69 @@ Figure&nbsp;2.2: Demonstrasi Sample-Dependency pada CTT
 </div>
 </div>
 </div>
-<div class="callout callout-style-simple callout-important no-icon callout-titled" title="Implikasi Sample-Dependency">
+<div class="callout callout-style-simple callout-important no-icon callout-titled" title="Apa yang Ditunjukkan Grafik Ini?">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Important</span>Implikasi Sample-Dependency
+<span class="screen-reader-only">Important</span>Apa yang Ditunjukkan Grafik Ini?
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Item yang tampak “sedang” di kelompok kemampuan tinggi akan tampak “sulit” di kelompok kemampuan rendah. Ini menyulitkan <strong>ekuivalensi tes</strong> dan <strong>norma lintas kelompok</strong>.</p>
+<p>Satu soal yang <strong>sama persis</strong> diujikan ke tiga kelompok berbeda, dan hasilnya:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Kelompok</th>
+<th>n</th>
+<th>Tingkat Kesulitan (p)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>🟢 Gabungan</td>
+<td>200 orang</td>
+<td>p = 0.58</td>
+</tr>
+<tr class="even">
+<td>🔴 Kemampuan Rendah</td>
+<td>100 orang</td>
+<td>p = 0.31</td>
+</tr>
+<tr class="odd">
+<td>🔵 Kemampuan Tinggi</td>
+<td>100 orang</td>
+<td>p = 0.85</td>
+</tr>
+</tbody>
+</table>
+<blockquote class="blockquote">
+<p>Soalnya <strong>tidak berubah</strong> — yang berubah hanya <strong>siapa yang mengerjakan</strong>.</p>
+</blockquote>
+<p><strong>Memahami Angka p dalam CTT</strong></p>
+<p>Dalam CTT, tingkat kesulitan (<em>p</em>) dihitung sederhana:</p>
+<p><span class="math display">\[p = \frac{\text{jumlah yang menjawab benar}}{\text{total peserta}}\]</span></p>
+<ul>
+<li><p><strong>p mendekati 1.0</strong> : soal mudah (hampir semua benar)</p></li>
+<li><p><strong>p mendekati 0.0</strong> : soal sulit (hampir semua salah)</p></li>
+<li><p><strong>p = 0.5</strong> : soal sedang</p></li>
+</ul>
+<p><strong>Masalahnya: Soal Sama, Angka Berbeda!</strong></p>
+<ul>
+<li><p><strong>Kelompok Kemampuan Rendah (merah, p = 0.31)</strong> Hanya 31 dari 100 orang yang benar → soal terlihat <strong>sulit</strong></p></li>
+<li><p><strong>Kelompok Kemampuan Tinggi (biru, p = 0.85)</strong> 85 dari 100 orang yang benar → soal terlihat <strong>mudah</strong></p></li>
+<li><p><strong>Gabungan (hijau, p = 0.58)</strong> Rata-rata keduanya → soal terlihat <strong>sedang</strong></p></li>
+</ul>
+<p>Padahal sekali lagi — <strong>soalnya sama persis!</strong></p>
+<p><strong>Analogi: Soal Matematika di Sekolah Berbeda</strong></p>
+<p>Bayangkan soal cerita matematika yang sama diberikan ke:</p>
+<ul>
+<li><p>Siswa SD kelas 6 → susah, nilai rata-rata 31</p></li>
+<li><p>Siswa SMA kelas 10 → gampang, nilai rata-rata 85</p></li>
+</ul>
+<p>Apakah soalnya berubah? <strong>Tidak</strong>. Yang berubah adalah kemampuan pesertanya.</p>
+<p>Tapi dalam CTT, kita akan menyimpulkan soal itu “sulit” atau “mudah” tergantung ke sekolah mana kita memberikannya — ini jelas <strong>tidak adil dan tidak akurat</strong>.</p>
 </div>
 </div>
 </section>
@@ -808,9 +903,9 @@ Figure&nbsp;2.2: Demonstrasi Sample-Dependency pada CTT
 <h2 data-number="2.5" class="anchored" data-anchor-id="perbandingan-ctt-vs-irt"><span class="header-section-number">2.5</span> Perbandingan CTT vs IRT</h2>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 40%">
-<col style="width: 29%">
-<col style="width: 29%">
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -862,6 +957,7 @@ Figure&nbsp;2.2: Demonstrasi Sample-Dependency pada CTT
 </tr>
 </tbody>
 </table>
+<p>:::</p>
 
 
 <!-- -->
@@ -1388,110 +1484,170 @@ Figure&nbsp;2.2: Demonstrasi Sample-Dependency pada CTT
 <span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>)</span>
 <span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a><span class="fu">## Statistik Item dalam CTT</span></span>
-<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tbl-statistik-ctt</span></span>
-<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: "Statistik Item CTT: Contoh Perhitungan"</span></span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>::: {.callout-important title="Apa yang Ditunjukkan Grafik Ini?"}</span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>Grafik ini memperlihatkan dari mana asal varians (variasi) skor peserta — berapa persen yang "nyata" dan berapa persen yang "*noise*".</span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Warna <span class="pp">|</span> Makna <span class="pp">|</span> Proporsi <span class="pp">|</span></span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a><span class="pp">|-------------------|----------------------------------|-------------------|</span></span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 🔴 Merah (True Score Variance) <span class="pp">|</span> Variasi yang benar-benar mencerminkan perbedaan kemampuan antar peserta <span class="pp">|</span> **75%** <span class="pp">|</span></span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 🔵 Biru (Error Variance) <span class="pp">|</span> Variasi yang disebabkan faktor kebetulan/gangguan <span class="pp">|</span> **25%** <span class="pp">|</span></span>
 <span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
-<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a>n_item <span class="ot">&lt;-</span> <span class="dv">10</span></span>
-<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a>n_peserta <span class="ot">&lt;-</span> <span class="dv">200</span></span>
-<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulasi data dikotomis</span></span>
-<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a>data_sim <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
-<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rbinom</span>(n_peserta <span class="sc">*</span> n_item, <span class="dv">1</span>, </span>
-<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>         <span class="fu">rep</span>(<span class="fu">seq</span>(<span class="fl">0.3</span>, <span class="fl">0.8</span>, <span class="at">length.out =</span> n_item), <span class="at">each =</span> n_peserta)),</span>
-<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a>  <span class="at">nrow =</span> n_peserta,</span>
-<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a>  <span class="at">ncol =</span> n_item</span>
-<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(data_sim) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"Item_"</span>, <span class="dv">1</span><span class="sc">:</span>n_item)</span>
-<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a>total_score <span class="ot">&lt;-</span> <span class="fu">rowSums</span>(data_sim)</span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>***Apa itu Reliabilitas 0.75?***</span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a>Angka 0.75 itu persis adalah proporsi merahnya, artinya:</span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a>"**75% dari perbedaan skor antar peserta mencerminkan perbedaan kemampuan yang nyata. Sisanya, 25%, hanyalah kebetulan/error**."</span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>Analoginya seperti timbangan. Reliabilitas 0.75 berarti timbanganmu cukup akurat tapi masih ada sedikit goyang. Kalau reliabilitasnya 1.0, berarti semua merah timbangan sempurna, nol error.</span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a><span class="fu">## Statistik Item dalam CTT</span></span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tbl-statistik-ctt</span></span>
+<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: "Statistik Item CTT: Contoh Perhitungan"</span></span>
 <span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a><span class="co"># Hitung statistik CTT</span></span>
-<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a>stats_ctt <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a>  <span class="at">Item =</span> <span class="fu">paste0</span>(<span class="st">"Item "</span>, <span class="dv">1</span><span class="sc">:</span>n_item),</span>
-<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">Tingkat Kesulitan (p)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">round</span>(<span class="fu">colMeans</span>(data_sim), <span class="dv">3</span>),</span>
-<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">Daya Beda (r_pbis)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">round</span>(<span class="fu">apply</span>(data_sim, <span class="dv">2</span>, <span class="cf">function</span>(x) </span>
-<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cor</span>(x, total_score <span class="sc">-</span> x)), <span class="dv">3</span>)</span>
-<span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
-<span id="cb4-78"><a href="#cb4-78" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb4-79"><a href="#cb4-79" aria-hidden="true" tabindex="-1"></a>    <span class="at">Kategori_p =</span> <span class="fu">case_when</span>(</span>
-<span id="cb4-80"><a href="#cb4-80" aria-hidden="true" tabindex="-1"></a>      <span class="st">`</span><span class="at">Tingkat.Kesulitan..p.</span><span class="st">`</span> <span class="sc">&lt;</span> <span class="fl">0.30</span> <span class="sc">~</span> <span class="st">"Sulit"</span>,</span>
-<span id="cb4-81"><a href="#cb4-81" aria-hidden="true" tabindex="-1"></a>      <span class="st">`</span><span class="at">Tingkat.Kesulitan..p.</span><span class="st">`</span> <span class="sc">&gt;</span> <span class="fl">0.70</span> <span class="sc">~</span> <span class="st">"Mudah"</span>,</span>
-<span id="cb4-82"><a href="#cb4-82" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"Sedang"</span></span>
-<span id="cb4-83"><a href="#cb4-83" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb4-84"><a href="#cb4-84" aria-hidden="true" tabindex="-1"></a>    <span class="at">Kategori_r =</span> <span class="fu">case_when</span>(</span>
-<span id="cb4-85"><a href="#cb4-85" aria-hidden="true" tabindex="-1"></a>      <span class="st">`</span><span class="at">Daya.Beda..r_pbis.</span><span class="st">`</span> <span class="sc">&lt;</span> <span class="fl">0.20</span> <span class="sc">~</span> <span class="st">"Buruk"</span>,</span>
-<span id="cb4-86"><a href="#cb4-86" aria-hidden="true" tabindex="-1"></a>      <span class="st">`</span><span class="at">Daya.Beda..r_pbis.</span><span class="st">`</span> <span class="sc">&lt;</span> <span class="fl">0.30</span> <span class="sc">~</span> <span class="st">"Cukup"</span>,</span>
-<span id="cb4-87"><a href="#cb4-87" aria-hidden="true" tabindex="-1"></a>      <span class="st">`</span><span class="at">Daya.Beda..r_pbis.</span><span class="st">`</span> <span class="sc">&lt;</span> <span class="fl">0.40</span> <span class="sc">~</span> <span class="st">"Baik"</span>,</span>
-<span id="cb4-88"><a href="#cb4-88" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"Sangat Baik"</span></span>
-<span id="cb4-89"><a href="#cb4-89" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb4-90"><a href="#cb4-90" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb4-91"><a href="#cb4-91" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-92"><a href="#cb4-92" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(stats_ctt, <span class="at">align =</span> <span class="st">"c"</span>)</span>
-<span id="cb4-93"><a href="#cb4-93" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb4-94"><a href="#cb4-94" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-95"><a href="#cb4-95" aria-hidden="true" tabindex="-1"></a><span class="fu">## Keterbatasan CTT: Demonstrasi</span></span>
-<span id="cb4-96"><a href="#cb4-96" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-97"><a href="#cb4-97" aria-hidden="true" tabindex="-1"></a><span class="fu">### Sample-Dependency</span></span>
-<span id="cb4-98"><a href="#cb4-98" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-101"><a href="#cb4-101" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb4-102"><a href="#cb4-102" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-sample-dependency</span></span>
-<span id="cb4-103"><a href="#cb4-103" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Demonstrasi Sample-Dependency pada CTT"</span></span>
-<span id="cb4-104"><a href="#cb4-104" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-105"><a href="#cb4-105" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb4-106"><a href="#cb4-106" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-107"><a href="#cb4-107" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulasi dua kelompok berbeda kemampuan</span></span>
-<span id="cb4-108"><a href="#cb4-108" aria-hidden="true" tabindex="-1"></a>kelompok_tinggi <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(<span class="dv">100</span>, <span class="dv">1</span>, <span class="fl">0.85</span>)</span>
-<span id="cb4-109"><a href="#cb4-109" aria-hidden="true" tabindex="-1"></a>kelompok_rendah <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(<span class="dv">100</span>, <span class="dv">1</span>, <span class="fl">0.35</span>)</span>
-<span id="cb4-110"><a href="#cb4-110" aria-hidden="true" tabindex="-1"></a>kelompok_campur <span class="ot">&lt;-</span> <span class="fu">c</span>(kelompok_tinggi, kelompok_rendah)</span>
+<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a>n_item <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a>n_peserta <span class="ot">&lt;-</span> <span class="dv">200</span></span>
+<span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-78"><a href="#cb4-78" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulasi data dikotomis</span></span>
+<span id="cb4-79"><a href="#cb4-79" aria-hidden="true" tabindex="-1"></a>data_sim <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
+<span id="cb4-80"><a href="#cb4-80" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rbinom</span>(n_peserta <span class="sc">*</span> n_item, <span class="dv">1</span>, </span>
+<span id="cb4-81"><a href="#cb4-81" aria-hidden="true" tabindex="-1"></a>         <span class="fu">rep</span>(<span class="fu">seq</span>(<span class="fl">0.3</span>, <span class="fl">0.8</span>, <span class="at">length.out =</span> n_item), <span class="at">each =</span> n_peserta)),</span>
+<span id="cb4-82"><a href="#cb4-82" aria-hidden="true" tabindex="-1"></a>  <span class="at">nrow =</span> n_peserta,</span>
+<span id="cb4-83"><a href="#cb4-83" aria-hidden="true" tabindex="-1"></a>  <span class="at">ncol =</span> n_item</span>
+<span id="cb4-84"><a href="#cb4-84" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-85"><a href="#cb4-85" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(data_sim) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"Item_"</span>, <span class="dv">1</span><span class="sc">:</span>n_item)</span>
+<span id="cb4-86"><a href="#cb4-86" aria-hidden="true" tabindex="-1"></a>total_score <span class="ot">&lt;-</span> <span class="fu">rowSums</span>(data_sim)</span>
+<span id="cb4-87"><a href="#cb4-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-88"><a href="#cb4-88" aria-hidden="true" tabindex="-1"></a><span class="co"># Hitung statistik CTT</span></span>
+<span id="cb4-89"><a href="#cb4-89" aria-hidden="true" tabindex="-1"></a>stats_ctt <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb4-90"><a href="#cb4-90" aria-hidden="true" tabindex="-1"></a>  <span class="at">Item =</span> <span class="fu">paste0</span>(<span class="st">"Item "</span>, <span class="dv">1</span><span class="sc">:</span>n_item),</span>
+<span id="cb4-91"><a href="#cb4-91" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">Tingkat Kesulitan (p)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">round</span>(<span class="fu">colMeans</span>(data_sim), <span class="dv">3</span>),</span>
+<span id="cb4-92"><a href="#cb4-92" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">Daya Beda (r_pbis)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">round</span>(<span class="fu">apply</span>(data_sim, <span class="dv">2</span>, <span class="cf">function</span>(x) </span>
+<span id="cb4-93"><a href="#cb4-93" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cor</span>(x, total_score <span class="sc">-</span> x)), <span class="dv">3</span>)</span>
+<span id="cb4-94"><a href="#cb4-94" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-95"><a href="#cb4-95" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb4-96"><a href="#cb4-96" aria-hidden="true" tabindex="-1"></a>    <span class="at">Kategori_p =</span> <span class="fu">case_when</span>(</span>
+<span id="cb4-97"><a href="#cb4-97" aria-hidden="true" tabindex="-1"></a>      <span class="st">`</span><span class="at">Tingkat.Kesulitan..p.</span><span class="st">`</span> <span class="sc">&lt;</span> <span class="fl">0.30</span> <span class="sc">~</span> <span class="st">"Sulit"</span>,</span>
+<span id="cb4-98"><a href="#cb4-98" aria-hidden="true" tabindex="-1"></a>      <span class="st">`</span><span class="at">Tingkat.Kesulitan..p.</span><span class="st">`</span> <span class="sc">&gt;</span> <span class="fl">0.70</span> <span class="sc">~</span> <span class="st">"Mudah"</span>,</span>
+<span id="cb4-99"><a href="#cb4-99" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"Sedang"</span></span>
+<span id="cb4-100"><a href="#cb4-100" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb4-101"><a href="#cb4-101" aria-hidden="true" tabindex="-1"></a>    <span class="at">Kategori_r =</span> <span class="fu">case_when</span>(</span>
+<span id="cb4-102"><a href="#cb4-102" aria-hidden="true" tabindex="-1"></a>      <span class="st">`</span><span class="at">Daya.Beda..r_pbis.</span><span class="st">`</span> <span class="sc">&lt;</span> <span class="fl">0.20</span> <span class="sc">~</span> <span class="st">"Buruk"</span>,</span>
+<span id="cb4-103"><a href="#cb4-103" aria-hidden="true" tabindex="-1"></a>      <span class="st">`</span><span class="at">Daya.Beda..r_pbis.</span><span class="st">`</span> <span class="sc">&lt;</span> <span class="fl">0.30</span> <span class="sc">~</span> <span class="st">"Cukup"</span>,</span>
+<span id="cb4-104"><a href="#cb4-104" aria-hidden="true" tabindex="-1"></a>      <span class="st">`</span><span class="at">Daya.Beda..r_pbis.</span><span class="st">`</span> <span class="sc">&lt;</span> <span class="fl">0.40</span> <span class="sc">~</span> <span class="st">"Baik"</span>,</span>
+<span id="cb4-105"><a href="#cb4-105" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"Sangat Baik"</span></span>
+<span id="cb4-106"><a href="#cb4-106" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb4-107"><a href="#cb4-107" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb4-108"><a href="#cb4-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-109"><a href="#cb4-109" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(stats_ctt, <span class="at">align =</span> <span class="st">"c"</span>)</span>
+<span id="cb4-110"><a href="#cb4-110" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb4-111"><a href="#cb4-111" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-112"><a href="#cb4-112" aria-hidden="true" tabindex="-1"></a>p_values <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb4-113"><a href="#cb4-113" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>(kelompok_tinggi),</span>
-<span id="cb4-114"><a href="#cb4-114" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>(kelompok_rendah),</span>
-<span id="cb4-115"><a href="#cb4-115" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>(kelompok_campur)</span>
-<span id="cb4-116"><a href="#cb4-116" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb4-117"><a href="#cb4-117" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-118"><a href="#cb4-118" aria-hidden="true" tabindex="-1"></a>df_sd <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb4-119"><a href="#cb4-119" aria-hidden="true" tabindex="-1"></a>  <span class="at">Kelompok =</span> <span class="fu">c</span>(<span class="st">"Kemampuan Tinggi</span><span class="sc">\n</span><span class="st">(n=100)"</span>, </span>
-<span id="cb4-120"><a href="#cb4-120" aria-hidden="true" tabindex="-1"></a>               <span class="st">"Kemampuan Rendah</span><span class="sc">\n</span><span class="st">(n=100)"</span>, </span>
-<span id="cb4-121"><a href="#cb4-121" aria-hidden="true" tabindex="-1"></a>               <span class="st">"Gabungan</span><span class="sc">\n</span><span class="st">(n=200)"</span>),</span>
-<span id="cb4-122"><a href="#cb4-122" aria-hidden="true" tabindex="-1"></a>  <span class="at">p_value =</span> p_values</span>
-<span id="cb4-123"><a href="#cb4-123" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb4-124"><a href="#cb4-124" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-125"><a href="#cb4-125" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_sd, <span class="fu">aes</span>(<span class="at">x =</span> Kelompok, <span class="at">y =</span> p_value, <span class="at">fill =</span> Kelompok)) <span class="sc">+</span></span>
-<span id="cb4-126"><a href="#cb4-126" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">width =</span> <span class="fl">0.5</span>, <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb4-127"><a href="#cb4-127" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">round</span>(p_value, <span class="dv">3</span>)), <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">4</span>, <span class="at">fontface =</span> <span class="st">"bold"</span>) <span class="sc">+</span></span>
-<span id="cb4-128"><a href="#cb4-128" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#2ecc71"</span>, <span class="st">"#e74c3c"</span>, <span class="st">"#3498db"</span>)) <span class="sc">+</span></span>
-<span id="cb4-129"><a href="#cb4-129" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">1.1</span>), <span class="at">labels =</span> percent) <span class="sc">+</span></span>
-<span id="cb4-130"><a href="#cb4-130" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb4-131"><a href="#cb4-131" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Tingkat Kesulitan Item yang Sama pada Sampel Berbeda"</span>,</span>
-<span id="cb4-132"><a href="#cb4-132" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Item CTT yang 'sama' memiliki p-value berbeda tergantung sampel"</span>,</span>
-<span id="cb4-133"><a href="#cb4-133" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Tingkat Kesulitan (p)"</span></span>
-<span id="cb4-134"><a href="#cb4-134" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb4-135"><a href="#cb4-135" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span>
-<span id="cb4-136"><a href="#cb4-136" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb4-137"><a href="#cb4-137" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-138"><a href="#cb4-138" aria-hidden="true" tabindex="-1"></a>::: {.callout-important title="Implikasi Sample-Dependency"}</span>
-<span id="cb4-139"><a href="#cb4-139" aria-hidden="true" tabindex="-1"></a>Item yang tampak "sedang" di kelompok kemampuan tinggi akan tampak "sulit" di kelompok kemampuan rendah. Ini menyulitkan **ekuivalensi tes** dan **norma lintas kelompok**.</span>
-<span id="cb4-140"><a href="#cb4-140" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb4-112"><a href="#cb4-112" aria-hidden="true" tabindex="-1"></a><span class="fu">## Keterbatasan CTT: Demonstrasi</span></span>
+<span id="cb4-113"><a href="#cb4-113" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-114"><a href="#cb4-114" aria-hidden="true" tabindex="-1"></a><span class="fu">### Sample-Dependency</span></span>
+<span id="cb4-115"><a href="#cb4-115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-118"><a href="#cb4-118" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb4-119"><a href="#cb4-119" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-sample-dependency</span></span>
+<span id="cb4-120"><a href="#cb4-120" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Demonstrasi Sample-Dependency pada CTT"</span></span>
+<span id="cb4-121"><a href="#cb4-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-122"><a href="#cb4-122" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb4-123"><a href="#cb4-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-124"><a href="#cb4-124" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulasi dua kelompok berbeda kemampuan</span></span>
+<span id="cb4-125"><a href="#cb4-125" aria-hidden="true" tabindex="-1"></a>kelompok_tinggi <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(<span class="dv">100</span>, <span class="dv">1</span>, <span class="fl">0.85</span>)</span>
+<span id="cb4-126"><a href="#cb4-126" aria-hidden="true" tabindex="-1"></a>kelompok_rendah <span class="ot">&lt;-</span> <span class="fu">rbinom</span>(<span class="dv">100</span>, <span class="dv">1</span>, <span class="fl">0.35</span>)</span>
+<span id="cb4-127"><a href="#cb4-127" aria-hidden="true" tabindex="-1"></a>kelompok_campur <span class="ot">&lt;-</span> <span class="fu">c</span>(kelompok_tinggi, kelompok_rendah)</span>
+<span id="cb4-128"><a href="#cb4-128" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-129"><a href="#cb4-129" aria-hidden="true" tabindex="-1"></a>p_values <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb4-130"><a href="#cb4-130" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>(kelompok_tinggi),</span>
+<span id="cb4-131"><a href="#cb4-131" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>(kelompok_rendah),</span>
+<span id="cb4-132"><a href="#cb4-132" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>(kelompok_campur)</span>
+<span id="cb4-133"><a href="#cb4-133" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-134"><a href="#cb4-134" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-135"><a href="#cb4-135" aria-hidden="true" tabindex="-1"></a>df_sd <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb4-136"><a href="#cb4-136" aria-hidden="true" tabindex="-1"></a>  <span class="at">Kelompok =</span> <span class="fu">c</span>(<span class="st">"Kemampuan Tinggi</span><span class="sc">\n</span><span class="st">(n=100)"</span>, </span>
+<span id="cb4-137"><a href="#cb4-137" aria-hidden="true" tabindex="-1"></a>               <span class="st">"Kemampuan Rendah</span><span class="sc">\n</span><span class="st">(n=100)"</span>, </span>
+<span id="cb4-138"><a href="#cb4-138" aria-hidden="true" tabindex="-1"></a>               <span class="st">"Gabungan</span><span class="sc">\n</span><span class="st">(n=200)"</span>),</span>
+<span id="cb4-139"><a href="#cb4-139" aria-hidden="true" tabindex="-1"></a>  <span class="at">p_value =</span> p_values</span>
+<span id="cb4-140"><a href="#cb4-140" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb4-141"><a href="#cb4-141" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-142"><a href="#cb4-142" aria-hidden="true" tabindex="-1"></a><span class="fu">## Perbandingan CTT vs IRT</span></span>
-<span id="cb4-143"><a href="#cb4-143" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-144"><a href="#cb4-144" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Aspek <span class="pp">|</span> CTT <span class="pp">|</span> IRT <span class="pp">|</span></span>
-<span id="cb4-145"><a href="#cb4-145" aria-hidden="true" tabindex="-1"></a><span class="pp">|-----------------------------|---------------------|---------------------|</span></span>
-<span id="cb4-146"><a href="#cb4-146" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Unit analisis** <span class="pp">|</span> Skor total <span class="pp">|</span> Parameter item &amp; person <span class="pp">|</span></span>
-<span id="cb4-147"><a href="#cb4-147" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Estimasi kemampuan** <span class="pp">|</span> Skor mentah / skor standar <span class="pp">|</span> Logit (θ) <span class="pp">|</span></span>
-<span id="cb4-148"><a href="#cb4-148" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Ketergantungan sampel** <span class="pp">|</span> Ya — item statistics berubah <span class="pp">|</span> Tidak — parameter invariant <span class="pp">|</span></span>
-<span id="cb4-149"><a href="#cb4-149" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Error pengukuran** <span class="pp">|</span> Konstan untuk semua peserta <span class="pp">|</span> Bervariasi per level θ <span class="pp">|</span></span>
-<span id="cb4-150"><a href="#cb4-150" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Kompleksitas komputasi** <span class="pp">|</span> Rendah <span class="pp">|</span> Tinggi <span class="pp">|</span></span>
-<span id="cb4-151"><a href="#cb4-151" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Ukuran sampel** <span class="pp">|</span> Minimal 100–200 <span class="pp">|</span> Minimal 200–500+ <span class="pp">|</span></span>
-<span id="cb4-152"><a href="#cb4-152" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Equating** <span class="pp">|</span> Terbatas <span class="pp">|</span> Lebih kuat <span class="pp">|</span></span>
-<span id="cb4-153"><a href="#cb4-153" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Aplikasi CAT** <span class="pp">|</span> Tidak memungkinkan <span class="pp">|</span> Optimal <span class="pp">|</span></span>
+<span id="cb4-142"><a href="#cb4-142" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_sd, <span class="fu">aes</span>(<span class="at">x =</span> Kelompok, <span class="at">y =</span> p_value, <span class="at">fill =</span> Kelompok)) <span class="sc">+</span></span>
+<span id="cb4-143"><a href="#cb4-143" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">width =</span> <span class="fl">0.5</span>, <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb4-144"><a href="#cb4-144" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">round</span>(p_value, <span class="dv">3</span>)), <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">4</span>, <span class="at">fontface =</span> <span class="st">"bold"</span>) <span class="sc">+</span></span>
+<span id="cb4-145"><a href="#cb4-145" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#2ecc71"</span>, <span class="st">"#e74c3c"</span>, <span class="st">"#3498db"</span>)) <span class="sc">+</span></span>
+<span id="cb4-146"><a href="#cb4-146" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">1.1</span>), <span class="at">labels =</span> percent) <span class="sc">+</span></span>
+<span id="cb4-147"><a href="#cb4-147" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb4-148"><a href="#cb4-148" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Tingkat Kesulitan Item yang Sama pada Sampel Berbeda"</span>,</span>
+<span id="cb4-149"><a href="#cb4-149" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Item CTT yang 'sama' memiliki p-value berbeda tergantung sampel"</span>,</span>
+<span id="cb4-150"><a href="#cb4-150" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Tingkat Kesulitan (p)"</span></span>
+<span id="cb4-151"><a href="#cb4-151" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb4-152"><a href="#cb4-152" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span>
+<span id="cb4-153"><a href="#cb4-153" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb4-154"><a href="#cb4-154" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-155"><a href="#cb4-155" aria-hidden="true" tabindex="-1"></a>::: {.callout-important title="Apa yang Ditunjukkan Grafik Ini?"}</span>
+<span id="cb4-156"><a href="#cb4-156" aria-hidden="true" tabindex="-1"></a>Satu soal yang **sama persis** diujikan ke tiga kelompok berbeda, dan hasilnya:</span>
+<span id="cb4-157"><a href="#cb4-157" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-158"><a href="#cb4-158" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Kelompok            <span class="pp">|</span> n         <span class="pp">|</span> Tingkat Kesulitan (p) <span class="pp">|</span></span>
+<span id="cb4-159"><a href="#cb4-159" aria-hidden="true" tabindex="-1"></a><span class="pp">|---------------------|-----------|-----------------------|</span></span>
+<span id="cb4-160"><a href="#cb4-160" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 🟢 Gabungan         <span class="pp">|</span> 200 orang <span class="pp">|</span> p = 0.58              <span class="pp">|</span></span>
+<span id="cb4-161"><a href="#cb4-161" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 🔴 Kemampuan Rendah <span class="pp">|</span> 100 orang <span class="pp">|</span> p = 0.31              <span class="pp">|</span></span>
+<span id="cb4-162"><a href="#cb4-162" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 🔵 Kemampuan Tinggi <span class="pp">|</span> 100 orang <span class="pp">|</span> p = 0.85              <span class="pp">|</span></span>
+<span id="cb4-163"><a href="#cb4-163" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-164"><a href="#cb4-164" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; Soalnya **tidak berubah** — yang berubah hanya **siapa yang mengerjakan**.</span></span>
+<span id="cb4-165"><a href="#cb4-165" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-166"><a href="#cb4-166" aria-hidden="true" tabindex="-1"></a>**Memahami Angka p dalam CTT**</span>
+<span id="cb4-167"><a href="#cb4-167" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-168"><a href="#cb4-168" aria-hidden="true" tabindex="-1"></a>Dalam CTT, tingkat kesulitan (*p*) dihitung sederhana:</span>
+<span id="cb4-169"><a href="#cb4-169" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-170"><a href="#cb4-170" aria-hidden="true" tabindex="-1"></a>$$p = \frac{\text{jumlah yang menjawab benar}}{\text{total peserta}}$$</span>
+<span id="cb4-171"><a href="#cb4-171" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-172"><a href="#cb4-172" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**p mendekati 1.0** : soal mudah (hampir semua benar)</span>
+<span id="cb4-173"><a href="#cb4-173" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-174"><a href="#cb4-174" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**p mendekati 0.0** : soal sulit (hampir semua salah)</span>
+<span id="cb4-175"><a href="#cb4-175" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-176"><a href="#cb4-176" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**p = 0.5** : soal sedang</span>
+<span id="cb4-177"><a href="#cb4-177" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-178"><a href="#cb4-178" aria-hidden="true" tabindex="-1"></a>**Masalahnya: Soal Sama, Angka Berbeda!**</span>
+<span id="cb4-179"><a href="#cb4-179" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-180"><a href="#cb4-180" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**Kelompok Kemampuan Rendah (merah, p = 0.31)** Hanya 31 dari 100 orang yang benar → soal terlihat **sulit**</span>
+<span id="cb4-181"><a href="#cb4-181" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-182"><a href="#cb4-182" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**Kelompok Kemampuan Tinggi (biru, p = 0.85)** 85 dari 100 orang yang benar → soal terlihat **mudah**</span>
+<span id="cb4-183"><a href="#cb4-183" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-184"><a href="#cb4-184" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**Gabungan (hijau, p = 0.58)** Rata-rata keduanya → soal terlihat **sedang**</span>
+<span id="cb4-185"><a href="#cb4-185" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-186"><a href="#cb4-186" aria-hidden="true" tabindex="-1"></a>Padahal sekali lagi — **soalnya sama persis!**</span>
+<span id="cb4-187"><a href="#cb4-187" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-188"><a href="#cb4-188" aria-hidden="true" tabindex="-1"></a>**Analogi: Soal Matematika di Sekolah Berbeda**</span>
+<span id="cb4-189"><a href="#cb4-189" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-190"><a href="#cb4-190" aria-hidden="true" tabindex="-1"></a>Bayangkan soal cerita matematika yang sama diberikan ke:</span>
+<span id="cb4-191"><a href="#cb4-191" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-192"><a href="#cb4-192" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Siswa SD kelas 6 → susah, nilai rata-rata 31</span>
+<span id="cb4-193"><a href="#cb4-193" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-194"><a href="#cb4-194" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Siswa SMA kelas 10 → gampang, nilai rata-rata 85</span>
+<span id="cb4-195"><a href="#cb4-195" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-196"><a href="#cb4-196" aria-hidden="true" tabindex="-1"></a>Apakah soalnya berubah? **Tidak**. Yang berubah adalah kemampuan pesertanya.</span>
+<span id="cb4-197"><a href="#cb4-197" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-198"><a href="#cb4-198" aria-hidden="true" tabindex="-1"></a>Tapi dalam CTT, kita akan menyimpulkan soal itu "sulit" atau "mudah" tergantung ke sekolah mana kita memberikannya — ini jelas **tidak adil dan tidak akurat**. </span>
+<span id="cb4-199"><a href="#cb4-199" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb4-200"><a href="#cb4-200" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-201"><a href="#cb4-201" aria-hidden="true" tabindex="-1"></a><span class="fu">## Perbandingan CTT vs IRT</span></span>
+<span id="cb4-202"><a href="#cb4-202" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-203"><a href="#cb4-203" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Aspek <span class="pp">|</span> CTT <span class="pp">|</span> IRT <span class="pp">|</span></span>
+<span id="cb4-204"><a href="#cb4-204" aria-hidden="true" tabindex="-1"></a><span class="pp">|------------------------|------------------------|------------------------|</span></span>
+<span id="cb4-205"><a href="#cb4-205" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Unit analisis** <span class="pp">|</span> Skor total <span class="pp">|</span> Parameter item &amp; person <span class="pp">|</span></span>
+<span id="cb4-206"><a href="#cb4-206" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Estimasi kemampuan** <span class="pp">|</span> Skor mentah / skor standar <span class="pp">|</span> Logit (θ) <span class="pp">|</span></span>
+<span id="cb4-207"><a href="#cb4-207" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Ketergantungan sampel** <span class="pp">|</span> Ya — item statistics berubah <span class="pp">|</span> Tidak — parameter invariant <span class="pp">|</span></span>
+<span id="cb4-208"><a href="#cb4-208" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Error pengukuran** <span class="pp">|</span> Konstan untuk semua peserta <span class="pp">|</span> Bervariasi per level θ <span class="pp">|</span></span>
+<span id="cb4-209"><a href="#cb4-209" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Kompleksitas komputasi** <span class="pp">|</span> Rendah <span class="pp">|</span> Tinggi <span class="pp">|</span></span>
+<span id="cb4-210"><a href="#cb4-210" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Ukuran sampel** <span class="pp">|</span> Minimal 100–200 <span class="pp">|</span> Minimal 200–500+ <span class="pp">|</span></span>
+<span id="cb4-211"><a href="#cb4-211" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Equating** <span class="pp">|</span> Terbatas <span class="pp">|</span> Lebih kuat <span class="pp">|</span></span>
+<span id="cb4-212"><a href="#cb4-212" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> **Aplikasi CAT** <span class="pp">|</span> Tidak memungkinkan <span class="pp">|</span> Optimal <span class="pp">|</span></span>
+<span id="cb4-213"><a href="#cb4-213" aria-hidden="true" tabindex="-1"></a>:::</span>
 </code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
